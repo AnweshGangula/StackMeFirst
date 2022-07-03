@@ -1,5 +1,7 @@
 # StackMeFirst
-This is a browser Extension (currently only available in Microsoft Edge) that - Highlights and sorts any answers posted by current user in Stack overflow to the top of the list of answers
+This is a browser Extension (currently only available in Microsoft Edge & Firefox) that - Highlights and sorts any answers posted by current user in Stack overflow to the top of the list of answers.
+
+All of the current users answers will be highlighted with a green border and listed at the top of all answer's.
 
 <details>
     <summary>personal note: steps to update Edge extension version</summary>

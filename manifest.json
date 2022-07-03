@@ -2,9 +2,9 @@
   "name": "Stack Me First",
   "description": "Highlight and sort answers posted by current user in Stack overflow to the top",
   "version": "0.0.1",
-  "manifest_version": 3,
+  "manifest_version": 2,
   "permissions": ["tabs"],
-  "action": {
+  "browser_action": {
     "default_title": "Title",
     "default_icon": "./icons/StackMeFirst.png"
   },
@@ -15,6 +15,6 @@
     }
   ],
   "background": {
-    "service_worker": "background.js"
+    "scripts": ["background.js"]
   }
 }
