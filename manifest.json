@@ -1,0 +1,17 @@
+{
+  "name": "Stack Me First",
+  "description": "Highlight and sort answers posted by current user in Stack overflow to the top",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "permissions": ["tabs"],
+  "action": {
+    "default_title": "Title",
+    "default_icon": "./icons/logo-stackoverflow.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://stackoverflow.com/*"],
+      "js": ["contentScript.js"]
+    }
+  ]
+}
