@@ -4,59 +4,63 @@ var alertError = function (arg) {
     }
 };
 
+var dict = {}
 chrome.runtime.onMessage.addListener(
     //  reference: https://stackoverflow.com/a/20021813/6908282
     function (request, sender, sendResponse) {
-        color = "gray";
-        count = "0";
+        let tabId = sender.tab.id.toString()
+        dict[tabId] = {
+            "color": "gray",
+            "count": request.total_elements.toString()
+        };
+
         if (request.total_elements > 0) {
-            color = "green";
-            count = request.total_elements.toString();
+            dict[tabId].color = "green";
         }
-        // localStorage["total_elements"] = request.count;
-        chrome.action.setBadgeBackgroundColor({ color: color }, () => {
-            chrome.action.setBadgeText({ text: count });
-        });
+        // console.log(dict);
         sendResponse();
     }
 );
 
 chrome.action.onClicked.addListener(alertError);
 
-chrome.tabs.onActivated.addListener(function (info) {
-    // reference: https://stackoverflow.com/a/24652607/6908282
-    chrome.tabs.get(info.tabId, function (change) {
-        if (change.url == undefined) {
-            // chrome.action.setPopup({tabId: info.tabId, popup: ''});
-            chrome.action.setIcon({ path: './icons/StackMeFirst - disabled.png', tabId: info.tabId });
-            // console.log('undefined');
-        }
-        else if (change.url.match(/https:\/\/stackoverflow\.com\/*/) == null) {
-            // chrome.action.setPopup({tabId: info.tabId, popup: ''});
-            chrome.action.setIcon({ path: './icons/StackMeFirst - disabled.png', tabId: info.tabId });
+// fires when active tab changes
+chrome.tabs.onActivated.addListener(updateBadge);
+
+// fires when tab is updated
+chrome.tabs.onUpdated.addListener(updateBadge);
+
+
+function updateBadge() {
+    // get active tab on current window
+    // reference: https://stackoverflow.com/a/36747115/6908282
+    chrome.tabs.query({ active: true, currentWindow: true }, function (arrayOfTabs) {
+        // the return value is an array
+        var activeTab = arrayOfTabs[0];
+        if (!activeTab) return;
+        // compute number for badge for current tab's url
+        let tabId = activeTab.id
+        var tabInfo = dict[tabId];
+
+        if (activeTab.url == undefined || activeTab.url.match(/https:\/\/stackoverflow\.com\/*/) == null) {
+            // chrome.action.setPopup({tabId: tabId, popup: ''});
+            chrome.action.setIcon({ path: './icons/StackMeFirst - disabled.png', tabId: tabId });
             // console.log('not matching');
+            chrome.action.setBadgeText({ text: "" });
+
         }
         else {
-            // chrome.action.setPopup({tabId: info.tabId, popup: '../html/popup.html'});
-            chrome.action.setIcon({ path: './icons/StackMeFirst.png', tabId: info.tabId });
+            // chrome.action.setPopup({tabId: tabId, popup: '../html/popup.html'});
+            chrome.action.setIcon({ path: './icons/StackMeFirst.png', tabId: tabId });
             // console.log('matched');
+            if (tabId in dict) {
+                chrome.action.setBadgeBackgroundColor({ color: tabInfo.color }, () => {
+                    chrome.action.setBadgeText({ text: tabInfo.count });
+                });
+            }
         }
+
     });
-});
-chrome.tabs.onUpdated.addListener(function (tabId, change, tab) {
-    // reference: https://stackoverflow.com/a/24652607/6908282
-    if (tab.url == undefined) {
-        return;
-    }
-    else if (tab.url.match(/https:\/\/stackoverflow\.com\/*/) == null) {
-        // chrome.action.setPopup({tabId: tabId, popup: ''});
-        chrome.action.setIcon({ path: './icons/StackMeFirst - disabled.png', tabId: tabId });
-        // console.log('not matching');
-    }
-    else {
-        // chrome.action.setPopup({tabId: tabId, popup: '../html/popup.html'});
-        chrome.action.setIcon({ path: './icons/StackMeFirst.png', tabId: tabId });
-        // console.log('matched');
-    }
-});
+}
+
 
