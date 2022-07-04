@@ -8,13 +8,14 @@ var dict = {}
 chrome.runtime.onMessage.addListener(
     //  reference: https://stackoverflow.com/a/20021813/6908282
     function (request, sender, sendResponse) {
+        let badgeText = `${request.answerCount}A,${request.commentCount}C`
         let tabId = sender.tab.id.toString()
         dict[tabId] = {
             "color": "gray",
-            "count": request.total_elements.toString()
+            "badgeText": badgeText
         };
 
-        if (request.total_elements > 0) {
+        if (request.answerCount > 0 || request.commentCount > 0) {
             dict[tabId].color = "green";
         }
         // console.log(dict);
@@ -49,15 +50,15 @@ function updateBadge(tab) {
         if (tab.url == undefined || tab.url.match(/https:\/\/stackoverflow\.com\/*/) == null) {
             // chrome.action.setPopup({tabId: tabId, popup: ''});
             chrome.action.setIcon({ path: './icons/StackMeFirst - disabled.png', tabId: tabId });
-            console.log({ 'not matching': tab });
+            // console.log({ 'not matching': tab });
         }
         else {
             // chrome.action.setPopup({tabId: tabId, popup: '../html/popup.html'});
             chrome.action.setIcon({ path: './icons/StackMeFirst.png', tabId: tabId });
-            console.log({ 'matched': tab });
+            // console.log({ 'matched': tab });
             if (tabId in dict) {
                 chrome.action.setBadgeBackgroundColor({ color: tabInfo.color }, () => {
-                    chrome.action.setBadgeText({ text: tabInfo.count });
+                    chrome.action.setBadgeText({ text: tabInfo.badgeText });
                 });
             }
         }
