@@ -25,34 +25,36 @@ chrome.runtime.onMessage.addListener(
 chrome.action.onClicked.addListener(alertError);
 
 // fires when active tab changes
-chrome.tabs.onActivated.addListener(updateBadge);
+chrome.tabs.onActivated.addListener(function (info) {
+    chrome.tabs.get(info.tabId).then(function (tab) {
+        updateBadge(tab);
+    });
+});
 
 // fires when tab is updated
-chrome.tabs.onUpdated.addListener(updateBadge);
+chrome.tabs.onUpdated.addListener(function (tabId, change, tab) {
+    updateBadge(tab);
+});
 
 
-function updateBadge() {
+function updateBadge(tab) {
     // get active tab on current window
     // reference: https://stackoverflow.com/a/36747115/6908282
+    chrome.action.setBadgeText({ text: "" });
     chrome.tabs.query({ active: true, currentWindow: true }, function (arrayOfTabs) {
-        // the return value is an array
-        var activeTab = arrayOfTabs[0];
-        if (!activeTab) return;
         // compute number for badge for current tab's url
-        let tabId = activeTab.id
+        let tabId = tab.id
         var tabInfo = dict[tabId];
 
-        if (activeTab.url == undefined || activeTab.url.match(/https:\/\/stackoverflow\.com\/*/) == null) {
+        if (tab.url == undefined || tab.url.match(/https:\/\/stackoverflow\.com\/*/) == null) {
             // chrome.action.setPopup({tabId: tabId, popup: ''});
             chrome.action.setIcon({ path: './icons/StackMeFirst - disabled.png', tabId: tabId });
-            // console.log('not matching');
-            chrome.action.setBadgeText({ text: "" });
-
+            console.log({ 'not matching': tab });
         }
         else {
             // chrome.action.setPopup({tabId: tabId, popup: '../html/popup.html'});
             chrome.action.setIcon({ path: './icons/StackMeFirst.png', tabId: tabId });
-            // console.log('matched');
+            console.log({ 'matched': tab });
             if (tabId in dict) {
                 chrome.action.setBadgeBackgroundColor({ color: tabInfo.color }, () => {
                     chrome.action.setBadgeText({ text: tabInfo.count });
