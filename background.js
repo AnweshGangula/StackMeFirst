@@ -3,6 +3,24 @@ var alertError = function (arg) {
         // console.log('Something');
     }
 };
+
+chrome.runtime.onMessage.addListener(
+    //  reference: https://stackoverflow.com/a/20021813/6908282
+    function (request, sender, sendResponse) {
+        color = "gray";
+        count = "0";
+        if (request.total_elements > 0) {
+            color = "green";
+            count = request.total_elements.toString();
+        }
+        // localStorage["total_elements"] = request.count;
+        chrome.action.setBadgeBackgroundColor({ color: color }, () => {
+            chrome.action.setBadgeText({ text: count });
+        });
+        sendResponse();
+    }
+);
+
 chrome.action.onClicked.addListener(alertError);
 
 chrome.tabs.onActivated.addListener(function (info) {
