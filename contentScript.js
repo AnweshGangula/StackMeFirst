@@ -43,7 +43,6 @@ function highlightAnswer(answers) {
 function highlightComments(comments) {
     let bool = false;
     for (let comment of comments) {
-        console.log(comment);
         commentUser = comment.children[1].children[0];
         if (commentUser.href == currUser.href) {
             commentToHighlight = comment;

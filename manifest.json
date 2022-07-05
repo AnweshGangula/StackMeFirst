@@ -1,7 +1,7 @@
 {
   "name": "Stack Me First",
   "description": "Highlight and sort answers posted by current user in Stack overflow to the top",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "manifest_version": 3,
   "permissions": ["tabs"],
   "action": {

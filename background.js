@@ -18,7 +18,6 @@ chrome.runtime.onMessage.addListener(
         if (request.answerCount > 0 || request.commentCount > 0) {
             dict[tabId].color = "green";
         }
-        // console.log(dict);
         sendResponse();
     }
 );
