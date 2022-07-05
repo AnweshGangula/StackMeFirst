@@ -27,7 +27,7 @@ chrome.browserAction.onClicked.addListener(alertError);
 
 // fires when active tab changes
 chrome.tabs.onActivated.addListener(function (info) {
-    chrome.tabs.get(info.tabId).then(function (tab) {
+    chrome.tabs.get(info.tabId, function (tab) {
         updateBadge(tab);
     });
 });
