@@ -1,11 +1,11 @@
 {
   "name": "Stack Me First",
   "description": "Highlight and sort answers posted by current user in Stack overflow to the top",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "manifest_version": 2,
   "permissions": ["tabs"],
   "browser_action": {
-    "default_title": "Title",
+    "default_title": "Stack Me first",
     "default_icon": "./icons/StackMeFirst.png"
   },
   "content_scripts": [
