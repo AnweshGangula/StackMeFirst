@@ -13,11 +13,14 @@ chrome.runtime.onMessage.addListener(
         let tabId = sender.tab.id.toString()
         dict[tabId] = {
             "color": "gray",
-            "badgeText": badgeText
+            "badgeText": ""
         };
 
         if (request.answerCount > 0 || request.commentCount > 0) {
-            dict[tabId].color = "green";
+            dict[tabId] = {
+                "color": "green",
+                "badgeText": badgeText
+            };
         }
         sendResponse();
     }
@@ -47,7 +50,7 @@ function updateBadge(tab) {
 
     if (tab.url == undefined || tab.url.match(/https:\/\/stackoverflow\.com\/*/) == null) {
         // chrome.browserAction.setPopup({tabId: tabId, popup: ''});
-        chrome.browserAction.setIcon({ path: './icons/StackMeFirst - disabled.png', tabId: tabId });
+        chrome.browserAction.setIcon({ path: './icons/StackMeFirst_disabled.png', tabId: tabId });
         chrome.browserAction.setTitle({ tabId: tab.id, title: "Stack Me First" })
         // console.log({ 'not matching': tab });
     }

@@ -10,15 +10,13 @@ let commentCount = 0;
 let answerExists = highlightAnswer(allAnswers);
 let commentExists = highlightComments(allComments);
 
-if (answerExists || commentExists) {
-    chrome.runtime.sendMessage({
-        //  reference: https://stackoverflow.com/a/20021813/6908282
-        answerCount: answerCount,
-        commentCount: commentCount
-    }, function () {
-        // console.log("sending message");
-    });
-}
+chrome.runtime.sendMessage({
+    //  reference: https://stackoverflow.com/a/20021813/6908282
+    answerCount: answerCount,
+    commentCount: commentCount
+}, function () {
+    // console.log("sending message");
+});
 
 function highlightAnswer(answers) {
     let bool = false
