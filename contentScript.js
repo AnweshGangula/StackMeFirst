@@ -10,13 +10,13 @@ let commentCount = 0;
 let answerExists = highlightAnswer(allAnswers);
 let commentExists = highlightComments(allComments);
 
-if (answerExists || commentExists) {
-    chrome.runtime.sendMessage({
-        //  reference: https://stackoverflow.com/a/20021813/6908282
-        answerCount: answerCount,
-        commentCount: commentCount
-    });
-}
+chrome.runtime.sendMessage({
+    //  reference: https://stackoverflow.com/a/20021813/6908282
+    answerCount: answerCount,
+    commentCount: commentCount
+}, function () {
+    // console.log("sending message");
+});
 
 function highlightAnswer(answers) {
     let bool = false
@@ -46,7 +46,7 @@ function highlightComments(comments) {
         commentUser = comment.children[1].children[0];
         if (commentUser.href == currUser.href) {
             commentToHighlight = comment;
-            commentToHighlight.style.cssText = "padding: 5px;outline: 2px solid darkgreen;border-radius: 5px;"
+            commentToHighlight.style.cssText = "padding: 5px; outline: 2px solid darkgreen; border-radius: 5px;"
             bool = true
             commentCount++
         }

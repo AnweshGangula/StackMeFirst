@@ -3,9 +3,9 @@
   "description": "Highlight and sort answers posted by current user in Stack overflow to the top",
   "version": "1.0.0",
   "manifest_version": 3,
-  "permissions": ["tabs"],
+  "permissions": ["tabs", "webNavigation"],
   "action": {
-    "default_title": "Title",
+    "default_title": "Stack Me First",
     "default_icon": "./icons/StackMeFirst.png"
   },
   "content_scripts": [
