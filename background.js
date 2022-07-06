@@ -37,6 +37,7 @@ chrome.tabs.onActivated.addListener(function (info) {
 
 // fires when tab is updated
 chrome.tabs.onUpdated.addListener(function (tabId, change, tab) {
+    // Note: onUpdated gets fired multiple times: https://stackoverflow.com/a/36818991/6908282
     updateBadge(tab);
 });
 
@@ -45,13 +46,13 @@ function updateBadge(tab) {
     // get active tab on current window
     // reference: https://stackoverflow.com/a/36747115/6908282
     chrome.browserAction.setBadgeText({ text: "" });
+    chrome.browserAction.setTitle({ tabId: tab.id, title: "Stack Me First" })
     let tabId = tab.id
     var tabInfo = dict[tabId];
 
     if (tab.url == undefined || tab.url.match(/https:\/\/stackoverflow\.com\/*/) == null) {
         // chrome.browserAction.setPopup({tabId: tabId, popup: ''});
         chrome.browserAction.setIcon({ path: './icons/StackMeFirst_disabled.png', tabId: tabId });
-        chrome.browserAction.setTitle({ tabId: tab.id, title: "Stack Me First" })
         // console.log({ 'not matching': tab });
     }
     else {
@@ -61,7 +62,7 @@ function updateBadge(tab) {
         if (tabId in dict) {
             chrome.browserAction.setBadgeBackgroundColor({ color: tabInfo.color }, () => {
                 chrome.browserAction.setBadgeText({ text: tabInfo.badgeText });
-                chrome.browserAction.setTitle({ tabId: tab.id, title: tabInfo.badgeText })
+                chrome.browserAction.setTitle({ tabId: tab.id, title: "Stack Me First - " + tabInfo.badgeText })
             });
         }
     }
