@@ -4,19 +4,23 @@ allAnswers = document.getElementsByClassName('answer');
 allComments = document.getElementsByClassName("comment-body");
 answersHeader = document.getElementById('answers-header');
 currURL = window.location.href // .at(-1)
+website = window.location.host;
+isStackOverflow = website == "stackoverflow.com"
 let answerCount = 0;
 let commentCount = 0;
 
 let answerExists = highlightAnswer(allAnswers);
 let commentExists = highlightComments(allComments);
 
-chrome.runtime.sendMessage({
-    //  reference: https://stackoverflow.com/a/20021813/6908282
-    answerCount: answerCount,
-    commentCount: commentCount
-}, function () {
-    // console.log("sending message");
-});
+if (isStackOverflow) {
+    chrome.runtime.sendMessage({
+        //  reference: https://stackoverflow.com/a/20021813/6908282
+        answerCount: answerCount,
+        commentCount: commentCount
+    }, function () {
+        // console.log("sending message");
+    });
+}
 
 function highlightAnswer(answers) {
     let bool = false
