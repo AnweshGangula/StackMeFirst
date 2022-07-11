@@ -9,18 +9,18 @@ chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         // console.log("message received");
         let badgeText = `${request.answerCount}A,${request.commentCount}C`
-        let tabId = sender.tab.id;
+        let browserTabId = sender.tab.id;
 
-        chrome.action.setIcon({ path: './icons/StackMeFirst.png', tabId: tabId });
+        chrome.action.setIcon({ path: './icons/StackMeFirst.png', tabId: browserTabId });
 
         if (badgeText == "0A,0C") return;
 
         chrome.action.setBadgeText({
-            tabId: tabId,
+            tabId: browserTabId,
             text: badgeText
         }, () => {
             // chrome.action.setTitle({ tabId: tabId, title: "Stack Me First - " + badgeText });
-            chrome.action.setBadgeBackgroundColor({ color: "green", tabId: tabId });
+            chrome.action.setBadgeBackgroundColor({ color: "green", tabId: browserTabId });
         });
         sendResponse();
     }
