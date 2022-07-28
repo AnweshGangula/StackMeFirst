@@ -3,11 +3,13 @@
   "description": "Highlight and sort answers posted by current user in Stack overflow to the top",
   "version": "1.1.0",
   "manifest_version": 2,
-  "permissions": ["tabs", "webNavigation"],
+  "permissions": ["tabs", "webNavigation", "storage"],
   "browser_action": {
     "default_title": "Stack Me First",
-    "default_icon": "./icons/StackMeFirst_disabled.png"
+    "default_icon": "./icons/StackMeFirst_disabled.png",
+    "default_popup": "popup.html"
   },
+  "options_page": "popup.html",
   "content_scripts": [
     {
       "matches": ["https://stackoverflow.com/*"],
