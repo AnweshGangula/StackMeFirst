@@ -1,4 +1,4 @@
-# Manifest V3
+# Manifest V2
 
 The code in this folder follows [Manifest Version 2][1] standards.\
 This is used to create the [plugin for Firefox][2] since it currently [doesn't support Manifest version 3][3].
