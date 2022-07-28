@@ -9,6 +9,11 @@ isStackOverflow = website == "stackoverflow.com"
 let answerCount = 0;
 let commentCount = 0;
 
+const queryParams = new Proxy(new URLSearchParams(window.location.search), {
+    get: (searchParams, prop) => searchParams.get(prop),
+});
+const isSorted = queryParams.answertab != undefined;
+
 let answerExists = highlightAnswer(allAnswers);
 let commentExists = highlightComments(allComments);
 
@@ -30,7 +35,9 @@ function highlightAnswer(answers) {
         answerUser = userHTML.children.item(0);
         if (answerUser.href == currUser.href) {
             answerToHighlight = answer;
-            insertAfter(answersHeader, answerToHighlight);
+            if (!isSorted) {
+                insertAfter(answersHeader, answerToHighlight);
+            }
             answerToHighlight.style.cssText = "padding: 5px;outline: 2px solid darkgreen;border-radius: 5px; margin: 20px 0;"
             bool = true
             answerCount++
