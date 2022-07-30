@@ -1,6 +1,6 @@
 body{
     width: 300px;
-    height: 300px;
+    /* height: 300px; */
 }
 
 header{
@@ -14,7 +14,7 @@ header{
 
 #notification{
     display: none;
-    margin: 5px;
+    margin: 20px 5px;
     padding: 5px;
     background-color: mistyrose;
     color: firebrick;
@@ -23,5 +23,13 @@ header{
 
 #buttons{
     margin: 10px;
-    float: right;
+    text-align: end;
+}
+
+#status{
+    visibility: hidden;
+    color: green;
+    background-color: darkseagreen;
+    margin: 5px;
+    padding: 5px;
 }
