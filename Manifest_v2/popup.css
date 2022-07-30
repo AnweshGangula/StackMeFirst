@@ -1,39 +1,39 @@
-body{
-    width: 350px;
-    /* height: 300px; */
+body {
+	width: 350px;
+	/* height: 300px; */
 }
 
-header{
-    display: flex;
-    align-items: center;
+header {
+	display: flex;
+	align-items: center;
 }
 
-#logo{
-    margin: 5px;
+#logo {
+	margin: 5px;
 }
 
-#notification{
-    display: none;
-    margin: 20px 5px;
-    padding: 5px;
-    background-color: mistyrose;
-    color: firebrick;
-    border: 1px solid firebrick;
+#notification {
+	display: none;
+	margin: 20px 5px;
+	padding: 5px;
+	background-color: mistyrose;
+	color: firebrick;
+	border: 1px solid firebrick;
 }
 
-input{
-    margin-left: 5px;
+input {
+	margin-left: 5px;
 }
 
-#buttons{
-    margin: 10px;
-    text-align: end;
+#buttons {
+	margin: 10px;
+	text-align: end;
 }
 
-#status{
-    visibility: hidden;
-    color: green;
-    background-color: darkseagreen;
-    margin: 5px;
-    padding: 5px;
+#status {
+	visibility: hidden;
+	color: green;
+	background-color: darkseagreen;
+	margin: 5px;
+	padding: 5px;
 }

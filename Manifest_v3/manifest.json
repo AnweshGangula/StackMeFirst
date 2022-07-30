@@ -1,26 +1,26 @@
 {
-  "name": "Stack Me First",
-  "description": "Highlight and sort answers posted by current user in Stack overflow to the top",
-  "version": "2.0.0",
-  "manifest_version": 3,
-  "permissions": ["tabs", "webNavigation", "storage"],
-  "action": {
-    "default_title": "Stack Me First",
-    "default_icon": "./icons/StackMeFirst_disabled.png",
-    "default_popup": "popup.html"
-  },
-  "options_ui": {
-    "page": "popup.html",
-    "open_in_tab": false
-  },
-  "content_scripts": [
-    {
-      "matches": ["https://stackoverflow.com/*"],
-      "js": ["contentScript.js"]
-    }
-  ],
-  "background": {
-    "service_worker": "background.js",
-	"type": "module"
-  }
+	"name": "Stack Me First",
+	"description": "Highlight and sort answers posted by current user in Stack overflow to the top",
+	"version": "2.0.0",
+	"manifest_version": 3,
+	"permissions": ["tabs", "webNavigation", "storage"],
+	"action": {
+		"default_title": "Stack Me First",
+		"default_icon": "./icons/StackMeFirst_disabled.png",
+		"default_popup": "popup.html"
+	},
+	"options_ui": {
+		"page": "popup.html",
+		"open_in_tab": false
+	},
+	"content_scripts": [
+		{
+			"matches": ["https://stackoverflow.com/*"],
+			"js": ["contentScript.js"]
+		}
+	],
+	"background": {
+		"service_worker": "background.js",
+		"type": "module"
+	}
 }
