@@ -9,7 +9,10 @@
     "default_icon": "./icons/StackMeFirst_disabled.png",
     "default_popup": "popup.html"
   },
-  "options_page": "popup.html",
+  "options_ui": {
+    "page": "popup.html",
+    "open_in_tab": false
+  },
   "content_scripts": [
     {
       "matches": ["https://stackoverflow.com/*"],

@@ -14,18 +14,29 @@ const queryParams = new Proxy(new URLSearchParams(window.location.search), {
 });
 const isSorted = queryParams.answertab != undefined;
 
-let answerExists = highlightAnswer(allAnswers);
-let commentExists = highlightComments(allComments);
-
-if (isStackOverflow) {
-    chrome.runtime.sendMessage({
-        //  reference: https://stackoverflow.com/a/20021813/6908282
-        answerCount: answerCount,
-        commentCount: commentCount
-    }, function () {
-        // console.log("sending message");
-    });
+let defaultOptions = {
+    // You can set default for values not in the storage by providing a dictionary:
+    // reference: https://stackoverflow.com/a/26898749/6908282
+    highlightComments: true,
+    highlightLinkedQues: false,
 }
+chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
+    // You can set default for values not in the storage by providing a dictionary:
+    // reference: https://stackoverflow.com/a/26898749/6908282
+    if (isStackOverflow && currUser != undefined) {
+        let answerExists = highlightAnswer(allAnswers);
+        if (result.stackMeData.highlightComments && true) {
+            let commentExists = highlightComments(allComments);
+        }
+        chrome.runtime.sendMessage({
+            //  reference: https://stackoverflow.com/a/20021813/6908282
+            answerCount: answerCount,
+            commentCount: commentCount
+        }, function () {
+            // console.log("sending message");
+        });
+    }
+})
 
 function highlightAnswer(answers) {
     let bool = false
