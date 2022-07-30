@@ -1,5 +1,5 @@
 body{
-    width: 300px;
+    width: 450px;
     /* height: 300px; */
 }
 
@@ -21,6 +21,10 @@ header{
     border: 1px solid firebrick;
 }
 
+input{
+    margin-left: 5px;
+}
+
 #buttons{
     margin: 10px;
     text-align: end;
@@ -28,6 +32,7 @@ header{
 
 #status{
     visibility: hidden;
+    height: 1em;
     color: green;
     background-color: darkseagreen;
     margin: 5px;

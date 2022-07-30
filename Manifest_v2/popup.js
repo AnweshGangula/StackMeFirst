@@ -4,8 +4,6 @@ let defaultOptions = {
     hlAns: true,
     srtAns: true,
     hlCmnts: false,
-    countUpvotes: false,
-    hlLnkQs: false,
 }
 
 async function displayHTML() {
@@ -41,14 +39,11 @@ document.getElementById('btnReset').addEventListener('click', reset_options);
 async function save_options() {
     const hlAnswers = document.getElementById('hlAnswers').checked;
     const srtAns = document.getElementById('srtAns').checked;
-    const hlLinkedQs = document.getElementById('hlLinkedQs').checked;
     const hlComments = document.getElementById('hlComments').checked;
     let stackMeData = {
         hlAns: hlAnswers,
         srtAns: srtAns,
         hlCmnts: hlComments,
-        countUpvotes: false,
-        hlLnkQs: hlLinkedQs,
     }
     chrome.storage.sync.set({ stackMeData: stackMeData }, function () {
         UpdateStatus("Options Saved.");
@@ -89,6 +84,4 @@ function UpdateUI(Options) {
     document.getElementById('hlAnswers').checked = Options.hlAns;
     document.getElementById('srtAns').checked = Options.srtAns;
     document.getElementById('hlComments').checked = Options.hlCmnts;
-    document.getElementById('countUpvotes').checked = Options.countUpvotes;
-    document.getElementById('hlLinkedQs').checked = Options.hlLnkQs;
 }

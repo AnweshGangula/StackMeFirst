@@ -22,26 +22,30 @@
             ! Please open a Stack Overflow Question which has a answer submitted by you.
         </p>
     </div>
-    
+
     <div id="config">
-        <div id="options">
-            <input type="checkbox" id="hlAnswers" name="hlAnswers" value="Highlight my Answers">
-            <label for="hlAnswers">Highlight my Answers</label>
-            <input type="checkbox" id="srtAns" name="srtAns" value="Sort my Answers">
-            <label for="srtAns">Sort my Comments</label><br>
-            <input type="checkbox" id="hlComments" name="hlComments" value="Highlight Comments">
-            <label for="hlComments">Highlight my Comments</label><br>
-            <input type="checkbox" id="countUpvotes" name="countUpvotes" value="Count Upvotes">
-            <label for="countUpvotes">Count my Upvotes</label><br>
-            <input type="checkbox" id="hlLinkedQs" name="hlLinkedQs" value="Highlight Linked Questions">
-            <label for="hlLinkedQs">Highlight Linked Questions with my Upvote</label><br>
-        </div>
-        
+        <form id="options">
+            <fieldset>
+                <legend>Configure Settings</legend>
+
+                <div>
+                    <input type="checkbox" id="hlAnswers" name="hlAnswers" value="Highlight my Answers">
+                    <label for="hlAnswers">Highlight my Answers</label>
+                    <input type="checkbox" id="srtAns" name="srtAns" value="Bring My Answers to Top">
+                    <label for="srtAns">Bring My Answers to Top</label><br>
+                </div>
+                <div>
+                    <input type="checkbox" id="hlComments" name="hlComments" value="Highlight Comments">
+                    <label for="hlComments">Highlight my Comments</label><br>
+                </div>
+            </fieldset>
+        </form>
+
         <div id="buttons">
             <button id="btnSave" type="button">Save</button>
             <button id="btnReset" type="button">Reset</button>
         </div>
-        
+
         <p id="status"></p>
     </div>
 
