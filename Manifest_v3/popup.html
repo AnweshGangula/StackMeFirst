@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stack Me First</title>
+
+    <script src="popup.js" type="module"></script>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <header>
+        <img id="logo" src="./icons/StackMeFirst.png" alt="Stack Me First Logo" width="20" height="20">
+        <h1>Stack Me First</h1>
+    </header>
+
+    <div>
+        <p id="notification" style="display: none;">
+            ! Please open a Stack Overflow Question which has a answer submitted by you.
+        </p>
+    </div>
+
+    <div id="config">
+        <form id="options">
+            <fieldset>
+                <legend>Configure Settings</legend>
+
+                <div>
+                    <input type="checkbox" id="hlAnswers" name="hlAnswers" value="Highlight my Answers">
+                    <label for="hlAnswers">Highlight my Answers</label>
+                    <input type="checkbox" id="srtAns" name="srtAns" value="Bring My Answers to Top">
+                    <label for="srtAns">Bring My Answers to Top</label><br>
+                </div>
+                <div>
+                    <input type="checkbox" id="hlComments" name="hlComments" value="Highlight Comments">
+                    <label for="hlComments">Highlight my Comments</label><br>
+                </div>
+            </fieldset>
+        </form>
+
+        <div id="buttons">
+            <button id="btnSave" type="button">Save</button>
+            <button id="btnReset" type="button">Reset</button>
+        </div>
+
+        <p id="status"></p>
+    </div>
+
+</body>
+
+</html>
