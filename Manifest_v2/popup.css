@@ -12,6 +12,15 @@ header{
     margin: 5px;
 }
 
+#notification{
+    display: none;
+    margin: 5px;
+    padding: 5px;
+    background-color: mistyrose;
+    color: firebrick;
+    border: 1px solid firebrick;
+}
+
 #buttons{
     margin: 10px;
     float: right;

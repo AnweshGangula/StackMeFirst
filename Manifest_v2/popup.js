@@ -4,8 +4,27 @@ let defaultOptions = {
     highlightLinkedQues: false,
 }
 
+async function displayHTML() {
+    chrome.tabs.query({ active: true, lastFocusedWindow: true }, function (tabs) {
+        // get current Tab - https://stackoverflow.com/a/29151677/6908282
+        let activeTab = tabs[0];
+        let activeURL = new URL(activeTab.url)
+        let currURL = activeURL.href // .at(-1)
+        let website = activeURL.host;
+        console.log(activeURL);
+        if (website == "stackoverflow.com") {
+            document.getElementById("notification").style.display = "none";
+        }
+        else {
+            document.getElementById("notification").style.display = "block";
+            document.getElementById("config").style.display = "none";
+        }
+    });
+
+}
+
 // chrome.storage.sync.clear(); // use this while development to clear any existing options
-document.addEventListener('DOMContentLoaded', restore_options);
+document.addEventListener('DOMContentLoaded', displayHTML);
 document.getElementById('btnSave').addEventListener('click', save_options);
 document.getElementById('btnReset').addEventListener('click', reset_options);
 

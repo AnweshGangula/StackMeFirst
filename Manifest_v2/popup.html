@@ -17,20 +17,27 @@
         <h1>Stack Me First</h1>
     </header>
 
-    <div id="options">
-        <input type="checkbox" id="hlComments" name="hlComments" value="Comments">
-        <label for="hlComments">Highlight Comments</label><br>
-        <input type="checkbox" id="hlLinkedQs" name="hlLinkedQs" value="LinkedQs">
-        <label for="hlLinkedQs">Highlight Linked Questions with Upvote</label><br>
+    <div>
+        <p id="notification" style="display: none;">
+            ! Please open a Stack Overflow Question which has a answer submitted by you.
+        </p>
     </div>
     
-    <div id="buttons">
-        <button id="btnSave" type="button">Save</button>
-        <button id="btnReset" type="button">Reset</button>
+    <div id="config">
+        <div id="options">
+            <input type="checkbox" id="hlComments" name="hlComments" value="Comments">
+            <label for="hlComments">Highlight Comments</label><br>
+            <input type="checkbox" id="hlLinkedQs" name="hlLinkedQs" value="LinkedQs">
+            <label for="hlLinkedQs">Highlight Linked Questions with Upvote</label><br>
         </div>
-
-
-    <p id="status"></p>
+        
+        <div id="buttons">
+            <button id="btnSave" type="button">Save</button>
+            <button id="btnReset" type="button">Reset</button>
+        </div>
+        
+        <p id="status"></p>
+    </div>
 
 </body>
 
