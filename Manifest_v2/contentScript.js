@@ -17,20 +17,19 @@ const isSorted = queryParams.answertab != undefined;
 let defaultOptions = {
     // You can set default for values not in the storage by providing a dictionary:
     // reference: https://stackoverflow.com/a/26898749/6908282
-    highlightComments: false,
-    highlightLinkedQues: false,
+    hlAns: true,
+    srtAns: true,
+    hlCmnts: false,
+    countUpvotes: false,
+    hlLnkQs: false,
 }
 chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
+    let config = result.stackMeData;
     // You can set default for values not in the storage by providing a dictionary:
     // reference: https://stackoverflow.com/a/26898749/6908282
     if (isStackOverflow && currUser != undefined) {
-        let answerExists = highlightAnswer(allAnswers);
-        if (result.stackMeData.highlightComments) {
-            let commentExists = highlightComments(allComments);
-        }
-        else {
-            commentCount = "?"
-        }
+        let answerExists = highlightAnswer(allAnswers, config.hlAns, config.srtAns);
+        let commentExists = highlightComments(allComments, config.hlCmnts);
         chrome.runtime.sendMessage({
             //  reference: https://stackoverflow.com/a/20021813/6908282
             answerCount: answerCount,
@@ -41,40 +40,49 @@ chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
     }
 })
 
-function highlightAnswer(answers) {
+function highlightAnswer(answers, hlAns, srtAns) {
     let bool = false
-    for (let answer of answers) {
-        userDetails = answer.querySelectorAll('.user-details');
-        userHTML = userDetails[userDetails.length - 1];
-        answerUser = userHTML.children.item(0);
-        if (answerUser.href == currUser.href) {
-            answerToHighlight = answer;
-            if (!isSorted) {
-                insertAfter(answersHeader, answerToHighlight);
+    if (hlAns || srtAns) {
+        for (let answer of answers) {
+            userDetails = answer.querySelectorAll('.user-details');
+            userHTML = userDetails[userDetails.length - 1];
+            answerUser = userHTML.children.item(0);
+            if (answerUser.href == currUser.href) {
+                answerToHighlight = answer;
+                if (!isSorted && srtAns) {
+                    insertAfter(answersHeader, answerToHighlight);
+                }
+                if (hlAns) {
+                    answerToHighlight.style.cssText = "padding: 5px;outline: 2px solid darkgreen;border-radius: 5px; margin: 20px 0;"
+                }
+                bool = true
+                answerCount++
             }
-            answerToHighlight.style.cssText = "padding: 5px;outline: 2px solid darkgreen;border-radius: 5px; margin: 20px 0;"
-            bool = true
-            answerCount++
-        }
 
-        if (currURL.indexOf(answer.dataset.answerid) > -1) {
-            // if the user clicks on a link to a specific answer, scroll that into view
-            answer.scrollIntoView();
+            if (currURL.indexOf(answer.dataset.answerid) > -1) {
+                // if the user clicks on a link to a specific answer, scroll that into view
+                answer.scrollIntoView();
+            }
         }
     }
     return bool;
 }
 
-function highlightComments(comments) {
+function highlightComments(comments, hlCmnts) {
     let bool = false;
-    for (let comment of comments) {
-        commentUser = comment.children[1].children[0];
-        if (commentUser.href == currUser.href) {
-            commentToHighlight = comment;
-            commentToHighlight.style.cssText = "padding: 5px; outline: 2px solid darkgreen; border-radius: 5px;"
-            bool = true
-            commentCount++
+    if (hlCmnts == true) {
+        for (let comment of comments) {
+            commentUser = comment.children[1].children[0];
+            if (commentUser.href == currUser.href) {
+                commentToHighlight = comment;
+                commentToHighlight.style.cssText = "padding: 5px; outline: 2px solid darkgreen; border-radius: 5px;"
+                bool = true
+                commentCount++
+            }
         }
+    }
+    else {
+        commentCount = "?"
     }
     return bool;
 }
