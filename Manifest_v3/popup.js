@@ -16,16 +16,16 @@ async function displayHTML() {
         let currURL = activeURL.href // .at(-1)
         let website = activeURL.host;
         let URLpathname = activeURL.pathname;
-        chrome.browserAction.getBadgeText({ tabId: activeTab.id }, badgeText => {
+        chrome.action.getBadgeText({ tabId: activeTab.id }, badgeText => {
             // https://stackoverflow.com/a/73178480/6908282
             if (badgeText == "" || badgeText == "0A0C" || !URLpathname.startsWith("/questions")) {
                 document.getElementById("notification").style.display = "block"
             }
         });
-        if (website != "stackoverflow.com" || website != "extensions") {
-            console.log(website + "Test");
-            document.getElementById("config").style.display = "none";
-        }
+        // if (website != "stackoverflow.com" || website != "extensions") {
+        //     console.log(website);
+        //     document.getElementById("config").style.display = "none";
+        // }
     });
 
 }

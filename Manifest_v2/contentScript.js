@@ -20,8 +20,6 @@ let defaultOptions = {
     hlAns: true,
     srtAns: true,
     hlCmnts: false,
-    countUpvotes: false,
-    hlLnkQs: false,
 }
 chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
     let config = result.stackMeData;
