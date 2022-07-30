@@ -17,7 +17,7 @@ const isSorted = queryParams.answertab != undefined;
 let defaultOptions = {
     // You can set default for values not in the storage by providing a dictionary:
     // reference: https://stackoverflow.com/a/26898749/6908282
-    highlightComments: true,
+    highlightComments: false,
     highlightLinkedQues: false,
 }
 chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
@@ -25,8 +25,11 @@ chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
     // reference: https://stackoverflow.com/a/26898749/6908282
     if (isStackOverflow && currUser != undefined) {
         let answerExists = highlightAnswer(allAnswers);
-        if (result.stackMeData.highlightComments && true) {
+        if (result.stackMeData.highlightComments) {
             let commentExists = highlightComments(allComments);
+        }
+        else {
+            commentCount = "?"
         }
         chrome.runtime.sendMessage({
             //  reference: https://stackoverflow.com/a/20021813/6908282

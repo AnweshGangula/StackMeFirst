@@ -12,13 +12,22 @@
 </head>
 
 <body>
-    <h>Stack Me First</h>
+    <header>
+        <img id="logo" src="./icons/StackMeFirst.png" alt="Stack Me First Logo" width="20" height="20">
+        <h1>Stack Me First</h1>
+    </header>
 
-    <input type="checkbox" id="hlComments" name="hlComments" value="Comments">
-    <label for="hlComments">Highlight Comments</label><br>
-    <input type="checkbox" id="hlLinkedQs" name="hlLinkedQs" value="LinkedQs">
-    <label for="hlLinkedQs">Highlight Linked Questions with Upvote</label><br>
-    <button id="btnSave" type="button">Save</button>
+    <div id="options">
+        <input type="checkbox" id="hlComments" name="hlComments" value="Comments">
+        <label for="hlComments">Highlight Comments</label><br>
+        <input type="checkbox" id="hlLinkedQs" name="hlLinkedQs" value="LinkedQs">
+        <label for="hlLinkedQs">Highlight Linked Questions with Upvote</label><br>
+    </div>
+    
+    <div id="buttons">
+        <button id="btnSave" type="button">Save</button>
+        <button id="btnReset" type="button">Reset</button>
+        </div>
 
 
     <p id="status"></p>
