@@ -19,13 +19,17 @@ async function displayHTML() {
         chrome.browserAction.getBadgeText({ tabId: activeTab.id }, badgeText => {
             // https://stackoverflow.com/a/73178480/6908282
             if (badgeText == "" || badgeText == "0A0C" || !URLpathname.startsWith("/questions")) {
-                document.getElementById("notification").style.display = "block"
+                DisplayNotificaction("! Please open a Stack Overflow Question which has a answer submitted by you.");
+            }
+            if (badgeText == "Login") {
+                DisplayNotificaction("! Login to Stack Overflow to highlight your answers");
             }
         });
-        if (website != "stackoverflow.com" || website != "extensions") {
-            console.log(website + "Test");
-            document.getElementById("config").style.display = "none";
-        }
+        // if (website != "stackoverflow.com" || website != "extensions") {
+        // // commenting this because the options page is not working as expected in edge://extensions/ page
+        //     console.log(website);
+        //     document.getElementById("config").style.display = "none";
+        // }
     });
 
 }
@@ -85,4 +89,13 @@ function UpdateUI(Options) {
     document.getElementById('hlAnswers').checked = Options.hlAns;
     document.getElementById('srtAns').checked = Options.srtAns;
     document.getElementById('hlComments').checked = Options.hlCmnts;
+}
+
+function DisplayNotificaction(warningText) {
+    if (warningText == "") {
+        document.getElementById("notification").style.display = "none";
+    } else {
+        document.getElementById("notification").style.display = "block"
+        document.getElementById("notification").textContent = warningText;
+    }
 }

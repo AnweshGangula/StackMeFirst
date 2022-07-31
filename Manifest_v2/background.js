@@ -8,20 +8,35 @@ chrome.runtime.onMessage.addListener(
     //  reference: https://stackoverflow.com/a/20021813/6908282
     function (request, sender, sendResponse) {
         // console.log("message received");
-        let badgeText = `${request.answerCount}A,${request.commentCount}C`
+        let content = request.content;
+        let type = request.type;
         let browserTabId = sender.tab.id;
+        if (type == "needLogin") {
+            chrome.browserAction.setIcon({ path: './icons/StackMeFirst.png', tabId: browserTabId });
+            chrome.browserAction.setBadgeText({
+                tabId: browserTabId,
+                text: "Login"
+            }, () => {
+                chrome.browserAction.setTitle({ tabId: browserTabId, title: "Login to Stack Overflow to highlight your answers" });
+                chrome.browserAction.setBadgeBackgroundColor({ color: "firebrick", tabId: browserTabId });
+            });
+        }
+        else {
+            let badgeText = `${content.answerCount}A,${content.commentCount}C`
+            let pluginTitle = `${content.answerCount}Answers, ${content.commentCount}Comments\n`
 
-        chrome.browserAction.setIcon({ path: './icons/StackMeFirst.png', tabId: browserTabId });
+            chrome.browserAction.setIcon({ path: './icons/StackMeFirst.png', tabId: browserTabId });
 
-        if (badgeText == "0A,0C") return;
+            if (badgeText == "0A,0C") return;
 
-        chrome.browserAction.setBadgeText({
-            tabId: browserTabId,
-            text: badgeText
-        }, () => {
-            // chrome.browserAction.setTitle({ tabId: tabId, title: "Stack Me First - " + badgeText });
-            chrome.browserAction.setBadgeBackgroundColor({ color: "green", tabId: browserTabId });
-        });
+            chrome.browserAction.setBadgeText({
+                tabId: browserTabId,
+                text: badgeText
+            }, () => {
+                chrome.browserAction.setTitle({ tabId: browserTabId, title: pluginTitle });
+                chrome.browserAction.setBadgeBackgroundColor({ color: "green", tabId: browserTabId });
+            });
+        }
         sendResponse();
     }
 );

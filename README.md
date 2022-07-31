@@ -1,4 +1,5 @@
 # StackMeFirst
+
 This is a browser Extension (currently only available in Microsoft Edge & Firefox) that - Highlights and sorts any answers posted by current user in Stack overflow to the top of the list of answers.
 
 All of the current users answers will be highlighted with a green border and listed at the top of all answer's.
@@ -12,14 +13,17 @@ use below script to create zip from terminal:
 Note: below scripts won't work if you have the plugin loaded in browser
 
 [Powershell script][3]:
+
 ```powershell
 Compress-Archive -Force -Path manifest.json, background.js, contentScript.js, Icons -CompressionLevel Optimal -DestinationPath StackMeFirst.Zip
 ```
 
- [using tar.exe in Command Prompt][2]:
+[using tar.exe in Command Prompt][2]:
+
 ```bash
 tar -acf StackMeFirst.zip -c manifest.json background.js contentScript.js Icons
 ```
+
 </details>
 
 ## Screenshots
@@ -28,7 +32,6 @@ tar -acf StackMeFirst.zip -c manifest.json background.js contentScript.js Icons
 ![Screenshot 2](./Assets/Screenshots/Screenshot%202.png)
 ![Screenshot 3](./Assets/Screenshots/Screenshot%203.png)
 
-
-   [1]: https://partner.microsoft.com/en-us/dashboard/microsoftedge/overview
-   [2]: https://stackoverflow.com/a/68728992/6908282
-   [3]: https://stackoverflow.com/a/55173830/6908282
+[1]: https://partner.microsoft.com/en-us/dashboard/microsoftedge/overview
+[2]: https://stackoverflow.com/a/68728992/6908282
+[3]: https://stackoverflow.com/a/55173830/6908282

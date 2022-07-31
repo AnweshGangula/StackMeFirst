@@ -25,16 +25,32 @@ chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
     let config = result.stackMeData;
     // You can set default for values not in the storage by providing a dictionary:
     // reference: https://stackoverflow.com/a/26898749/6908282
-    if (isStackOverflow && currUser != undefined) {
-        let answerExists = highlightAnswer(allAnswers, config.hlAns, config.srtAns);
-        let commentExists = highlightComments(allComments, config.hlCmnts);
-        chrome.runtime.sendMessage({
-            //  reference: https://stackoverflow.com/a/20021813/6908282
-            answerCount: answerCount,
-            commentCount: commentCount
-        }, function () {
-            // console.log("sending message");
-        });
+    if (isStackOverflow) {
+        if (currUser == undefined) {
+            chrome.runtime.sendMessage({
+                //  reference: https://stackoverflow.com/a/20021813/6908282
+                type: "needLogin",
+                content: {
+                    currUser: currUser,
+                }
+            }, function () {
+                // console.log("sending message");
+            });
+        }
+        else {
+            let answerExists = highlightAnswer(allAnswers, config.hlAns, config.srtAns);
+            let commentExists = highlightComments(allComments, config.hlCmnts);
+            chrome.runtime.sendMessage({
+                //  reference: https://stackoverflow.com/a/20021813/6908282
+                type: "loggedIn",
+                content: {
+                    answerCount: answerCount,
+                    commentCount: commentCount
+                }
+            }, function () {
+                // console.log("sending message");
+            });
+        }
     }
 })
 
