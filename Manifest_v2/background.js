@@ -64,6 +64,6 @@ chrome.browserAction.onClicked.addListener(alertError);
 
 var alertError = function (arg) {
     if (arg.url.match(/https:\/\/stackoverflow\.com\/*/) == null) {
-        console.log('Something');
+        // console.log('Something');
     }
 };

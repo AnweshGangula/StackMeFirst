@@ -19,19 +19,30 @@ const SetPopupContent = info => {
     //  reference: https://stackoverflow.com/a/20023723/6908282
     let answerList = info.answerList;
     let commentList = info.answerCount;
-    let answerDOM = document.getElementById('summary') //.textContent = info.answerCount;
+    let answerDOM = document.getElementById('ansList');
+    let ansCount = document.getElementById('ansCount');
+    let ansList = document.createElement("ul");
 
-    console.log(answerList)
+    ansCount.textContent = Object.keys(answerList).length
     for (const [key, value] of Object.entries(answerList)) {
-        let ansEle = document.createElement("p");
+        let ansEle = document.createElement("li");
         let link = document.createElement("a");
         link.setAttribute('href', "#" + key);
         link.innerHTML = key;
+        link.addEventListener('click', function () {
+            window.event.preventDefault();
+            chrome.tabs.query({ active: true, currentWindow: true }, function (activeTabs) {
+                //  reference: https://stackoverflow.com/a/38579393/6908282
+                chrome.tabs.executeScript(activeTabs[0].id, { code: "scrollToTarget('" + key + "', 60); console.log('" + key + "'); " });
+            });
+        });
         ansEle.appendChild(link);
-        answerDOM.appendChild(ansEle);
+        ansList.appendChild(ansEle);
     };
+    answerDOM.appendChild(ansList);
 
 };
+
 
 async function displayHTML() {
     restore_options();
@@ -53,7 +64,6 @@ async function displayHTML() {
             }
         });
 
-        console.log("before message sent");
         chrome.tabs.sendMessage(
             activeTab.id,
             { from: 'popup', subject: 'popupDOM' },

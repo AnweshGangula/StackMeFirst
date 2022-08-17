@@ -52,7 +52,6 @@ chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
 
             // Listen for messages from the popup.
             chrome.runtime.onMessage.addListener((msg, sender, response) => {
-                console.log("message received")
                 // Reference: https://stackoverflow.com/a/20023723/6908282
                 // First, validate the message's structure.
                 if ((msg.from === 'popup') && (msg.subject === 'popupDOM')) {
@@ -88,7 +87,6 @@ function highlightAnswer(answers, hlAns, srtAns) {
                 if (hlAns) {
                     answerToHighlight.style.cssText = "padding: 5px; outline: 2px solid darkgreen; border-radius: 5px; margin: 20px 0;"
                 }
-                console.log(answer)
                 answerList[answer.id] = answer;
             }
 
@@ -123,4 +121,17 @@ function highlightComments(comments, hlCmnts) {
 function insertAfter(referenceNode, newNode) {
     // reference: https://stackoverflow.com/a/4793630/6908282
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
+
+function scrollToTarget(eleId, headerHeight = 40) {
+    // reference: https://stackoverflow.com/a/67647864/6908282
+    // this function is being used in popupjs for sctoll to the answer/comment clicked dby the user
+    const element = document.getElementById(eleId);
+    const elementPosition = element.getBoundingClientRect().top;
+    const offsetPosition = elementPosition - headerHeight;
+
+    window.scrollBy({
+        top: offsetPosition,
+        behavior: "smooth"
+    });
 }
