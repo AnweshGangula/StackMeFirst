@@ -1,13 +1,10 @@
-
-currUser = document.getElementsByClassName("s-user-card")[0];
-allAnswers = document.getElementsByClassName('answer');
-allComments = document.getElementsByClassName("comment-body");
-answersHeader = document.getElementById('answers-header');
-currURL = window.location.href // .at(-1)
-website = window.location.host;
-isStackOverflow = website == "stackoverflow.com"
-let answerCount = 0;
-let commentCount = 0;
+const currUser = document.getElementsByClassName("s-user-card")[0];
+const allAnswers = document.getElementsByClassName('answer');
+const allComments = document.getElementsByClassName("comment-body");
+const answersHeader = document.getElementById('answers-header');
+const currURL = window.location.href // .at(-1)
+const website = window.location.host;
+const isStackOverflow = website == "stackoverflow.com"
 
 const queryParams = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
@@ -29,7 +26,8 @@ chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
         if (currUser == undefined) {
             chrome.runtime.sendMessage({
                 //  reference: https://stackoverflow.com/a/20021813/6908282
-                type: "needLogin",
+                from: "contentScript",
+                subject: "needLogin",
                 content: {
                     currUser: currUser,
                 }
@@ -38,11 +36,12 @@ chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
             });
         }
         else {
-            let answerExists = highlightAnswer(allAnswers, config.hlAns, config.srtAns);
-            let commentExists = highlightComments(allComments, config.hlCmnts);
+            let answerCount = highlightAnswer(allAnswers, config.hlAns, config.srtAns);
+            let commentCount = highlightComments(allComments, config.hlCmnts);
             chrome.runtime.sendMessage({
                 //  reference: https://stackoverflow.com/a/20021813/6908282
-                type: "loggedIn",
+                from: "contentScript",
+                subject: "loggedIn",
                 content: {
                     answerCount: answerCount,
                     commentCount: commentCount
@@ -56,18 +55,18 @@ chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
                 console.log("message received")
                 // Reference: https://stackoverflow.com/a/20023723/6908282
                 // First, validate the message's structure.
-                if ((msg.from === 'popup') && (msg.subject === 'DOMInfo')) {
+                if ((msg.from === 'popup') && (msg.subject === 'popupDOM')) {
                     console.log({ "abc": answerCount })
                     // Collect the necessary data. 
                     // (For your specific requirements `document.querySelectorAll(...)`
                     //  should be equivalent to jquery's `$(...)`.)
-                    var domInfo = {
+                    var popupContent = {
                         answerCount: answerCount,
                     };
 
                     // Directly respond to the sender (popup), 
                     // through the specified callback.
-                    response(domInfo);
+                    response(popupContent);
                 }
             });
         }
@@ -75,7 +74,7 @@ chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
 })
 
 function highlightAnswer(answers, hlAns, srtAns) {
-    let bool = false
+    let answerCount = 0;
     if (hlAns || srtAns) {
         for (let answer of answers) {
             userDetails = answer.querySelectorAll('.user-details');
@@ -87,7 +86,7 @@ function highlightAnswer(answers, hlAns, srtAns) {
                     insertAfter(answersHeader, answerToHighlight);
                 }
                 if (hlAns) {
-                    answerToHighlight.style.cssText = "padding: 5px;outline: 2px solid darkgreen;border-radius: 5px; margin: 20px 0;"
+                    answerToHighlight.style.cssText = "padding: 5px; outline: 2px solid darkgreen; border-radius: 5px; margin: 20px 0;"
                 }
                 bool = true
                 answerCount++
@@ -99,11 +98,11 @@ function highlightAnswer(answers, hlAns, srtAns) {
             }
         }
     }
-    return bool;
+    return answerCount;
 }
 
 function highlightComments(comments, hlCmnts) {
-    let bool = false;
+    let commentCount = 0;
     if (hlCmnts == true) {
         for (let comment of comments) {
             commentUser = comment.children[1].children[0];
@@ -118,7 +117,7 @@ function highlightComments(comments, hlCmnts) {
     else {
         commentCount = "?"
     }
-    return bool;
+    return commentCount;
 }
 
 function insertAfter(referenceNode, newNode) {

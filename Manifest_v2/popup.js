@@ -1,5 +1,13 @@
 // chrome.storage.sync.clear(); // use this while development to clear any existing options
 // let console = chrome.extension.getBackgroundPage().console;
+
+// Once the DOM is ready...
+window.addEventListener('DOMContentLoaded', () => {
+    displayHTML();
+    document.getElementById('btnSave').addEventListener('click', save_options);
+    document.getElementById('btnReset').addEventListener('click', reset_options);
+})
+
 let defaultOptions = {
     hlAns: true,
     srtAns: true,
@@ -7,7 +15,7 @@ let defaultOptions = {
 }
 
 // Update the relevant fields with the new data.
-const setPopupContent = info => {
+const SetPopupContent = info => {
     //  reference: https://stackoverflow.com/a/20023723/6908282
     document.getElementById('summary').textContent = info.answerCount;
     console.log("message sent")
@@ -36,10 +44,10 @@ async function displayHTML() {
         console.log("before message sent");
         chrome.tabs.sendMessage(
             activeTab.id,
-            { from: 'popup', subject: 'DOMInfo' },
+            { from: 'popup', subject: 'popupDOM' },
             // ...also specifying a callback to be called 
             //    from the receiving end (content script).
-            setPopupContent);
+            SetPopupContent);
         // if (website != "stackoverflow.com" || website != "extensions") {
         // // commenting this because the options page is not working as expected in edge://extensions/ page
         //     console.log(website);
@@ -48,11 +56,6 @@ async function displayHTML() {
     });
 
 }
-
-document.addEventListener('DOMContentLoaded', displayHTML);
-document.getElementById('btnSave').addEventListener('click', save_options);
-document.getElementById('btnReset').addEventListener('click', reset_options);
-
 
 // Saves options to chrome.storage
 // https://developer.chrome.com/docs/extensions/mv3/options/

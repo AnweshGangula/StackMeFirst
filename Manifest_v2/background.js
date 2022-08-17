@@ -1,17 +1,11 @@
-var alertError = function (arg) {
-    if (arg.url.match(/https:\/\/stackoverflow\.com\/*/) == null) {
-        // console.log('Something');
-    }
-};
-
 chrome.runtime.onMessage.addListener(
     //  reference: https://stackoverflow.com/a/20021813/6908282
     function (request, sender, sendResponse) {
         // console.log("message received");
         let content = request.content;
-        let type = request.type;
+        let subject = request.subject;
         let browserTabId = sender.tab.id;
-        if (type == "needLogin") {
+        if (subject == "needLogin") {
             chrome.browserAction.setIcon({ path: './icons/StackMeFirst.png', tabId: browserTabId });
             chrome.browserAction.setBadgeText({
                 text: "Login",
@@ -41,8 +35,6 @@ chrome.runtime.onMessage.addListener(
     }
 );
 
-chrome.browserAction.onClicked.addListener(alertError);
-
 // fires when active tab changes
 chrome.tabs.onActivated.addListener(function (info) {
     chrome.tabs.get(info.tabId, function (tab) {
@@ -67,3 +59,11 @@ function onTabUpdate(tab) {
 
     }
 }
+
+chrome.browserAction.onClicked.addListener(alertError);
+
+var alertError = function (arg) {
+    if (arg.url.match(/https:\/\/stackoverflow\.com\/*/) == null) {
+        console.log('Something');
+    }
+};
