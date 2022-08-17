@@ -21,9 +21,16 @@ const SetPopupContent = info => {
     let commentList = info.answerCount;
     let answerDOM = document.getElementById('ansList');
     let ansCount = document.getElementById('ansCount');
-    let ansList = document.createElement("ul");
 
     ansCount.textContent = Object.keys(answerList).length
+    answerDOM.appendChild(AnsLinks(answerList));
+
+};
+
+function AnsLinks(answerList) {
+    let ansLinks = document.createElement("ul");
+    let offsetHeight = document.getElementsByTagName('header')[0].offsetHeight
+
     for (const [key, value] of Object.entries(answerList)) {
         let ansEle = document.createElement("li");
         let link = document.createElement("a");
@@ -33,15 +40,15 @@ const SetPopupContent = info => {
             window.event.preventDefault();
             chrome.tabs.query({ active: true, currentWindow: true }, function (activeTabs) {
                 //  reference: https://stackoverflow.com/a/38579393/6908282
-                chrome.tabs.executeScript(activeTabs[0].id, { code: "scrollToTarget('" + key + "', 60); console.log('" + key + "'); " });
+                chrome.tabs.executeScript(activeTabs[0].id, { code: "scrollToTarget('" + key + "', " + (offsetHeight + 10) + "); " });
             });
         });
         ansEle.appendChild(link);
-        ansList.appendChild(ansEle);
+        ansLinks.appendChild(ansEle);
     };
-    answerDOM.appendChild(ansList);
 
-};
+    return ansLinks;
+}
 
 
 async function displayHTML() {
