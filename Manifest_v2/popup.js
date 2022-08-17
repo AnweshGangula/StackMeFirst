@@ -6,6 +6,13 @@ let defaultOptions = {
     hlCmnts: false,
 }
 
+// Update the relevant fields with the new data.
+const setPopupContent = info => {
+    //  reference: https://stackoverflow.com/a/20023723/6908282
+    document.getElementById('summary').textContent = info.answerCount;
+    console.log("message sent")
+};
+
 async function displayHTML() {
     restore_options();
 
@@ -25,6 +32,14 @@ async function displayHTML() {
                 DisplayNotificaction("! Login to Stack Overflow to highlight your answers");
             }
         });
+
+        console.log("before message sent");
+        chrome.tabs.sendMessage(
+            activeTab.id,
+            { from: 'popup', subject: 'DOMInfo' },
+            // ...also specifying a callback to be called 
+            //    from the receiving end (content script).
+            setPopupContent);
         // if (website != "stackoverflow.com" || website != "extensions") {
         // // commenting this because the options page is not working as expected in edge://extensions/ page
         //     console.log(website);
