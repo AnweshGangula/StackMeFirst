@@ -37,3 +37,8 @@ input {
 	margin: 5px;
 	padding: 5px;
 }
+
+.featureOff {
+	background-color: firebrick;
+	color: white;
+}

@@ -5,6 +5,7 @@ chrome.runtime.onMessage.addListener(
         let content = request.content;
         let subject = request.subject;
         let browserTabId = sender.tab.id;
+
         if (subject == "needLogin") {
             chrome.browserAction.setIcon({ path: './icons/StackMeFirst.png', tabId: browserTabId });
             chrome.browserAction.setBadgeText({
@@ -15,7 +16,8 @@ chrome.runtime.onMessage.addListener(
                 chrome.browserAction.setBadgeBackgroundColor({ color: "firebrick", tabId: browserTabId });
             });
         }
-        else {
+
+        if (subject == "loggedIn") {
             let badgeText = `${content.answerCount}A,${content.commentCount}C`
             let pluginTitle = `${content.answerCount}Answers, ${content.commentCount}Comments\n`
 

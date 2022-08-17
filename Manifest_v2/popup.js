@@ -26,12 +26,14 @@ const SetPopupContent = info => {
 
     if (answerList !== "N/A") {
         answerDOM.title = "";
+        document.getElementById("ansOff").remove();
         ansCount.textContent = Object.keys(answerList).length;
         answerDOM.appendChild(MyStackLinks(answerList, "answer"));
     }
 
     if (commentList !== "N/A") {
         commDOM.title = "";
+        document.getElementById("commOff").remove();
         commCount.textContent = Object.keys(commentList).length;
         commDOM.appendChild(MyStackLinks(commentList, "comment"));
     }
@@ -109,7 +111,7 @@ async function save_options() {
         hlCmnts: hlComments,
     }
     chrome.storage.sync.set({ stackMeData: stackMeData }, function () {
-        UpdateStatus("Options Saved.");
+        UpdateStatus("Options Saved");
     });
 }
 
@@ -129,18 +131,18 @@ async function reset_options() {
         UpdateUI(defaultOptions)
     });
 
-    UpdateStatus("Options reset.");
+    UpdateStatus("Options reset");
     restore_options;
 }
 
 function UpdateStatus(statusText) {
     // Update status to let user know options were saved.
     var status = document.getElementById('status');
-    status.textContent = statusText;
+    status.textContent = statusText + " - Please reload the tab for accurate behaviour";
     status.style.visibility = "visible";
     setTimeout(function () {
         status.style.visibility = "hidden";
-    }, 750);
+    }, 5000);
 }
 
 function UpdateUI(Options) {
