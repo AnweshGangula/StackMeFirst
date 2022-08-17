@@ -36,15 +36,15 @@ chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
             });
         }
         else {
-            let answerCount = highlightAnswer(allAnswers, config.hlAns, config.srtAns);
-            let commentCount = highlightComments(allComments, config.hlCmnts);
+            let answerList = highlightAnswer(allAnswers, config.hlAns, config.srtAns);
+            let commentList = highlightComments(allComments, config.hlCmnts);
             chrome.runtime.sendMessage({
                 //  reference: https://stackoverflow.com/a/20021813/6908282
                 from: "contentScript",
                 subject: "loggedIn",
                 content: {
-                    answerCount: answerCount,
-                    commentCount: commentCount
+                    answerCount: Object.keys(answerList).length,
+                    commentCount: Object.keys(commentList).length
                 }
             }, function () {
                 // console.log("sending message");
@@ -56,12 +56,12 @@ chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
                 // Reference: https://stackoverflow.com/a/20023723/6908282
                 // First, validate the message's structure.
                 if ((msg.from === 'popup') && (msg.subject === 'popupDOM')) {
-                    console.log({ "abc": answerCount })
                     // Collect the necessary data. 
                     // (For your specific requirements `document.querySelectorAll(...)`
                     //  should be equivalent to jquery's `$(...)`.)
                     var popupContent = {
-                        answerCount: answerCount,
+                        answerList: answerList,
+                        commentList: commentList,
                     };
 
                     // Directly respond to the sender (popup), 
@@ -74,7 +74,7 @@ chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
 })
 
 function highlightAnswer(answers, hlAns, srtAns) {
-    let answerCount = 0;
+    let answerList = {};
     if (hlAns || srtAns) {
         for (let answer of answers) {
             userDetails = answer.querySelectorAll('.user-details');
@@ -88,8 +88,8 @@ function highlightAnswer(answers, hlAns, srtAns) {
                 if (hlAns) {
                     answerToHighlight.style.cssText = "padding: 5px; outline: 2px solid darkgreen; border-radius: 5px; margin: 20px 0;"
                 }
-                bool = true
-                answerCount++
+                console.log(answer)
+                answerList[answer.id] = answer;
             }
 
             if (currURL.indexOf(answer.dataset.answerid) > -1) {
@@ -98,26 +98,26 @@ function highlightAnswer(answers, hlAns, srtAns) {
             }
         }
     }
-    return answerCount;
+    return answerList;
 }
 
 function highlightComments(comments, hlCmnts) {
-    let commentCount = 0;
+    let commentList = [];
     if (hlCmnts == true) {
         for (let comment of comments) {
             commentUser = comment.children[1].children[0];
             if (commentUser.href == currUser.href) {
                 commentToHighlight = comment;
                 commentToHighlight.style.cssText = "padding: 5px; outline: 2px solid darkgreen; border-radius: 5px;"
-                bool = true
-                commentCount++
+                commentList.push(comment.innerHTML)
             }
         }
     }
     else {
-        commentCount = "?"
+        commentList = "?"
     }
-    return commentCount;
+
+    return commentList;
 }
 
 function insertAfter(referenceNode, newNode) {

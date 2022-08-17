@@ -17,8 +17,20 @@ let defaultOptions = {
 // Update the relevant fields with the new data.
 const SetPopupContent = info => {
     //  reference: https://stackoverflow.com/a/20023723/6908282
-    document.getElementById('summary').textContent = info.answerCount;
-    console.log("message sent")
+    let answerList = info.answerList;
+    let commentList = info.answerCount;
+    let answerDOM = document.getElementById('summary') //.textContent = info.answerCount;
+
+    console.log(answerList)
+    for (const [key, value] of Object.entries(answerList)) {
+        let ansEle = document.createElement("p");
+        let link = document.createElement("a");
+        link.setAttribute('href', "#" + key);
+        link.innerHTML = key;
+        ansEle.appendChild(link);
+        answerDOM.appendChild(ansEle);
+    };
+
 };
 
 async function displayHTML() {
