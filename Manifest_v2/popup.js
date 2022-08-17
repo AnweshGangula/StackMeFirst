@@ -18,20 +18,31 @@ let defaultOptions = {
 const SetPopupContent = info => {
     //  reference: https://stackoverflow.com/a/20023723/6908282
     let answerList = info.answerList;
-    let commentList = info.answerCount;
+    let commentList = info.commentList;
     let answerDOM = document.getElementById('ansList');
     let ansCount = document.getElementById('ansCount');
+    let commDOM = document.getElementById('commList');
+    let commCount = document.getElementById('commCount');
 
-    ansCount.textContent = Object.keys(answerList).length
-    answerDOM.appendChild(AnsLinks(answerList));
+    if (answerList !== "N/A") {
+        answerDOM.title = "";
+        ansCount.textContent = Object.keys(answerList).length;
+        answerDOM.appendChild(MyStackLinks(answerList, "answer"));
+    }
+
+    if (commentList !== "N/A") {
+        commDOM.title = "";
+        commCount.textContent = Object.keys(commentList).length;
+        commDOM.appendChild(MyStackLinks(commentList, "comment"));
+    }
 
 };
 
-function AnsLinks(answerList) {
-    let ansLinks = document.createElement("ul");
+function MyStackLinks(eleList, type) {
+    let myContent = document.createElement("ul");
     let offsetHeight = document.getElementsByTagName('header')[0].offsetHeight
 
-    for (const [key, value] of Object.entries(answerList)) {
+    for (const [key, value] of Object.entries(eleList)) {
         let ansEle = document.createElement("li");
         let link = document.createElement("a");
         link.setAttribute('href', "#" + key);
@@ -40,14 +51,14 @@ function AnsLinks(answerList) {
             window.event.preventDefault();
             chrome.tabs.query({ active: true, currentWindow: true }, function (activeTabs) {
                 //  reference: https://stackoverflow.com/a/38579393/6908282
-                chrome.tabs.executeScript(activeTabs[0].id, { code: "scrollToTarget('" + key + "', " + (offsetHeight + 10) + "); " });
+                chrome.tabs.executeScript(activeTabs[0].id, { code: "scrollToTarget('" + key + "', '" + type + "', " + (offsetHeight + 10) + "); " });
             });
         });
         ansEle.appendChild(link);
-        ansLinks.appendChild(ansEle);
+        myContent.appendChild(ansEle);
     };
 
-    return ansLinks;
+    return myContent;
 }
 
 
