@@ -14,10 +14,10 @@ chrome.runtime.onMessage.addListener(
         if (type == "needLogin") {
             chrome.browserAction.setIcon({ path: './icons/StackMeFirst.png', tabId: browserTabId });
             chrome.browserAction.setBadgeText({
+                text: "Login",
                 tabId: browserTabId,
-                text: "Login"
             }, () => {
-                chrome.browserAction.setTitle({ tabId: browserTabId, title: "Login to Stack Overflow to highlight your answers" });
+                chrome.browserAction.setTitle({ title: "Login to Stack Overflow to highlight your answers", tabId: browserTabId });
                 chrome.browserAction.setBadgeBackgroundColor({ color: "firebrick", tabId: browserTabId });
             });
         }
@@ -30,10 +30,10 @@ chrome.runtime.onMessage.addListener(
             if (badgeText == "0A,0C") return;
 
             chrome.browserAction.setBadgeText({
+                text: badgeText,
                 tabId: browserTabId,
-                text: badgeText
             }, () => {
-                chrome.browserAction.setTitle({ tabId: browserTabId, title: pluginTitle });
+                chrome.browserAction.setTitle({ title: pluginTitle, tabId: browserTabId });
                 chrome.browserAction.setBadgeBackgroundColor({ color: "green", tabId: browserTabId });
             });
         }
@@ -60,10 +60,10 @@ chrome.tabs.onUpdated.addListener(function (tabId, change, tab) {
 function onTabUpdate(tab) {
 
     if (tab.url == undefined || tab.url.match(/https:\/\/stackoverflow\.com\/*/) == null) {
-        // chrome.browserAction.setPopup({tabId: tabId, popup: ''});
+        // chrome.browserAction.setPopup({popup: '', tabId: tabId});
     }
     else {
-        // chrome.browserAction.setPopup({tabId: tabId, popup: '../html/popup.html'});
+        // chrome.browserAction.setPopup({popup: '../html/popup.html', tabId: tabId,});
 
     }
 }

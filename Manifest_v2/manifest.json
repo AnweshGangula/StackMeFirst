@@ -11,7 +11,7 @@
 	},
 	"options_ui": {
 		"page": "popup.html",
-		"open_in_tab": false
+		"open_in_tab": true
 	},
 	"content_scripts": [
 		{

@@ -18,7 +18,7 @@ chrome.runtime.onMessage.addListener(
                 text: "Login"
             }, () => {
                 chrome.action.setTitle({ tabId: browserTabId, title: "Login to Stack Overflow to highlight your answers" });
-                chrome.action.setBadgeBackgroundColor({ color: "firebrick", tabId: browserTabId });
+                chrome.action.setBadgeBackgroundColor({ tabId: browserTabId, color: "firebrick" });
             });
         }
         else {
@@ -34,7 +34,7 @@ chrome.runtime.onMessage.addListener(
                 text: badgeText
             }, () => {
                 chrome.action.setTitle({ tabId: browserTabId, title: pluginTitle });
-                chrome.action.setBadgeBackgroundColor({ color: "green", tabId: browserTabId });
+                chrome.action.setBadgeBackgroundColor({ tabId: browserTabId, color: "green" });
             });
         }
         sendResponse();
