@@ -122,19 +122,3 @@ function insertAfter(referenceNode, newNode) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 
-function scrollToTarget(eleId, type, headerHeight = 40) {
-    // reference: https://stackoverflow.com/a/67647864/6908282
-    // this function is being used in popupjs for sctoll to the answer/comment clicked dby the user
-    let element = document.getElementById(eleId);
-
-    if (type == "comment") {
-        element = document.getElementById(eleId).getElementsByClassName("comment-text")[0];
-    }
-    const elementPosition = element.getBoundingClientRect().top;
-    const offsetPosition = elementPosition - headerHeight;
-
-    window.scrollBy({
-        top: offsetPosition,
-        behavior: "smooth"
-    });
-}

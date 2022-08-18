@@ -88,7 +88,11 @@ function MyStackLinks(eleList, type) {
             window.event.preventDefault();
             chrome.tabs.query({ active: true, currentWindow: true }, function (activeTabs) {
                 //  reference: https://stackoverflow.com/a/38579393/6908282
-                chrome.tabs.executeScript(activeTabs[0].id, { code: "scrollToTarget('" + key + "', '" + type + "', " + (offsetHeight + 10) + "); " });
+                chrome.scripting.executeScript({
+                    target: { tabId: activeTabs[0].id, allFrames: true },
+                    args: [key, type, offsetHeight + 10],
+                    func: scrollToTarget
+                });
             });
         });
         ansEle.appendChild(link);
@@ -157,4 +161,21 @@ function DisplayNotificaction(warningText) {
         document.getElementById("notification").style.display = "block"
         document.getElementById("notification").textContent = warningText;
     }
+}
+
+function scrollToTarget(eleId, type, headerHeight = 40) {
+    // reference: https://stackoverflow.com/a/67647864/6908282
+    // this function is being used in popupjs for sctoll to the answer/comment clicked dby the user
+    let element = document.getElementById(eleId);
+
+    if (type == "comment") {
+        element = document.getElementById(eleId).getElementsByClassName("comment-text")[0];
+    }
+    const elementPosition = element.getBoundingClientRect().top;
+    const offsetPosition = elementPosition - headerHeight;
+
+    window.scrollBy({
+        top: offsetPosition,
+        behavior: "smooth"
+    });
 }

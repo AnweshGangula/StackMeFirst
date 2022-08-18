@@ -88,7 +88,13 @@ function MyStackLinks(eleList, type) {
             window.event.preventDefault();
             chrome.tabs.query({ active: true, currentWindow: true }, function (activeTabs) {
                 //  reference: https://stackoverflow.com/a/38579393/6908282
-                chrome.tabs.executeScript(activeTabs[0].id, { code: "scrollToTarget('" + key + "', '" + type + "', " + (offsetHeight + 10) + "); " });
+                chrome.tabs.executeScript(
+                    activeTabs[0].id,
+                    {
+                        allFrames: true,
+                        code: "scrollToTarget('" + key + "', '" + type + "', " + (offsetHeight + 10) + "); ",
+                    }
+                );
             });
         });
         ansEle.appendChild(link);
