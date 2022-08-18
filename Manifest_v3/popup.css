@@ -37,3 +37,10 @@ input {
 	margin: 5px;
 	padding: 5px;
 }
+
+.featureOff {
+	background-color: firebrick;
+	color: white;
+	padding: 0 5px;
+	text-align: center;
+}

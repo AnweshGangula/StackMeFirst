@@ -1,5 +1,13 @@
 // chrome.storage.sync.clear(); // use this while development to clear any existing options
 // let console = chrome.extension.getBackgroundPage().console;
+
+// Once the DOM is ready...
+window.addEventListener('DOMContentLoaded', () => {
+    displayHTML();
+    document.getElementById('btnSave').addEventListener('click', save_options);
+    document.getElementById('btnReset').addEventListener('click', reset_options);
+})
+
 let defaultOptions = {
     hlAns: true,
     srtAns: true,
@@ -19,12 +27,19 @@ async function displayHTML() {
         chrome.action.getBadgeText({ tabId: activeTab.id }, badgeText => {
             // https://stackoverflow.com/a/73178480/6908282
             if (badgeText == "" || badgeText == "0A0C" || !URLpathname.startsWith("/questions")) {
-                DisplayNotificaction("! Please open a Stack Overflow Question which has a answer submitted by you.");
+                DisplayNotificaction("! This question doesn't have any answers/comments submitted by you.");
             }
             if (badgeText == "Login") {
                 DisplayNotificaction("! Login to Stack Overflow to highlight your answers");
             }
         });
+
+        chrome.tabs.sendMessage(
+            activeTab.id,
+            { from: 'popup', subject: 'popupDOM' },
+            // ...also specifying a callback to be called 
+            //    from the receiving end (content script).
+            SetPopupContent);
         // if (website != "stackoverflow.com" || website != "extensions") {
         // // commenting this because the options page is not working as expected in edge://extensions/ page
         //     console.log(website);
@@ -34,10 +49,54 @@ async function displayHTML() {
 
 }
 
-document.addEventListener('DOMContentLoaded', displayHTML);
-document.getElementById('btnSave').addEventListener('click', save_options);
-document.getElementById('btnReset').addEventListener('click', reset_options);
+// Update the relevant fields with the new data.
+const SetPopupContent = info => {
+    //  reference: https://stackoverflow.com/a/20023723/6908282
+    let answerList = info.answerList;
+    let commentList = info.commentList;
+    let answerDOM = document.getElementById('ansList');
+    let ansCount = document.getElementById('ansCount');
+    let commDOM = document.getElementById('commList');
+    let commCount = document.getElementById('commCount');
 
+    if (answerList !== "N/A") {
+        answerDOM.title = "";
+        document.getElementById("ansOff").remove();
+        ansCount.textContent = Object.keys(answerList).length;
+        answerDOM.appendChild(MyStackLinks(answerList, "answer"));
+    }
+
+    if (commentList !== "N/A") {
+        commDOM.title = "";
+        document.getElementById("commOff").remove();
+        commCount.textContent = Object.keys(commentList).length;
+        commDOM.appendChild(MyStackLinks(commentList, "comment"));
+    }
+
+};
+
+function MyStackLinks(eleList, type) {
+    let myContent = document.createElement("ul");
+    let offsetHeight = document.getElementsByTagName('header')[0].offsetHeight
+
+    for (const [key, value] of Object.entries(eleList)) {
+        let ansEle = document.createElement("li");
+        let link = document.createElement("a");
+        link.setAttribute('href', "#" + key);
+        link.innerHTML = key;
+        link.addEventListener('click', function () {
+            window.event.preventDefault();
+            chrome.tabs.query({ active: true, currentWindow: true }, function (activeTabs) {
+                //  reference: https://stackoverflow.com/a/38579393/6908282
+                chrome.tabs.executeScript(activeTabs[0].id, { code: "scrollToTarget('" + key + "', '" + type + "', " + (offsetHeight + 10) + "); " });
+            });
+        });
+        ansEle.appendChild(link);
+        myContent.appendChild(ansEle);
+    };
+
+    return myContent;
+}
 
 // Saves options to chrome.storage
 // https://developer.chrome.com/docs/extensions/mv3/options/
@@ -51,7 +110,7 @@ async function save_options() {
         hlCmnts: hlComments,
     }
     chrome.storage.sync.set({ stackMeData: stackMeData }, function () {
-        UpdateStatus("Options Saved.");
+        UpdateStatus("Options Saved");
     });
 }
 
@@ -71,18 +130,18 @@ async function reset_options() {
         UpdateUI(defaultOptions)
     });
 
-    UpdateStatus("Options reset.");
+    UpdateStatus("Options reset");
     restore_options;
 }
 
 function UpdateStatus(statusText) {
     // Update status to let user know options were saved.
     var status = document.getElementById('status');
-    status.textContent = statusText;
+    status.textContent = statusText + " - Please reload the tab for accurate behaviour";
     status.style.visibility = "visible";
     setTimeout(function () {
         status.style.visibility = "hidden";
-    }, 750);
+    }, 5000);
 }
 
 function UpdateUI(Options) {

@@ -1,27 +1,23 @@
-var alertError = function (arg) {
-    if (arg.url.match(/https:\/\/stackoverflow\.com\/*/) == null) {
-        // console.log('Something');
-    }
-};
-
 chrome.runtime.onMessage.addListener(
     //  reference: https://stackoverflow.com/a/20021813/6908282
     function (request, sender, sendResponse) {
         // console.log("message received");
         let content = request.content;
-        let type = request.type;
+        let subject = request.subject;
         let browserTabId = sender.tab.id;
-        if (type == "needLogin") {
+
+        if (subject == "needLogin") {
             chrome.action.setIcon({ path: './icons/StackMeFirst.png', tabId: browserTabId });
             chrome.action.setBadgeText({
+                text: "Login",
                 tabId: browserTabId,
-                text: "Login"
             }, () => {
-                chrome.action.setTitle({ tabId: browserTabId, title: "Login to Stack Overflow to highlight your answers" });
-                chrome.action.setBadgeBackgroundColor({ tabId: browserTabId, color: "firebrick" });
+                chrome.action.setTitle({ title: "Login to Stack Overflow to highlight your answers", tabId: browserTabId });
+                chrome.action.setBadgeBackgroundColor({ color: "firebrick", tabId: browserTabId });
             });
         }
-        else {
+
+        if (subject == "loggedIn") {
             let badgeText = `${content.answerCount}A,${content.commentCount}C`
             let pluginTitle = `${content.answerCount}Answers, ${content.commentCount}Comments\n`
 
@@ -30,18 +26,16 @@ chrome.runtime.onMessage.addListener(
             if (badgeText == "0A,0C") return;
 
             chrome.action.setBadgeText({
+                text: badgeText,
                 tabId: browserTabId,
-                text: badgeText
             }, () => {
-                chrome.action.setTitle({ tabId: browserTabId, title: pluginTitle });
-                chrome.action.setBadgeBackgroundColor({ tabId: browserTabId, color: "green" });
+                chrome.action.setTitle({ title: pluginTitle, tabId: browserTabId });
+                chrome.action.setBadgeBackgroundColor({ color: "green", tabId: browserTabId });
             });
         }
         sendResponse();
     }
 );
-
-chrome.action.onClicked.addListener(alertError);
 
 // fires when active tab changes
 chrome.tabs.onActivated.addListener(function (info) {
@@ -60,10 +54,10 @@ chrome.tabs.onUpdated.addListener(function (tabId, change, tab) {
 function onTabUpdate(tab) {
 
     if (tab.url == undefined || tab.url.match(/https:\/\/stackoverflow\.com\/*/) == null) {
-        // chrome.action.setPopup({tabId: tabId, popup: ''});
+        // chrome.action.setPopup({popup: '', tabId: tabId});
     }
     else {
-        // chrome.action.setPopup({tabId: tabId, popup: '../html/popup.html'});
+        // chrome.action.setPopup({popup: '../html/popup.html', tabId: tabId,});
 
     }
 }
