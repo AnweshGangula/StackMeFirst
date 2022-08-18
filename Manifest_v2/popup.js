@@ -14,6 +14,41 @@ let defaultOptions = {
     hlCmnts: false,
 }
 
+async function displayHTML() {
+    restore_options();
+
+    chrome.tabs.query({ active: true, lastFocusedWindow: true }, function (tabs) {
+        // get current Tab - https://stackoverflow.com/a/29151677/6908282
+        let activeTab = tabs[0];
+        let activeURL = new URL(activeTab.url)
+        let currURL = activeURL.href // .at(-1)
+        let website = activeURL.host;
+        let URLpathname = activeURL.pathname;
+        chrome.browserAction.getBadgeText({ tabId: activeTab.id }, badgeText => {
+            // https://stackoverflow.com/a/73178480/6908282
+            if (badgeText == "" || badgeText == "0A0C" || !URLpathname.startsWith("/questions")) {
+                DisplayNotificaction("! This question doesn't have any answers/comments submitted by you.");
+            }
+            if (badgeText == "Login") {
+                DisplayNotificaction("! Login to Stack Overflow to highlight your answers");
+            }
+        });
+
+        chrome.tabs.sendMessage(
+            activeTab.id,
+            { from: 'popup', subject: 'popupDOM' },
+            // ...also specifying a callback to be called 
+            //    from the receiving end (content script).
+            SetPopupContent);
+        // if (website != "stackoverflow.com" || website != "extensions") {
+        // // commenting this because the options page is not working as expected in edge://extensions/ page
+        //     console.log(website);
+        //     document.getElementById("config").style.display = "none";
+        // }
+    });
+
+}
+
 // Update the relevant fields with the new data.
 const SetPopupContent = info => {
     //  reference: https://stackoverflow.com/a/20023723/6908282
@@ -61,42 +96,6 @@ function MyStackLinks(eleList, type) {
     };
 
     return myContent;
-}
-
-
-async function displayHTML() {
-    restore_options();
-
-    chrome.tabs.query({ active: true, lastFocusedWindow: true }, function (tabs) {
-        // get current Tab - https://stackoverflow.com/a/29151677/6908282
-        let activeTab = tabs[0];
-        let activeURL = new URL(activeTab.url)
-        let currURL = activeURL.href // .at(-1)
-        let website = activeURL.host;
-        let URLpathname = activeURL.pathname;
-        chrome.browserAction.getBadgeText({ tabId: activeTab.id }, badgeText => {
-            // https://stackoverflow.com/a/73178480/6908282
-            if (badgeText == "" || badgeText == "0A0C" || !URLpathname.startsWith("/questions")) {
-                DisplayNotificaction("! Please open a Stack Overflow Question which has a answer submitted by you.");
-            }
-            if (badgeText == "Login") {
-                DisplayNotificaction("! Login to Stack Overflow to highlight your answers");
-            }
-        });
-
-        chrome.tabs.sendMessage(
-            activeTab.id,
-            { from: 'popup', subject: 'popupDOM' },
-            // ...also specifying a callback to be called 
-            //    from the receiving end (content script).
-            SetPopupContent);
-        // if (website != "stackoverflow.com" || website != "extensions") {
-        // // commenting this because the options page is not working as expected in edge://extensions/ page
-        //     console.log(website);
-        //     document.getElementById("config").style.display = "none";
-        // }
-    });
-
 }
 
 // Saves options to chrome.storage

@@ -127,7 +127,7 @@ function scrollToTarget(eleId, type, headerHeight = 40) {
     // this function is being used in popupjs for sctoll to the answer/comment clicked dby the user
     let element = document.getElementById(eleId);
 
-    if (type = "comment") {
+    if (type == "comment") {
         element = document.getElementById(eleId).getElementsByClassName("comment-text")[0];
     }
     const elementPosition = element.getBoundingClientRect().top;
