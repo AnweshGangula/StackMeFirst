@@ -43,8 +43,8 @@ chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
                 from: "contentScript",
                 subject: "loggedIn",
                 content: {
-                    answerCount: answerList == "N/A" ? "?" : Object.keys(answerList).length,
-                    commentCount: commentList == "N/A" ? "?" : Object.keys(commentList).length
+                    answerCount: answerList == "N/A" ? "?" : answerList.length,
+                    commentCount: commentList == "N/A" ? "?" : commentList.length
                 }
             }, function () {
                 // console.log("sending message");
@@ -68,7 +68,7 @@ chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
 })
 
 function highlightAnswer(answers, hlAns, srtAns) {
-    let answerList = {};
+    let answerList = [];
     if (hlAns || srtAns) {
         for (let answer of answers) {
             userDetails = answer.querySelectorAll('.user-details');
@@ -82,7 +82,7 @@ function highlightAnswer(answers, hlAns, srtAns) {
                 if (hlAns) {
                     answerToHighlight.style.cssText = "padding: 5px; outline: 2px solid darkgreen; border-radius: 5px; margin: 20px 0;"
                 }
-                answerList[answer.id] = answer;
+                answerList.push(answer.id);
             }
 
             if (currURL.indexOf(answer.dataset.answerid) > -1) {
@@ -99,14 +99,14 @@ function highlightAnswer(answers, hlAns, srtAns) {
 }
 
 function highlightComments(comments, hlCmnts) {
-    let commentList = {};
+    let commentList = [];
     if (hlCmnts == true) {
         for (let comment of comments) {
             commentUser = comment.getElementsByClassName("comment-user")[0];
             if (commentUser.href == currUser.href) {
                 commentToHighlight = comment.getElementsByClassName("comment-text")[0];
                 commentToHighlight.style.cssText = "padding: 5px; outline: 2px solid darkgreen; border-radius: 5px;"
-                commentList[comment.id] = comment;
+                commentList.push(comment.id);
             }
         }
     }

@@ -57,7 +57,6 @@ async function displayHTML() {
 
 // Update the relevant fields with the new data.
 const SetPopupContent = info => {
-    console.log(info);
     //  reference: https://stackoverflow.com/a/20023723/6908282
     let answerList = info.answerList;
     let commentList = info.commentList;
@@ -67,27 +66,26 @@ const SetPopupContent = info => {
     let commCount = document.getElementById('commCount');
 
     if (answerList !== "N/A") {
-        ansCount.textContent = Object.keys(answerList).length;
+        ansCount.textContent = answerList.length;
         answerDOM.appendChild(MyStackLinks(answerList, "answer"));
     }
 
     if (commentList !== "N/A") {
-        commCount.textContent = Object.keys(commentList).length;
+        commCount.textContent = commentList.length;
         commDOM.appendChild(MyStackLinks(commentList, "comment"));
     }
 
 };
 
 function MyStackLinks(eleList, type) {
-    console.log(eleList)
     let myContent = document.createElement("ul");
     let offsetHeight = document.getElementsByTagName('header')[0].offsetHeight
 
-    for (const [key, value] of Object.entries(eleList)) {
+    eleList.forEach(eleID => {
         let ansEle = document.createElement("li");
         let link = document.createElement("a");
-        link.setAttribute('href', "#" + key);
-        link.innerHTML = key;
+        link.setAttribute('href', "#" + eleID);
+        link.innerHTML = eleID;
         link.addEventListener('click', function () {
             window.event.preventDefault();
             chrome.tabs.query({ active: true, currentWindow: true }, function (activeTabs) {
@@ -96,14 +94,14 @@ function MyStackLinks(eleList, type) {
                     activeTabs[0].id,
                     {
                         allFrames: true,
-                        code: "scrollToTarget('" + key + "', '" + type + "', " + (offsetHeight + 10) + "); ",
+                        code: "scrollToTarget('" + eleID + "', '" + type + "', " + (offsetHeight + 10) + "); ",
                     }
                 );
             });
         });
         ansEle.appendChild(link);
         myContent.appendChild(ansEle);
-    };
+    });
 
     return myContent;
 }
