@@ -1,4 +1,5 @@
-const currUser = document.getElementsByClassName("s-user-card")[0];
+const currUser = document.querySelector('[data-gps-track="profile_summary.click()"]');
+// const currUser = document.getElementsByClassName("s-user-card")[0]; // this is not correct if user I not logged in at this URL: https://stackoverflow.com/questions
 const allAnswers = document.getElementsByClassName('answer');
 const allComments = document.getElementsByClassName("comment");
 const answersHeader = document.getElementById('answers-header');

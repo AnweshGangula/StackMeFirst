@@ -84,14 +84,24 @@ function MyStackLinks(eleList, type) {
     eleList.forEach(eleID => {
         let ansEle = document.createElement("li");
         let link = document.createElement("a");
-        link.setAttribute('href', "#" + eleID);
-        link.innerHTML = eleID;
-        link.addEventListener('click', function () {
-            window.event.preventDefault();
-            chrome.tabs.query({ active: true, currentWindow: true }, function (activeTabs) {
+        link.textContent = eleID;
+        chrome.tabs.query({ active: true, currentWindow: true }, function (activeTabs) {
+            let activeTab = activeTabs[0];
+            let activeURL = new URL(activeTab.url);
+            let linkRef = '';
+            if (type == "comment") {
+                linkRef = activeURL.href + eleID;
+            }
+            if (type == "answer") {
+                const ref = eleID.replace("answer-", "");
+                linkRef = activeURL.href + "/" + ref + "#" + ref
+            }
+            link.setAttribute('href', linkRef);
+            link.addEventListener('click', function () {
+                window.event.preventDefault();
                 //  reference: https://stackoverflow.com/a/38579393/6908282
                 chrome.scripting.executeScript({
-                    target: { tabId: activeTabs[0].id, allFrames: true },
+                    target: { tabId: activeTab.id, allFrames: true },
                     args: [eleID, type, offsetHeight + 10],
                     func: scrollToTarget
                 });
