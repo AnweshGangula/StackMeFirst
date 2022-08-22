@@ -7,6 +7,9 @@ const currURL = window.location.href // .at(-1)
 const website = window.location.host;
 const isStackOverflow = website == "stackoverflow.com"
 
+let myAnsList;
+let myCmmtList;
+
 const queryParams = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
 });
@@ -37,35 +40,39 @@ chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
             });
         }
         else {
-            let answerList = highlightAnswer(allAnswers, config.hlAns, config.srtAns);
-            let commentList = highlightComments(allComments, config.hlCmnts);
+            myAnsList = highlightAnswer(allAnswers, config.hlAns, config.srtAns);
+            myCmmtList = highlightComments(allComments, config.hlCmnts);
             chrome.runtime.sendMessage({
                 //  reference: https://stackoverflow.com/a/20021813/6908282
                 from: "contentScript",
                 subject: "loggedIn",
                 content: {
-                    answerCount: answerList == "N/A" ? "?" : answerList.length,
-                    commentCount: commentList == "N/A" ? "?" : commentList.length
+                    answerCount: myAnsList == "N/A" ? "?" : myAnsList.length,
+                    commentCount: myCmmtList == "N/A" ? "?" : myCmmtList.length
                 }
             }, function () {
                 // console.log("sending message");
             });
 
-            chrome.runtime.onMessage.addListener((msg, sender, response) => {
-                // Reference: https://stackoverflow.com/a/20023723/6908282
-                // First, validate the message's structure.
-                if ((msg.from === 'popup') && (msg.subject === 'popupDOM')) {
-                    // send data to list answers in popup
-                    var popupContent = {
-                        answerList: answerList,
-                        commentList: commentList,
-                    };
-
-                    response(popupContent); // this sends popupContent dict to SetPopupContent function in popup.js
-                }
-            });
         }
     }
+    chrome.runtime.onMessage.addListener((msg, sender, response) => {
+        // Reference: https://stackoverflow.com/a/20023723/6908282
+        // First, validate the message's structure.
+        if ((msg.from === 'popup') && (msg.subject === 'popupDOM')) {
+            // send data to list answers in popup
+            var popupContent = {
+                metaData: {
+                    isStackOverflow: isStackOverflow,
+                    currUser: currUser,
+                },
+                answerList: myAnsList,
+                commentList: myCmmtList,
+            };
+
+            response(popupContent); // this sends popupContent dict to SetPopupContent function in popup.js
+        }
+    });
 })
 
 function highlightAnswer(answers, hlAns, srtAns) {
