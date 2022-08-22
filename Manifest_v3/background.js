@@ -19,11 +19,9 @@ chrome.runtime.onMessage.addListener(
 
         if (subject == "loggedIn") {
             let badgeText = `${content.answerCount}A,${content.commentCount}C`
-            let pluginTitle = `${content.answerCount}Answers, ${content.commentCount}Comments\n`
+            let pluginTitle = `${content.answerCount} Answers, ${content.commentCount} Comments\n`
 
             chrome.action.setIcon({ path: './icons/StackMeFirst.png', tabId: browserTabId });
-
-            if (badgeText == "0A,0C") return;
 
             chrome.action.setBadgeText({
                 text: badgeText,

@@ -4,7 +4,7 @@
 	"version": "2.1.0",
 	"manifest_version": 3,
 	"permissions": ["tabs", "webNavigation", "storage", "scripting"],
-	"host_permissions": ["http://stackoverflow.com/*", "https://stackoverflow.com/*"],
+	"host_permissions": ["*://*.stackoverflow.com/*"],
 	"action": {
 		"default_title": "Stack Me First",
 		"default_icon": "./icons/StackMeFirst_disabled.png",
@@ -16,7 +16,7 @@
 	},
 	"content_scripts": [
 		{
-			"matches": ["https://stackoverflow.com/*"],
+			"matches": ["*://*.stackoverflow.com/*"],
 			"js": ["contentScript.js"]
 		}
 	],

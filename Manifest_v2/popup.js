@@ -14,7 +14,7 @@ let defaultOptions = {
     hlCmnts: false,
 }
 
-async function displayHTML() {
+function displayHTML() {
     restore_options();
 
     chrome.tabs.query({ active: true, lastFocusedWindow: true }, function (tabs) {
@@ -26,29 +26,18 @@ async function displayHTML() {
         let URLpathname = activeURL.pathname;
         const isStackOverflow = website == "stackoverflow.com"
         if (isStackOverflow) {
-            chrome.browserAction.getBadgeText({ tabId: activeTab.id }, badgeText => {
-                // https://stackoverflow.com/a/73178480/6908282
-                if (badgeText == "" || badgeText == "0A0C" || !URLpathname.startsWith("/questions")) {
-                    DisplayNotificaction("! This question doesn't have any answers/comments submitted by you.");
-                }
-                if (badgeText == "Login") {
-                    DisplayNotificaction("! Login to Stack Overflow to highlight your answers");
-                }
-            });
-
             chrome.tabs.sendMessage(
-                activeTab.id,
+                tabs[0].id,
                 { from: 'popup', subject: 'popupDOM' },
                 // ...also specifying a callback to be called
                 //    from the receiving end (content script).
-                SetPopupContent);
+                info => SetPopupContent(tabs[0], info));
             // if (website != "stackoverflow.com" || website != "extensions") {
             // // commenting this because the options page is not working as expected in edge://extensions/ page
             //     console.log(website);
             //     document.getElementById("config").style.display = "none";
             // }
-        }
-        else {
+        } else {
             DisplayNotificaction("! Please Open a Stack Overflow website to use this addin.");
         }
     });
@@ -56,8 +45,19 @@ async function displayHTML() {
 }
 
 // Update the relevant fields with the new data.
-const SetPopupContent = info => {
+function SetPopupContent(currTab, info) {
     //  reference: https://stackoverflow.com/a/20023723/6908282
+    const metaData = info.metaData;
+    if (metaData.currUser == undefined) {
+        DisplayNotificaction("! Login to Stack Overflow to highlight your answers");
+        return;
+    }
+
+    if (info.commentList.length == 0 && info.answerList.length == 0) {
+        DisplayNotificaction("! This question doesn't have any answers/comments submitted by you.");
+        return;
+    }
+
     let answerList = info.answerList;
     let commentList = info.commentList;
     let answerDOM = document.getElementById('ansList');
@@ -67,38 +67,46 @@ const SetPopupContent = info => {
 
     if (answerList !== "N/A") {
         ansCount.textContent = answerList.length;
-        answerDOM.appendChild(MyStackLinks(answerList, "answer"));
+        answerDOM.appendChild(MyStackLinks(answerList, "answer", currTab));
     }
 
     if (commentList !== "N/A") {
         commCount.textContent = commentList.length;
-        commDOM.appendChild(MyStackLinks(commentList, "comment"));
+        commDOM.appendChild(MyStackLinks(commentList, "comment", currTab));
     }
-
 };
 
-function MyStackLinks(eleList, type) {
+function MyStackLinks(eleList, type, tab) {
     let myContent = document.createElement("ul");
     let offsetHeight = document.getElementsByTagName('header')[0].offsetHeight
 
     eleList.forEach(eleID => {
         let ansEle = document.createElement("li");
         let link = document.createElement("a");
-        link.setAttribute('href', "#" + eleID);
-        link.innerHTML = eleID;
+        link.textContent = eleID;
+
+        let activeURL = new URL(tab.url);
+        let linkRef = '';
+        if (type == "comment") {
+            linkRef = activeURL.href + eleID;
+        }
+        if (type == "answer") {
+            const ref = eleID.replace("answer-", "");
+            linkRef = activeURL.href + "/" + ref + "#" + ref
+        }
+        link.setAttribute('href', linkRef);
         link.addEventListener('click', function () {
             window.event.preventDefault();
-            chrome.tabs.query({ active: true, currentWindow: true }, function (activeTabs) {
-                //  reference: https://stackoverflow.com/a/38579393/6908282
-                chrome.tabs.executeScript(
-                    activeTabs[0].id,
-                    {
-                        allFrames: true,
-                        code: "scrollToTarget('" + eleID + "', '" + type + "', " + (offsetHeight + 10) + "); ",
-                    }
-                );
-            });
+            //  reference: https://stackoverflow.com/a/38579393/6908282
+            chrome.tabs.executeScript(
+                tab.id,
+                {
+                    allFrames: false,
+                    code: "scrollToTarget('" + eleID + "', '" + type + "', " + (offsetHeight + 10) + "); ",
+                }
+            );
         });
+
         ansEle.appendChild(link);
         myContent.appendChild(ansEle);
     });
@@ -161,12 +169,14 @@ function UpdateUI(Options) {
         const msg = "highlighting answers is disabled"
         document.getElementById('ansList').title = msg;
         document.getElementById("ansOff").textContent = msg;
+        document.getElementById('ansCount').textContent = "?";
     }
 
     if (!Options.hlCmnts) {
         const msg = "highlighting comments is disabled"
         document.getElementById('commList').title = msg;
         document.getElementById("commOff").textContent = msg;
+        document.getElementById('commCount').textContent = "?";
     }
 }
 
