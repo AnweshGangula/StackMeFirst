@@ -60,7 +60,7 @@ chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
                         commentList: commentList,
                     };
 
-                    response(popupContent);
+                    response(popupContent); // this sends popupContent dict to SetPopupContent function in popup.js
                 }
             });
         }

@@ -59,8 +59,8 @@ chrome.storage.sync.get({ 'stackMeData': defaultOptions }, result => {
                         answerList: answerList,
                         commentList: commentList,
                     };
-
-                    response(popupContent);
+                    response(popupContent); // this sends popupContent dict to SetPopupContent function in popup.js
+                    console.log(popupContent)
                 }
             });
         }
@@ -126,9 +126,11 @@ function scrollToTarget(eleId, type, headerHeight = 40) {
     // reference: https://stackoverflow.com/a/67647864/6908282
     // this function is being used in popupjs for sctoll to the answer/comment clicked dby the user
     let element = document.getElementById(eleId);
+    element.classList.add("highlighted-post");
 
     if (type == "comment") {
         element = document.getElementById(eleId).getElementsByClassName("comment-text")[0];
+        element.style.backgroundColor = 'var(--yellow-100)' // comments have a transition for backgroundColor. So settimeout below is technically not necessary
     }
     const elementPosition = element.getBoundingClientRect().top;
     const offsetPosition = elementPosition - headerHeight;
@@ -137,4 +139,9 @@ function scrollToTarget(eleId, type, headerHeight = 40) {
         top: offsetPosition,
         behavior: "smooth"
     });
+
+    setTimeout(function () {
+        element.classList.remove("highlighted-post");
+        element.style.backgroundColor = ''
+    }, 3000);
 }

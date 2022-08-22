@@ -25,6 +25,15 @@ input {
 	margin-left: 5px;
 }
 
+hr {
+	/* reference: https://stackoverflow.com/a/5619906/6908282 */
+	margin-top: 5px;
+	height: 2px;
+	border: none;
+	background: lightgray;
+	width: 500px;
+}
+
 #buttons {
 	margin: 10px;
 	text-align: end;

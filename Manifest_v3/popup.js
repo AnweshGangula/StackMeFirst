@@ -24,27 +24,33 @@ async function displayHTML() {
         let currURL = activeURL.href // .at(-1)
         let website = activeURL.host;
         let URLpathname = activeURL.pathname;
-        chrome.action.getBadgeText({ tabId: activeTab.id }, badgeText => {
-            // https://stackoverflow.com/a/73178480/6908282
-            if (badgeText == "" || badgeText == "0A0C" || !URLpathname.startsWith("/questions")) {
-                DisplayNotificaction("! This question doesn't have any answers/comments submitted by you.");
-            }
-            if (badgeText == "Login") {
-                DisplayNotificaction("! Login to Stack Overflow to highlight your answers");
-            }
-        });
+        const isStackOverflow = website == "stackoverflow.com"
+        if (isStackOverflow) {
+            chrome.action.getBadgeText({ tabId: activeTab.id }, badgeText => {
+                // https://stackoverflow.com/a/73178480/6908282
+                if (badgeText == "" || badgeText == "0A0C" || !URLpathname.startsWith("/questions")) {
+                    DisplayNotificaction("! This question doesn't have any answers/comments submitted by you.");
+                }
+                if (badgeText == "Login") {
+                    DisplayNotificaction("! Login to Stack Overflow to highlight your answers");
+                }
+            });
 
-        chrome.tabs.sendMessage(
-            activeTab.id,
-            { from: 'popup', subject: 'popupDOM' },
-            // ...also specifying a callback to be called 
-            //    from the receiving end (content script).
-            SetPopupContent);
-        // if (website != "stackoverflow.com" || website != "extensions") {
-        // // commenting this because the options page is not working as expected in edge://extensions/ page
-        //     console.log(website);
-        //     document.getElementById("config").style.display = "none";
-        // }
+            chrome.tabs.sendMessage(
+                activeTab.id,
+                { from: 'popup', subject: 'popupDOM' },
+                // ...also specifying a callback to be called
+                //    from the receiving end (content script).
+                SetPopupContent);
+            // if (website != "stackoverflow.com" || website != "extensions") {
+            // // commenting this because the options page is not working as expected in edge://extensions/ page
+            //     console.log(website);
+            //     document.getElementById("config").style.display = "none";
+            // }
+        }
+        else {
+            DisplayNotificaction("! Please Open a Stack Overflow website to use this addin.");
+        }
     });
 
 }
@@ -60,15 +66,11 @@ const SetPopupContent = info => {
     let commCount = document.getElementById('commCount');
 
     if (answerList !== "N/A") {
-        answerDOM.title = "";
-        document.getElementById("ansOff").remove();
         ansCount.textContent = Object.keys(answerList).length;
         answerDOM.appendChild(MyStackLinks(answerList, "answer"));
     }
 
     if (commentList !== "N/A") {
-        commDOM.title = "";
-        document.getElementById("commOff").remove();
         commCount.textContent = Object.keys(commentList).length;
         commDOM.appendChild(MyStackLinks(commentList, "comment"));
     }
@@ -152,6 +154,18 @@ function UpdateUI(Options) {
     document.getElementById('hlAnswers').checked = Options.hlAns;
     document.getElementById('srtAns').checked = Options.srtAns;
     document.getElementById('hlComments').checked = Options.hlCmnts;
+
+    if (!Options.hlAns) {
+        const msg = "highlighting answers is disabled"
+        document.getElementById('ansList').title = msg;
+        document.getElementById("ansOff").textContent = msg;
+    }
+
+    if (!Options.hlCmnts) {
+        const msg = "highlighting comments is disabled"
+        document.getElementById('commList').title = msg;
+        document.getElementById("commOff").textContent = msg;
+    }
 }
 
 function DisplayNotificaction(warningText) {
@@ -167,9 +181,11 @@ function scrollToTarget(eleId, type, headerHeight = 40) {
     // reference: https://stackoverflow.com/a/67647864/6908282
     // this function is being used in popupjs for sctoll to the answer/comment clicked dby the user
     let element = document.getElementById(eleId);
+    element.classList.add("highlighted-post"); // CSS class 'highlighted-post' has a animation called 
 
     if (type == "comment") {
         element = document.getElementById(eleId).getElementsByClassName("comment-text")[0];
+        element.style.backgroundColor = 'var(--yellow-100)' // comments have a transition for backgroundColor. So settimeout to remove backgroundcolor triggers that's transition
     }
     const elementPosition = element.getBoundingClientRect().top;
     const offsetPosition = elementPosition - headerHeight;
@@ -178,4 +194,9 @@ function scrollToTarget(eleId, type, headerHeight = 40) {
         top: offsetPosition,
         behavior: "smooth"
     });
+
+    setTimeout(function () {
+        element.classList.remove("highlighted-post");
+        element.style.backgroundColor = ''
+    }, 3000);
 }

@@ -24,33 +24,40 @@ async function displayHTML() {
         let currURL = activeURL.href // .at(-1)
         let website = activeURL.host;
         let URLpathname = activeURL.pathname;
-        chrome.browserAction.getBadgeText({ tabId: activeTab.id }, badgeText => {
-            // https://stackoverflow.com/a/73178480/6908282
-            if (badgeText == "" || badgeText == "0A0C" || !URLpathname.startsWith("/questions")) {
-                DisplayNotificaction("! This question doesn't have any answers/comments submitted by you.");
-            }
-            if (badgeText == "Login") {
-                DisplayNotificaction("! Login to Stack Overflow to highlight your answers");
-            }
-        });
+        const isStackOverflow = website == "stackoverflow.com"
+        if (isStackOverflow) {
+            chrome.browserAction.getBadgeText({ tabId: activeTab.id }, badgeText => {
+                // https://stackoverflow.com/a/73178480/6908282
+                if (badgeText == "" || badgeText == "0A0C" || !URLpathname.startsWith("/questions")) {
+                    DisplayNotificaction("! This question doesn't have any answers/comments submitted by you.");
+                }
+                if (badgeText == "Login") {
+                    DisplayNotificaction("! Login to Stack Overflow to highlight your answers");
+                }
+            });
 
-        chrome.tabs.sendMessage(
-            activeTab.id,
-            { from: 'popup', subject: 'popupDOM' },
-            // ...also specifying a callback to be called 
-            //    from the receiving end (content script).
-            SetPopupContent);
-        // if (website != "stackoverflow.com" || website != "extensions") {
-        // // commenting this because the options page is not working as expected in edge://extensions/ page
-        //     console.log(website);
-        //     document.getElementById("config").style.display = "none";
-        // }
+            chrome.tabs.sendMessage(
+                activeTab.id,
+                { from: 'popup', subject: 'popupDOM' },
+                // ...also specifying a callback to be called
+                //    from the receiving end (content script).
+                SetPopupContent);
+            // if (website != "stackoverflow.com" || website != "extensions") {
+            // // commenting this because the options page is not working as expected in edge://extensions/ page
+            //     console.log(website);
+            //     document.getElementById("config").style.display = "none";
+            // }
+        }
+        else {
+            DisplayNotificaction("! Please Open a Stack Overflow website to use this addin.");
+        }
     });
 
 }
 
 // Update the relevant fields with the new data.
 const SetPopupContent = info => {
+    console.log(info);
     //  reference: https://stackoverflow.com/a/20023723/6908282
     let answerList = info.answerList;
     let commentList = info.commentList;
@@ -60,15 +67,11 @@ const SetPopupContent = info => {
     let commCount = document.getElementById('commCount');
 
     if (answerList !== "N/A") {
-        answerDOM.title = "";
-        document.getElementById("ansOff").remove();
         ansCount.textContent = Object.keys(answerList).length;
         answerDOM.appendChild(MyStackLinks(answerList, "answer"));
     }
 
     if (commentList !== "N/A") {
-        commDOM.title = "";
-        document.getElementById("commOff").remove();
         commCount.textContent = Object.keys(commentList).length;
         commDOM.appendChild(MyStackLinks(commentList, "comment"));
     }
@@ -76,6 +79,7 @@ const SetPopupContent = info => {
 };
 
 function MyStackLinks(eleList, type) {
+    console.log(eleList)
     let myContent = document.createElement("ul");
     let offsetHeight = document.getElementsByTagName('header')[0].offsetHeight
 
@@ -154,6 +158,18 @@ function UpdateUI(Options) {
     document.getElementById('hlAnswers').checked = Options.hlAns;
     document.getElementById('srtAns').checked = Options.srtAns;
     document.getElementById('hlComments').checked = Options.hlCmnts;
+
+    if (!Options.hlAns) {
+        const msg = "highlighting answers is disabled"
+        document.getElementById('ansList').title = msg;
+        document.getElementById("ansOff").textContent = msg;
+    }
+
+    if (!Options.hlCmnts) {
+        const msg = "highlighting comments is disabled"
+        document.getElementById('commList').title = msg;
+        document.getElementById("commOff").textContent = msg;
+    }
 }
 
 function DisplayNotificaction(warningText) {
