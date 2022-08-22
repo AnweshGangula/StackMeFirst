@@ -31,7 +31,7 @@ function displayHTML() {
                 { from: 'popup', subject: 'popupDOM' },
                 // ...also specifying a callback to be called
                 //    from the receiving end (content script).
-                SetPopupContent);
+                info => SetPopupContent(tabs[0], info));
             // if (website != "stackoverflow.com" || website != "extensions") {
             // // commenting this because the options page is not working as expected in edge://extensions/ page
             //     console.log(website);
@@ -45,7 +45,7 @@ function displayHTML() {
 }
 
 // Update the relevant fields with the new data.
-const SetPopupContent = info => {
+function SetPopupContent(currTab, info) {
     //  reference: https://stackoverflow.com/a/20023723/6908282
     const metaData = info.metaData;
     if (metaData.currUser == undefined) {
@@ -67,16 +67,16 @@ const SetPopupContent = info => {
 
     if (answerList !== "N/A") {
         ansCount.textContent = answerList.length;
-        answerDOM.appendChild(MyStackLinks(answerList, "answer"));
+        answerDOM.appendChild(MyStackLinks(answerList, "answer", currTab));
     }
 
     if (commentList !== "N/A") {
         commCount.textContent = commentList.length;
-        commDOM.appendChild(MyStackLinks(commentList, "comment"));
+        commDOM.appendChild(MyStackLinks(commentList, "comment", currTab));
     }
 };
 
-function MyStackLinks(eleList, type) {
+function MyStackLinks(eleList, type, tab) {
     let myContent = document.createElement("ul");
     let offsetHeight = document.getElementsByTagName('header')[0].offsetHeight
 
@@ -84,30 +84,29 @@ function MyStackLinks(eleList, type) {
         let ansEle = document.createElement("li");
         let link = document.createElement("a");
         link.textContent = eleID;
-        chrome.tabs.query({ active: true, currentWindow: true }, function (activeTabs) {
-            let activeTab = activeTabs[0];
-            let activeURL = new URL(activeTab.url);
-            let linkRef = '';
-            if (type == "comment") {
-                linkRef = activeURL.href + eleID;
-            }
-            if (type == "answer") {
-                const ref = eleID.replace("answer-", "");
-                linkRef = activeURL.href + "/" + ref + "#" + ref
-            }
-            link.setAttribute('href', linkRef);
-            link.addEventListener('click', function () {
-                window.event.preventDefault();
-                //  reference: https://stackoverflow.com/a/38579393/6908282
-                chrome.tabs.executeScript(
-                    activeTabs[0].id,
-                    {
-                        allFrames: true,
-                        code: "scrollToTarget('" + eleID + "', '" + type + "', " + (offsetHeight + 10) + "); ",
-                    }
-                );
-            });
+
+        let activeURL = new URL(tab.url);
+        let linkRef = '';
+        if (type == "comment") {
+            linkRef = activeURL.href + eleID;
+        }
+        if (type == "answer") {
+            const ref = eleID.replace("answer-", "");
+            linkRef = activeURL.href + "/" + ref + "#" + ref
+        }
+        link.setAttribute('href', linkRef);
+        link.addEventListener('click', function () {
+            window.event.preventDefault();
+            //  reference: https://stackoverflow.com/a/38579393/6908282
+            chrome.tabs.executeScript(
+                tab.id,
+                {
+                    allFrames: false,
+                    code: "scrollToTarget('" + eleID + "', '" + type + "', " + (offsetHeight + 10) + "); ",
+                }
+            );
         });
+
         ansEle.appendChild(link);
         myContent.appendChild(ansEle);
     });
