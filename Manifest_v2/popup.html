@@ -17,9 +17,26 @@
 		</header>
 
 		<div>
-			<p id="notification">! Please open a Stack Overflow Question which has a answer submitted by you.</p>
+			<p id="notification">! This question doesn't have any answers/comments submitted by you.</p>
 		</div>
 
+		<div id="myStack">
+			<details id="ansList" open>
+				<summary>
+					<b><span id="ansCount">?</span> Answer/s</b> posted by you:
+				</summary>
+
+				<p id="ansOff" class="featureOff"></p>
+			</details>
+
+			<details id="commList" open>
+				<summary>
+					<b><span id="commCount">?</span> Comment/s</b> posted by you:
+				</summary>
+				<p id="commOff" class="featureOff"></p>
+			</details>
+		</div>
+		<hr>
 		<div id="config">
 			<form id="options">
 				<fieldset>
@@ -28,9 +45,12 @@
 					<div>
 						<input type="checkbox" id="hlAnswers" name="hlAnswers" value="Highlight my Answers" />
 						<label for="hlAnswers">Highlight my Answers</label>
+					</div>
+					<div>
 						<input type="checkbox" id="srtAns" name="srtAns" value="Bring My Answers to Top" />
 						<label for="srtAns">Bring My Answers to Top</label><br />
-					</div>
+					<div>
+					<br>
 					<div>
 						<input type="checkbox" id="hlComments" name="hlComments" value="Highlight Comments" />
 						<label for="hlComments">Highlight my Comments</label><br />

@@ -25,6 +25,14 @@ input {
 	margin-left: 5px;
 }
 
+hr {
+	/* reference: https://stackoverflow.com/a/5619906/6908282 */
+	margin-top: 5px;
+	height: 2px;
+	border: none;
+	background: lightgray;
+}
+
 #buttons {
 	margin: 10px;
 	text-align: end;
@@ -36,4 +44,11 @@ input {
 	background-color: darkseagreen;
 	margin: 5px;
 	padding: 5px;
+}
+
+.featureOff {
+	background-color: firebrick;
+	color: white;
+	padding: 0 5px;
+	text-align: center;
 }
