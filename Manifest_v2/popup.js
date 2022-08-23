@@ -31,7 +31,9 @@ function displayHTML() {
                 { from: 'popup', subject: 'popupDOM' },
                 // ...also specifying a callback to be called
                 //    from the receiving end (content script).
-                info => SetPopupContent(tabs[0], info));
+                (info) => {
+                    SetPopupContent(tabs[0], info);
+                });
             // if (website != "stackoverflow.com" || website != "extensions") {
             // // commenting this because the options page is not working as expected in edge://extensions/ page
             //     console.log(website);
@@ -97,14 +99,7 @@ function MyStackLinks(eleList, type, tab) {
         link.setAttribute('href', linkRef);
         link.addEventListener('click', function () {
             window.event.preventDefault();
-            //  reference: https://stackoverflow.com/a/38579393/6908282
-            chrome.tabs.executeScript(
-                tab.id,
-                {
-                    allFrames: false,
-                    code: "scrollToTarget('" + eleID + "', '" + type + "', " + (offsetHeight + 10) + "); ",
-                }
-            );
+            ExecuteScroll(tab.id, eleID, type, offsetHeight);
         });
 
         ansEle.appendChild(link);
@@ -187,4 +182,15 @@ function DisplayNotificaction(warningText) {
         document.getElementById("notification").style.display = "block"
         document.getElementById("notification").textContent = warningText;
     }
+}
+
+function ExecuteScroll(tabId, eleID, type, offsetHeight) {
+    //  reference: https://stackoverflow.com/a/38579393/6908282
+    chrome.tabs.executeScript(
+        tabId,
+        {
+            allFrames: false,
+            code: "scrollToTarget('" + eleID + "', '" + type + "', " + (offsetHeight + 10) + "); ",
+        }
+    );
 }
