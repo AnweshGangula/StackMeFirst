@@ -31,7 +31,9 @@ function displayHTML() {
                 { from: 'popup', subject: 'popupDOM' },
                 // ...also specifying a callback to be called
                 //    from the receiving end (content script).
-                info => SetPopupContent(tabs[0], info));
+                (info) => {
+                    SetPopupContent(tabs[0], info);
+                });
             // if (website != "stackoverflow.com" || website != "extensions") {
             // // commenting this because the options page is not working as expected in edge://extensions/ page
             //     console.log(website);
@@ -84,6 +86,7 @@ function MyStackLinks(eleList, type, tab) {
         let ansEle = document.createElement("li");
         let link = document.createElement("a");
         link.textContent = eleID;
+
         let activeURL = new URL(tab.url);
         let linkRef = '';
         if (type == "comment") {
@@ -96,13 +99,9 @@ function MyStackLinks(eleList, type, tab) {
         link.setAttribute('href', linkRef);
         link.addEventListener('click', function () {
             window.event.preventDefault();
-            //  reference: https://stackoverflow.com/a/38579393/6908282
-            chrome.scripting.executeScript({
-                target: { tabId: tab.id, allFrames: false },
-                args: [eleID, type, offsetHeight + 10],
-                func: scrollToTarget
-            });
+            ExecuteScroll(tab.id, eleID, type, offsetHeight);
         });
+
         ansEle.appendChild(link);
         myContent.appendChild(ansEle);
     });
@@ -184,6 +183,16 @@ function DisplayNotificaction(warningText) {
         document.getElementById("notification").textContent = warningText;
     }
 }
+
+function ExecuteScroll(tabId, eleID, type, offsetHeight) {
+    //  reference: https://stackoverflow.com/a/70932186/6908282
+    chrome.scripting.executeScript({
+        target: { tabId: tabId, allFrames: false },
+        args: [eleID, type, offsetHeight + 10],
+        func: scrollToTarget
+    });
+}
+
 
 function scrollToTarget(eleId, type, headerHeight = 40) {
     // reference: https://stackoverflow.com/a/67647864/6908282

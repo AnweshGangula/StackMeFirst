@@ -71,7 +71,7 @@ if (isStackOverflow) {
             // send data to list answers in popup
             var popupContent = {
                 metaData: {
-                    currUser: currUser,
+                    currUser: currUser.href,
                 },
                 answerList: myAnsList,
                 commentList: myCmmtList,
@@ -101,7 +101,7 @@ function highlightAnswer(answers, userConfig, DOM_Opts) {
                     insertAfter(answersHeader, answerToHighlight);
                 }
                 if (hlAns) {
-                    answerToHighlight.style.cssText = "padding: 5px; outline: 2px solid darkgreen; border-radius: 5px; margin: 20px 0;"
+                    answerToHighlight.style.cssText = "border: 2px solid darkgreen; border-radius: 5px; margin: 20px 0; padding-left: 5px;"
                 }
                 answerList.push(answer.id);
             }
@@ -129,7 +129,7 @@ function highlightComments(comments, userConfig, DOM_Opts) {
             commentUser = comment.getElementsByClassName("comment-user")[0];
             if (commentUser.href == currUser.href) {
                 commentToHighlight = comment.getElementsByClassName("comment-text")[0];
-                commentToHighlight.style.cssText = "padding: 5px; outline: 2px solid darkgreen; border-radius: 5px;"
+                commentToHighlight.style.cssText = "border: 2px solid darkgreen; border-radius: 5px; margin: 5px;"
                 commentList.push(comment.id);
             }
         }
