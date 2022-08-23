@@ -71,7 +71,7 @@ if (isStackOverflow) {
             // send data to list answers in popup
             var popupContent = {
                 metaData: {
-                    currUser: currUser,
+                    currUser: currUser.href,
                 },
                 answerList: myAnsList,
                 commentList: myCmmtList,

@@ -21,7 +21,6 @@ if (isStackOverflow) {
             // console.log("sending message");
         });
     } else {
-        console.log("ABC")
         const allAnswers = document.getElementsByClassName('answer');
         const allComments = document.getElementsByClassName("comment");
         const answersHeader = document.getElementById('answers-header');
@@ -71,7 +70,7 @@ if (isStackOverflow) {
             // send data to list answers in popup
             var popupContent = {
                 metaData: {
-                    currUser: currUser,
+                    currUser: currUser.href,
                 },
                 answerList: myAnsList,
                 commentList: myCmmtList,
