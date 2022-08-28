@@ -51,13 +51,17 @@ function SetPopupContent(currTab, info) {
     //  reference: https://stackoverflow.com/a/20023723/6908282
     const metaData = info.metaData;
     if (metaData.currUser == undefined) {
-        DisplayNotificaction("! Login to Stack Overflow to highlight your answers");
+        DisplayNotificaction("! Login to Stack Overflow to highlight your answers", "warn");
         return;
     }
 
     if (info.commentList.length == 0 && info.answerList.length == 0) {
-        DisplayNotificaction("! This question doesn't have any answers/comments submitted by you.");
+        DisplayNotificaction("! This question doesn't have any answers/comments submitted by you.", "warn");
         return;
+    }
+
+    if (metaData.currUser == metaData.quesAuthor) {
+        DisplayNotificaction("You are the author of this question.", "notify");
     }
 
     let answerList = info.answerList;
@@ -175,12 +179,28 @@ function UpdateUI(Options) {
     }
 }
 
-function DisplayNotificaction(warningText) {
+function DisplayNotificaction(warningText, type) {
+
+    let notifyEle = document.getElementById("notification")
+    let bgColor, txtColor;
+    if (type == "warn") {
+        bgColor = "mistyrose";
+        txtColor = "firebrick"
+    } else if (type == "notify") {
+        bgColor = "palegreen";
+        txtColor = "darkgreen"
+    }
+
     if (warningText == "") {
-        document.getElementById("notification").style.display = "none";
+        notifyEle.style.display = "none";
     } else {
-        document.getElementById("notification").style.display = "block"
-        document.getElementById("notification").textContent = warningText;
+        notifyEle.textContent = warningText;
+        notifyEle.style.cssText = `
+            display: block; 
+            background-color: ${bgColor};
+            color: ${txtColor};
+            border-color: ${txtColor};
+        `
     }
 }
 
