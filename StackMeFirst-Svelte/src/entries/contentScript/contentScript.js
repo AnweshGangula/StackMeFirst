@@ -103,14 +103,14 @@ export function highlightStack() {
       // First, validate the message's structure.
       if ((msg.from === 'popup') && (msg.subject === 'popupDOM')) {
         // send data to list answers in popup
+        const userURL = currUser == null ? undefined : currUser.href;
         var popupContent = {
           metaData: {
-            currUser: currUser.href,
+            currUser: userURL,
           },
           answerList: myAnsList,
           commentList: myCmmtList,
         };
-
         response(popupContent); // this sends popupContent dict to SetPopupContent function in popup.js
       }
     });
