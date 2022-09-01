@@ -1,6 +1,7 @@
 <script>
 	// chrome.storage.sync.clear(); // use this while development to clear any existing options
 	// let console = chrome.extension.getBackgroundPage().console;
+	import Popup from "./Popup.svelte";
 
 	export let pageType = "popup";
 
@@ -19,7 +20,6 @@
 
 	function displayHTML() {
 		restore_options();
-		isOptions();
 
 		chrome.tabs.query({ active: true, lastFocusedWindow: true }, function (tabs) {
 			// get current Tab - https://stackoverflow.com/a/29151677/6908282
@@ -48,12 +48,6 @@
 				DisplayNotificaction("! Please Open a Stack Overflow website to use this addin.");
 			}
 		});
-	}
-
-	function isOptions() {
-		if (pageType == "options") {
-			document.getElementById("myStack").remove();
-		}
 	}
 
 	// Update the relevant fields with the new data.
@@ -170,23 +164,25 @@
 		document.getElementById("srtAns").checked = Options.srtAns;
 		document.getElementById("hlComments").checked = Options.hlCmnts;
 
-		if (!Options.hlAns) {
-			const msg = "highlighting answers is disabled";
-			document.getElementById("ansList").title = msg;
-			document.getElementById("ansOff").textContent = msg;
-			document.getElementById("ansCount").textContent = "?";
-		}
+		if (pageType != "options") {
+			if (!Options.hlAns) {
+				const msg = "highlighting answers is disabled";
+				document.getElementById("ansList").title = msg;
+				document.getElementById("ansOff").textContent = msg;
+				document.getElementById("ansCount").textContent = "?";
+			}
 
-		if (!Options.hlCmnts) {
-			const msg = "highlighting comments is disabled";
-			document.getElementById("commList").title = msg;
-			document.getElementById("commOff").textContent = msg;
-			document.getElementById("commCount").textContent = "?";
+			if (!Options.hlCmnts) {
+				const msg = "highlighting comments is disabled";
+				document.getElementById("commList").title = msg;
+				document.getElementById("commOff").textContent = msg;
+				document.getElementById("commCount").textContent = "?";
+			}
 		}
 	}
 
 	function DisplayNotificaction(warningText) {
-		if (warningText == "") {
+		if (warningText == "" || pageType == "options") {
 			document.getElementById("notification").style.display = "none";
 		} else {
 			document.getElementById("notification").style.display = "block";
@@ -228,10 +224,7 @@
 	}
 </script>
 
-<div id="stackEnd" />
+<Popup {pageType} />
 
 <style>
-	h1 {
-		margin: 5px;
-	}
 </style>

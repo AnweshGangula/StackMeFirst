@@ -5,66 +5,8 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Stack Me First</title>
-
-		<link rel="stylesheet" href="popup.css" />
 	</head>
 	<body>
-		<header>
-			<img id="logo" src="/icons/StackMeFirst.png" alt="Stack Me First Logo" width="20" height="20" />
-			<h1>Stack Me First</h1>
-		</header>
-
-		<main>
-			<div>
-				<p id="notification">! This question doesn't have any answers/comments submitted by you.</p>
-			</div>
-			<div id="myStack">
-				<details id="ansList" open>
-					<summary>
-						<b><span id="ansCount">0</span> Answer/s</b> posted by you:
-					</summary>
-
-					<p id="ansOff" class="featureOff"></p>
-				</details>
-
-				<details id="commList" open>
-					<summary>
-						<b><span id="commCount">0</span> Comment/s</b> posted by you:
-					</summary>
-					<p id="commOff" class="featureOff"></p>
-				</details>
-				<hr />
-			</div>
-
-			<div id="config">
-				<form id="options">
-					<fieldset>
-						<legend>Configure Settings</legend>
-
-						<div>
-							<input type="checkbox" id="hlAnswers" name="hlAnswers" value="Highlight my Answers" />
-							<label for="hlAnswers">Highlight my Answers</label>
-						</div>
-						<br />
-						<div>
-							<input type="checkbox" id="srtAns" name="srtAns" value="Bring My Answers to Top" />
-							<label for="srtAns">Bring My Answers to Top</label><br />
-						</div>
-						<div>
-							<input type="checkbox" id="hlComments" name="hlComments" value="Highlight Comments" />
-							<label for="hlComments">Highlight my Comments</label><br />
-						</div>
-					</fieldset>
-				</form>
-
-				<div id="buttons">
-					<button id="btnSave" type="button">Save</button>
-					<button id="btnReset" type="button">Reset</button>
-				</div>
-
-				<p id="status"></p>
-			</div>
-		</main>
 		<script type="module" src="./main.js"></script>
 	</body>
 </html>
