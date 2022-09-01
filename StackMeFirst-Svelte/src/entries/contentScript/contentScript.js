@@ -37,7 +37,6 @@ export function highlightStack() {
   const website = window.location.host;
   const isStackOverflow = website == "stackoverflow.com"
 
-
   if (isStackOverflow) {
     const currUser = document.querySelector('[data-gps-track="profile_summary.click()"]');
     // const currUser = document.getElementsByClassName("s-user-card")[0]; // this is not correct if user I not logged in at this URL: https://stackoverflow.com/questions
@@ -114,8 +113,6 @@ export function highlightStack() {
         response(popupContent); // this sends popupContent dict to SetPopupContent function in popup.js
       }
     });
-  } else {
-    browser.action.setIcon({ path: '../icons/StackMeFirst_disabled.png', tabId: browserTabId });
   }
 
   function highlightAnswer(answers, userConfig, DOM_Opts) {
