@@ -1,9 +1,9 @@
 {
-	"name": "vite-web-extension",
-	"version": "1.0.0",
-	"displayName": "Vite Web Extension",
-	"author": "@samrum/vite-plugin-web-extension",
-	"description": "A @samrum/vite-plugin-web-extension web extension",
+	"name": "stack-me-first",
+	"version": "2.1.0",
+	"displayName": "Stack Me First",
+	"author": "Anwesh Gangula",
+	"description": "Highlight and sort answers posted by current user in Stack overflow to the top",
 	"scripts": {
 		"build": "vite build",
 		"watch": "vite build --watch",
