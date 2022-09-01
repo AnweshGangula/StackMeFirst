@@ -1,47 +1,16 @@
 import browser from "webextension-polyfill";
 
-export default async function renderContent(
-  cssPaths,
-  render = (_appRoot) => { }
-) {
-  const appContainer = document.createElement("div");
-  const shadowRoot = appContainer.attachShadow({
-    mode: import.meta.env.DEV ? "open" : "closed",
-  });
-  const appRoot = document.createElement("div");
-
-  if (import.meta.hot) {
-    const { addViteStyleTarget } = await import(
-      "@samrum/vite-plugin-web-extension/client"
-    );
-
-    await addViteStyleTarget(shadowRoot);
-  } else {
-    cssPaths.forEach((cssPath) => {
-      const styleEl = document.createElement("link");
-      styleEl.setAttribute("rel", "stylesheet");
-      styleEl.setAttribute("href", browser.runtime.getURL(cssPath));
-      shadowRoot.appendChild(styleEl);
-    });
-  }
-
-  shadowRoot.appendChild(appRoot);
-  document.body.appendChild(appContainer);
-
-  render(appRoot);
-}
-
-
-export function highlightStack() {
+export default function highlightStack() {
   const currURL = window.location.href // .at(-1)
   const website = window.location.host;
   const isStackOverflow = website == "stackoverflow.com"
 
   if (isStackOverflow) {
-    const currUser = document.querySelector('[data-gps-track="profile_summary.click()"]');
+    const currUser = document.querySelector(".s-topbar--item.s-user-card");
+    const isQuestion = window.location.pathname.startsWith("/questions/")
+    let question, quesAuthor;
     // const currUser = document.getElementsByClassName("s-user-card")[0]; // this is not correct if user I not logged in at this URL: https://stackoverflow.com/questions
-    let myAnsList;
-    let myCmmtList;
+    let myAnsList, myCmmtList;
 
     if (currUser == undefined) {
       browser.runtime.sendMessage({
@@ -54,7 +23,9 @@ export function highlightStack() {
       }).then(function () {
         // console.log("sending message");
       });
-    } else {
+    } else if (isQuestion) {
+      question = document.getElementById('question');
+      quesAuthor = document.querySelector(".post-signature.owner").getElementsByTagName("a")[0];
       const allAnswers = document.getElementsByClassName('answer');
       const allComments = document.getElementsByClassName("comment");
       const answersHeader = document.getElementById('answers-header');
@@ -103,9 +74,11 @@ export function highlightStack() {
       if ((msg.from === 'popup') && (msg.subject === 'popupDOM')) {
         // send data to list answers in popup
         const userURL = currUser == null ? undefined : currUser.href;
+        const quesAuth = quesAuthor == null ? undefined : quesAuthor.href;
         var popupContent = {
           metaData: {
             currUser: userURL,
+            quesAuthor: quesAuth,
           },
           answerList: myAnsList,
           commentList: myCmmtList,
@@ -179,5 +152,35 @@ export function highlightStack() {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
   }
 
+}
 
+export async function renderContent(
+  cssPaths,
+  render = (_appRoot) => { }
+) {
+  const appContainer = document.createElement("div");
+  const shadowRoot = appContainer.attachShadow({
+    mode: import.meta.env.DEV ? "open" : "closed",
+  });
+  const appRoot = document.createElement("div");
+
+  if (import.meta.hot) {
+    const { addViteStyleTarget } = await import(
+      "@samrum/vite-plugin-web-extension/client"
+    );
+
+    await addViteStyleTarget(shadowRoot);
+  } else {
+    cssPaths.forEach((cssPath) => {
+      const styleEl = document.createElement("link");
+      styleEl.setAttribute("rel", "stylesheet");
+      styleEl.setAttribute("href", browser.runtime.getURL(cssPath));
+      shadowRoot.appendChild(styleEl);
+    });
+  }
+
+  shadowRoot.appendChild(appRoot);
+  document.body.appendChild(appContainer);
+
+  render(appRoot);
 }

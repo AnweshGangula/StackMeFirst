@@ -1,4 +1,4 @@
-import renderContent, { highlightStack } from "../contentScript";
+import highlightStack, { renderContent } from "../contentScript";
 import App from "./App.svelte";
 
 // renderContent(import.meta.PLUGIN_WEB_EXT_CHUNK_CSS_PATHS, (appRoot) => {
