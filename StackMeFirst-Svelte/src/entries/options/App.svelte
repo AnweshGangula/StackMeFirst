@@ -1,17 +1,8 @@
 <script>
-import PageContent from "~/lib/PageContent.svelte";
+	import PageContent from "~/lib/PageContent.svelte";
 </script>
 
-<main>
-  <PageContent> Options </PageContent>
-</main>
+<PageContent />
 
 <style>
-main {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
 </style>
