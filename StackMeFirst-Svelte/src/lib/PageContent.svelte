@@ -1,6 +1,7 @@
 <script>
-	// chrome.storage.sync.clear(); // use this while development to clear any existing options
-	// let console = chrome.extension.getBackgroundPage().console;
+	import browser from "webextension-polyfill";
+	// browser.storage.sync.clear(); // use this while development to clear any existing options
+	// let console = browser.extension.getBackgroundPage().console;
 	import Popup from "./Popup.svelte";
 
 	export let pageType = "popup";
@@ -21,7 +22,7 @@
 	function displayHTML() {
 		restore_options();
 
-		chrome.tabs.query({ active: true, lastFocusedWindow: true }, function (tabs) {
+		browser.tabs.query({ active: true, lastFocusedWindow: true }).then(function (tabs) {
 			// get current Tab - https://stackoverflow.com/a/29151677/6908282
 			let activeTab = tabs[0];
 			let activeURL = new URL(activeTab.url);
@@ -30,12 +31,10 @@
 			let URLpathname = activeURL.pathname;
 			const isStackOverflow = website == "stackoverflow.com";
 			if (isStackOverflow) {
-				chrome.tabs.sendMessage(
-					tabs[0].id,
-					{ from: "popup", subject: "popupDOM" },
+				browser.tabs.sendMessage(tabs[0].id, { from: "popup", subject: "popupDOM" }).then(
 					// ...also specifying a callback to be called
 					//    from the receiving end (content script).
-					(info) => {
+					function (info) {
 						SetPopupContent(tabs[0], info);
 					}
 				);
@@ -113,8 +112,7 @@
 		return myContent;
 	}
 
-	// Saves options to chrome.storage
-	// https://developer.chrome.com/docs/extensions/mv3/options/
+	// https://developer.browser.com/docs/extensions/mv3/options/
 	async function save_options() {
 		const hlAnswers = document.getElementById("hlAnswers").checked;
 		const srtAns = document.getElementById("srtAns").checked;
@@ -124,23 +122,22 @@
 			srtAns: srtAns,
 			hlCmnts: hlComments,
 		};
-		chrome.storage.sync.set({ stackMeData: stackMeData }, function () {
+		browser.storage.sync.set({ stackMeData: stackMeData }).then(function () {
 			UpdateStatus("Options Saved");
 		});
 	}
 
-	// Restores select box and checkbox state using the preferences
-	// stored in chrome.storage.
+	// Restores select box and checkbox state using the preferences stored in browser.storage.
 	function restore_options() {
 		// https://developer.chrome.com/docs/extensions/mv3/options/
-		chrome.storage.sync.get({ stackMeData: defaultOptions }, (result) => {
+		browser.storage.sync.get({ stackMeData: defaultOptions }).then(function (result) {
 			// if stackMeData is not found, use defaultOptions for a first time user
 			UpdateUI(result.stackMeData);
 		});
 	}
 
 	async function reset_options() {
-		chrome.storage.sync.set({ stackMeData: defaultOptions }, () => {
+		browser.storage.sync.set({ stackMeData: defaultOptions }).then(() => {
 			// reset to defaultOptions
 			UpdateUI(defaultOptions);
 		});
@@ -193,7 +190,7 @@
 
 	function ExecuteScroll(tabId, eleID, type, offsetHeight) {
 		//  reference: https://stackoverflow.com/a/70932186/6908282
-		chrome.scripting.executeScript({
+		browser.scripting.executeScript({
 			target: { tabId: tabId, allFrames: false },
 			args: [eleID, type, offsetHeight + 10],
 			func: scrollToTarget,

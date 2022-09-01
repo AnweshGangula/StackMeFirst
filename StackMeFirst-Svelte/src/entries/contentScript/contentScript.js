@@ -45,14 +45,14 @@ export function highlightStack() {
     let myCmmtList;
 
     if (currUser == undefined) {
-      chrome.runtime.sendMessage({
+      browser.runtime.sendMessage({
         //  reference: https://stackoverflow.com/a/20021813/6908282
         from: "contentScript",
         subject: "needLogin",
         content: {
           currUser: currUser,
         }
-      }, function () {
+      }).then(function () {
         // console.log("sending message");
       });
     } else {
@@ -75,7 +75,7 @@ export function highlightStack() {
         hlCmnts: false,
       }
 
-      chrome.storage.sync.get({ 'stackMeData': defaultConfig }, result => {
+      browser.storage.sync.get({ 'stackMeData': defaultConfig }).then(function (result) {
         let userConfig = result.stackMeData;
         // You can set default for values not in the storage by providing a dictionary:
         // reference: https://stackoverflow.com/a/26898749/6908282
@@ -83,7 +83,7 @@ export function highlightStack() {
 
         myAnsList = highlightAnswer(allAnswers, userConfig, DOM_Opts);
         myCmmtList = highlightComments(allComments, userConfig, DOM_Opts);
-        chrome.runtime.sendMessage({
+        browser.runtime.sendMessage({
           //  reference: https://stackoverflow.com/a/20021813/6908282
           from: "contentScript",
           subject: "loggedIn",
@@ -91,14 +91,14 @@ export function highlightStack() {
             answerCount: myAnsList == "N/A" ? "?" : myAnsList.length,
             commentCount: myCmmtList == "N/A" ? "?" : myCmmtList.length
           }
-        }, function () {
+        }).then(function () {
           // console.log("sending message");
         });
 
       })
     }
 
-    chrome.runtime.onMessage.addListener((msg, sender, response) => {
+    browser.runtime.onMessage.addListener((msg, sender, response) => {
       // Reference: https://stackoverflow.com/a/20023723/6908282
       // First, validate the message's structure.
       if ((msg.from === 'popup') && (msg.subject === 'popupDOM')) {
@@ -114,6 +114,8 @@ export function highlightStack() {
         response(popupContent); // this sends popupContent dict to SetPopupContent function in popup.js
       }
     });
+  } else {
+    browser.action.setIcon({ path: '../icons/StackMeFirst_disabled.png', tabId: browserTabId });
   }
 
   function highlightAnswer(answers, userConfig, DOM_Opts) {
