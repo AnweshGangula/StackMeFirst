@@ -2,6 +2,8 @@
 	// chrome.storage.sync.clear(); // use this while development to clear any existing options
 	// let console = chrome.extension.getBackgroundPage().console;
 
+	export let pageType = "popup";
+
 	// Once the DOM is ready...
 	window.addEventListener("DOMContentLoaded", () => {
 		displayHTML();
@@ -17,6 +19,7 @@
 
 	function displayHTML() {
 		restore_options();
+		isOptions();
 
 		chrome.tabs.query({ active: true, lastFocusedWindow: true }, function (tabs) {
 			// get current Tab - https://stackoverflow.com/a/29151677/6908282
@@ -45,6 +48,12 @@
 				DisplayNotificaction("! Please Open a Stack Overflow website to use this addin.");
 			}
 		});
+	}
+
+	function isOptions() {
+		if (pageType == "options") {
+			document.getElementById("myStack").remove();
+		}
 	}
 
 	// Update the relevant fields with the new data.

@@ -2,7 +2,7 @@
 	import PageContent from "~/lib/PageContent.svelte";
 </script>
 
-<PageContent />
+<PageContent pageType="options" />
 
 <style>
 </style>
