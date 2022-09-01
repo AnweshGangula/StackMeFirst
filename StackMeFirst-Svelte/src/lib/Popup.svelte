@@ -11,7 +11,7 @@
 	<div>
 		<p id="notification">! This question doesn't have any answers/comments submitted by you.</p>
 	</div>
-	{#if pageType != "options"}
+	{#if pageType == "popup"}
 		<div id="myStack">
 			<details id="ansList" open>
 				<summary>

@@ -152,7 +152,8 @@
 	function UpdateStatus(statusText) {
 		// Update status to let user know options were saved.
 		var status = document.getElementById("status");
-		status.textContent = statusText + " - Please reload the tab for accurate behaviour";
+		const statusSuffix = pageType == "options" ? "" : " - Please reload the tab for accurate behaviour";
+		status.textContent = statusText + statusSuffix;
 		status.style.visibility = "visible";
 		setTimeout(function () {
 			status.style.visibility = "hidden";
