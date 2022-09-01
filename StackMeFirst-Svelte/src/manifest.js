@@ -23,7 +23,7 @@ const sharedManifest = {
     page: "src/entries/options/index.html",
     open_in_tab: true,
   },
-  permissions: ["tabs", "storage"],
+  permissions: ["tabs", "storage", "scripting"],
 };
 
 const browserAction = {

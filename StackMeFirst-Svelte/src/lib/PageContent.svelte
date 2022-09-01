@@ -219,7 +219,7 @@
 	}
 </script>
 
-<hr />
+<div id="stackEnd" />
 
 <style>
 	h1 {
