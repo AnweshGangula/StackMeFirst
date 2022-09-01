@@ -1,5 +1,6 @@
 <script>
 	export let pageType = "popup";
+	export let isStackOverflow = true;
 </script>
 
 <header>
@@ -11,7 +12,7 @@
 	<div>
 		<p id="notification">! This question doesn't have any answers/comments submitted by you.</p>
 	</div>
-	{#if pageType == "popup"}
+	{#if pageType == "popup" && isStackOverflow}
 		<div id="myStack">
 			<details id="ansList" open>
 				<summary>
