@@ -1,0 +1,54 @@
+body {
+	width: 350px;
+	/* height: 300px; */
+}
+
+header {
+	display: flex;
+	align-items: center;
+}
+
+#logo {
+	margin: 5px;
+}
+
+#notification {
+	display: none;
+	margin: 20px 5px;
+	padding: 5px;
+	background-color: mistyrose;
+	color: firebrick;
+	border: 1px solid firebrick;
+}
+
+input {
+	margin-left: 5px;
+}
+
+hr {
+	/* reference: https://stackoverflow.com/a/5619906/6908282 */
+	margin-top: 5px;
+	height: 2px;
+	border: none;
+	background: lightgray;
+}
+
+#buttons {
+	margin: 10px;
+	text-align: end;
+}
+
+#status {
+	visibility: hidden;
+	color: green;
+	background-color: darkseagreen;
+	margin: 5px;
+	padding: 5px;
+}
+
+.featureOff {
+	background-color: firebrick;
+	color: white;
+	padding: 0 5px;
+	text-align: center;
+}

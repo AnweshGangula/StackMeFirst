@@ -4,10 +4,9 @@ const isStackOverflow = website == "stackoverflow.com"
 
 
 if (isStackOverflow) {
-    const currUser = document.querySelector('[data-gps-track="profile_summary.click()"]');
+    const currUser = document.querySelector(".s-topbar--item.s-user-card");
     // const currUser = document.getElementsByClassName("s-user-card")[0]; // this is not correct if user I not logged in at this URL: https://stackoverflow.com/questions
-    let myAnsList;
-    let myCmmtList;
+    let myAnsList, myCmmtList;
 
     if (currUser == undefined) {
         chrome.runtime.sendMessage({
@@ -21,7 +20,8 @@ if (isStackOverflow) {
             // console.log("sending message");
         });
     } else {
-        console.log("ABC")
+        const question = document.getElementById('question');
+        const quesAuthor = document.querySelector(".post-signature.owner").getElementsByTagName("a")[0];
         const allAnswers = document.getElementsByClassName('answer');
         const allComments = document.getElementsByClassName("comment");
         const answersHeader = document.getElementById('answers-header');
@@ -62,24 +62,25 @@ if (isStackOverflow) {
             });
 
         })
+
+        chrome.runtime.onMessage.addListener((msg, sender, response) => {
+            // Reference: https://stackoverflow.com/a/20023723/6908282
+            // First, validate the message's structure.
+            if ((msg.from === 'popup') && (msg.subject === 'popupDOM')) {
+                // send data to list answers in popup
+                var popupContent = {
+                    metaData: {
+                        currUser: currUser.href,
+                        quesAuthor: quesAuthor.href,
+                    },
+                    answerList: myAnsList,
+                    commentList: myCmmtList,
+                };
+
+                response(popupContent); // this sends popupContent dict to SetPopupContent function in popup.js
+            }
+        });
     }
-
-    chrome.runtime.onMessage.addListener((msg, sender, response) => {
-        // Reference: https://stackoverflow.com/a/20023723/6908282
-        // First, validate the message's structure.
-        if ((msg.from === 'popup') && (msg.subject === 'popupDOM')) {
-            // send data to list answers in popup
-            var popupContent = {
-                metaData: {
-                    currUser: currUser.href,
-                },
-                answerList: myAnsList,
-                commentList: myCmmtList,
-            };
-
-            response(popupContent); // this sends popupContent dict to SetPopupContent function in popup.js
-        }
-    });
 }
 
 function highlightAnswer(answers, userConfig, DOM_Opts) {
