@@ -3,8 +3,10 @@
 	// browser.storage.sync.clear(); // use this while development to clear any existing options
 	// let console = browser.extension.getBackgroundPage().console;
 	import Popup from "./Popup.svelte";
+	import Notification from "./Notification.svelte";
 
 	export let pageType = "popup";
+	let warningText, warningType;
 	let isStackOverflow;
 
 	// Once the DOM is ready...
@@ -46,7 +48,8 @@
 				//     document.getElementById("config").style.display = "none";
 				// }
 			} else {
-				DisplayNotificaction("! Please Open a Stack Overflow Question to use this addin.", "warn");
+				warningText = "! Please Open a Stack Overflow question to use this addin.";
+				warningType = "warn";
 			}
 		});
 	}
@@ -56,17 +59,20 @@
 		//  reference: https://stackoverflow.com/a/20023723/6908282
 		const metaData = info.metaData;
 		if (metaData.currUser == undefined) {
-			DisplayNotificaction("! Login to Stack Overflow to highlight your answers", "warn");
+			warningText = "! Login to Stack Overflow to highlight your answers";
+			warningType = "warn";
 			return;
 		}
 
 		if (info.commentList.length == 0 && info.answerList.length == 0) {
-			DisplayNotificaction("! This question doesn't have any answers/comments submitted by you.", "warn");
+			warningText = "! This question doesn't have any answers/comments submitted by you.";
+			warningType = "warn";
 			return;
 		}
 
 		if (metaData.currUser == metaData.quesAuthor) {
-			DisplayNotificaction("You are the author of this question.", "notify");
+			warningText = "You are the author of this question.";
+			warningType = "notify";
 		}
 
 		let answerList = info.answerList;
@@ -231,7 +237,9 @@
 	}
 </script>
 
-<Popup {pageType} {isStackOverflow} />
+<Popup {pageType} {isStackOverflow}>
+	<Notification {warningText} {warningType} />
+</Popup>
 
 <style>
 </style>

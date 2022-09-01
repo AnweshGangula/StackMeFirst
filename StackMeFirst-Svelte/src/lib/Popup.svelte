@@ -9,9 +9,7 @@
 </header>
 
 <main>
-	<div>
-		<p id="notification">! This question doesn't have any answers/comments submitted by you.</p>
-	</div>
+	<slot />
 	{#if pageType == "popup" && isStackOverflow}
 		<div id="myStack">
 			<details id="ansList" open>
@@ -75,15 +73,6 @@
 
 	:global(#logo) {
 		margin: 5px;
-	}
-
-	#notification {
-		display: none;
-		margin: 20px 5px;
-		padding: 5px;
-		background-color: mistyrose;
-		color: firebrick;
-		border: 1px solid firebrick;
 	}
 
 	input {
