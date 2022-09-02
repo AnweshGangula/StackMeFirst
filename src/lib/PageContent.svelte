@@ -5,6 +5,9 @@
 	import Popup from "./Popup.svelte";
 	import Notification from "./Notification.svelte";
 
+	const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION);
+	import scrollToTarget from "../entries/executeScript/executeScript";
+
 	export let pageType = "popup";
 	let warningText, warningType;
 	let isStackOverflow;
@@ -206,38 +209,19 @@
 	}
 
 	function ExecuteScroll(tabId, eleID, type, offsetHeight) {
-		//  reference: https://stackoverflow.com/a/70932186/6908282
-		browser.scripting.executeScript({
-			target: { tabId: tabId, allFrames: false },
-			args: [eleID, type, offsetHeight + 10],
-			func: scrollToTarget,
-		});
-	}
-
-	function scrollToTarget(eleId, type, headerHeight = 40) {
-		// reference: https://stackoverflow.com/a/67647864/6908282
-		// this function is being used in popupjs for sctoll to the answer/comment clicked dby the user
-		if (type == "question") {
-			window.scrollTo({ top: 0, behavior: "smooth" });
-		} else {
-			let element = document.getElementById(eleId);
-			element.classList.add("highlighted-post"); // CSS class 'highlighted-post' has a animation called
-
-			if (type == "comment") {
-				element = document.getElementById(eleId).getElementsByClassName("comment-text")[0];
-				element.style.backgroundColor = "var(--yellow-100)"; // comments have a transition for backgroundColor. So settimeout to remove backgroundcolor triggers that's transition
-			}
-			const elementPosition = element.getBoundingClientRect().top;
-			const offsetPosition = elementPosition - headerHeight;
-			window.scrollBy({
-				top: offsetPosition,
-				behavior: "smooth",
+		if ((manifestVer = 3)) {
+			//  reference: https://stackoverflow.com/a/70932186/6908282
+			browser.scripting.executeScript({
+				target: { tabId: tabId, allFrames: false },
+				args: [eleID, type, offsetHeight + 10],
+				func: scrollToTarget,
 			});
-
-			setTimeout(function () {
-				element.classList.remove("highlighted-post");
-				element.style.backgroundColor = "";
-			}, 3000);
+		} else {
+			//  reference: https://stackoverflow.com/a/38579393/6908282
+			browser.tabs.executeScript(tabId, {
+				allFrames: false,
+				code: "scrollToTarget('" + eleID + "', '" + type + "', " + (offsetHeight + 10) + "); ",
+			});
 		}
 	}
 </script>

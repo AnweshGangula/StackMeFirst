@@ -13,7 +13,7 @@ and handles style injection for HMR and build modes.
 
 Otherwise, the project functions just like a regular Vite project.
 
-To switch between Manifest V2 and Manifest V3 builds, use the MANIFEST_VERSION environment variable defined in `.env`
+To switch between Manifest V2 and Manifest V3 builds, use the VITE_MANIFEST_VERSION environment variable defined in `.env`
 
 HMR during development is currently not supported in Manifest V3 (see [@samrum/vite-plugin-web-extension](https://github.com/samrum/vite-plugin-web-extension)).
 Instead, when working with Manifest V3 builds, you can use watch mode.

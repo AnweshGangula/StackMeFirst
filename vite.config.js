@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       svelte(),
       webExtension({
-        manifest: getManifest(Number(env.MANIFEST_VERSION)),
+        manifest: getManifest(Number(env.VITE_MANIFEST_VERSION)),
       }),
     ],
     resolve: {
