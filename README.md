@@ -2,29 +2,7 @@
 
 This is a browser Extension (currently only available in Microsoft Edge & Firefox) that - Highlights and sorts any answers posted by current user in Stack overflow to the top of the list of answers.
 
-All of the current users answers will be highlighted with a green border and listed at the top of all answer's.
-
-<details>
-    <summary>personal note: steps to update Edge extension version</summary>
-
-In order to update the version - you need tot zip all the relevant files ([manifest.json](manifest.json), [contentScript.js](contentScript.js), [background.js](background.js), [./icons](./icons) ) that represents your extension package and Upload the extension package in [Microsoft Partner Center][1].
-
-use below script to create zip from terminal:
-Note: below scripts won't work if you have the plugin loaded in browser
-
-[Powershell script][3]:
-
-```powershell
-Compress-Archive -Force -Path manifest.json, background.js, contentScript.js, Icons -CompressionLevel Optimal -DestinationPath StackMeFirst.Zip
-```
-
-[using tar.exe in Command Prompt][2]:
-
-```bash
-tar -acf StackMeFirst.zip -c manifest.json background.js contentScript.js Icons
-```
-
-</details>
+All of the current user's answers will be highlighted with a green border and listed at the top of all answer's.
 
 ## Screenshots
 
@@ -32,6 +10,32 @@ tar -acf StackMeFirst.zip -c manifest.json background.js contentScript.js Icons
 ![Screenshot 2](./Assets/Screenshots/Screenshot%202.png)
 ![Screenshot 3](./Assets/Screenshots/Screenshot%203.png)
 
-[1]: https://partner.microsoft.com/en-us/dashboard/microsoftedge/overview
-[2]: https://stackoverflow.com/a/68728992/6908282
-[3]: https://stackoverflow.com/a/55173830/6908282
+---
+
+# StackMeFirst-Svelte.js
+
+The code in this [./src](./src) uses [@samrum/vite-plugin-web-extension][1] npm package to build browser extension for Manifest V2 & V3 using Svelte + Vite.
+
+## Chrome:
+
+[Manifest version 2 is no longer being maintained][2]
+
+> As of January 17, 2022 Chrome Web Store has stopped accepting new Manifest V2 extensions. We strongly recommend that new extensions target Manifest V3.
+
+[Manifest V3 migration checklist][4]
+
+## Edge:
+
+[Overview and timelines for migrating to Manifest V3][5]
+
+## FireFox:
+
+[Manifest V3 migration guide][6]
+[Manifest v3 in Firefox: Recap & Next Steps][7]
+
+[1]: https://github.com/samrum/vite-plugin-web-extension
+[2]: https://developer.chrome.com/docs/extensions/mv2/
+[4]: https://developer.chrome.com/docs/extensions/mv3/mv3-migration-checklist/
+[5]: https://docs.microsoft.com/en-us/microsoft-edge/extensions-chromium/developer-guide/manifest-v3
+[6]: https://extensionworkshop.com/documentation/develop/manifest-v3-migration-guide/
+[7]: https://blog.mozilla.org/addons/2022/05/18/manifest-v3-in-firefox-recap-next-steps/
