@@ -48,7 +48,7 @@
 				//     document.getElementById("config").style.display = "none";
 				// }
 			} else {
-				warningText = "! Please Open a Stack Overflow question to use this addin.";
+				warningText = "! Please open a Stack Overflow question to use this addin.";
 				warningType = "warn";
 			}
 		});
@@ -72,7 +72,7 @@
 
 		if (metaData.currUser == metaData.quesAuthor) {
 			warningText = "You are the author of this question.";
-			warningType = "notify";
+			warningType = "notify_author";
 		}
 
 		let answerList = info.answerList;
@@ -238,7 +238,15 @@
 </script>
 
 <Popup {pageType} {isStackOverflow}>
-	<Notification {warningText} {warningType} />
+	<Notification {warningType}>
+		<p>
+			{#if warningType == "notify_author"}
+				You are the author of this question
+			{:else}
+				{warningText}
+			{/if}
+		</p>
+	</Notification>
 </Popup>
 
 <style>

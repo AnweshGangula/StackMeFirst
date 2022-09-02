@@ -1,20 +1,17 @@
 <script>
-	export let warningText = "";
-	export let warningType = "warn";
-
-	console.log({ warningType, warningText });
+	export let warningType = "";
 </script>
 
-{#if warningText != ""}
-	<div>
-		<p id="notification" class={warningType}>{warningText}</p>
+{#if warningType != ""}
+	<div id="notification" class={warningType}>
+		<slot />
 	</div>
 {/if}
 
 <style>
 	#notification {
-		margin: 20px 5px;
-		padding: 5px;
+		margin: 15px 5px;
+		padding: 0 5px;
 		background-color: mistyrose;
 		color: firebrick;
 		border: 1px solid firebrick;
@@ -26,7 +23,7 @@
 		border-color: firebrick;
 	}
 
-	#notification.notify {
+	#notification.notify_author {
 		background-color: palegreen;
 		color: darkgreen;
 		border-color: darkgreen;
