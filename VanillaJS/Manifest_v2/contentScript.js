@@ -146,27 +146,3 @@ function insertAfter(referenceNode, newNode) {
     // reference: https://stackoverflow.com/a/4793630/6908282
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
-
-function scrollToTarget(eleId, type, headerHeight = 40) {
-    // reference: https://stackoverflow.com/a/67647864/6908282
-    // this function is being used in popupjs for sctoll to the answer/comment clicked dby the user
-    let element = document.getElementById(eleId);
-    element.classList.add("highlighted-post");
-
-    if (type == "comment") {
-        element = document.getElementById(eleId).getElementsByClassName("comment-text")[0];
-        element.style.backgroundColor = 'var(--yellow-100)' // comments have a transition for backgroundColor. So settimeout below is technically not necessary
-    }
-    const elementPosition = element.getBoundingClientRect().top;
-    const offsetPosition = elementPosition - headerHeight;
-
-    window.scrollBy({
-        top: offsetPosition,
-        behavior: "smooth"
-    });
-
-    setTimeout(function () {
-        element.classList.remove("highlighted-post");
-        element.style.backgroundColor = ''
-    }, 3000);
-}
