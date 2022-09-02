@@ -58,6 +58,7 @@ const ManifestV3 = {
 
 export function getManifest(manifestVersion) {
   const manifest = {
+    manifest_version: manifestVersion,
     author: pkg.author,
     description: pkg.description,
     name: pkg.displayName ?? pkg.name,
@@ -68,7 +69,6 @@ export function getManifest(manifestVersion) {
     return {
       ...manifest,
       ...ManifestV2,
-      manifest_version: manifestVersion,
     };
   }
 
@@ -76,7 +76,6 @@ export function getManifest(manifestVersion) {
     return {
       ...manifest,
       ...ManifestV3,
-      manifest_version: manifestVersion,
     };
   }
 

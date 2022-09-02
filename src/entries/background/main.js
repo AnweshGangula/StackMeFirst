@@ -1,5 +1,11 @@
 import browser from "webextension-polyfill";
 
+const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION)
+let browserAction = browser.action;
+if (manifestVer == 2) {
+  browserAction = browser.browserAction;
+}
+
 browser.runtime.onInstalled.addListener(() => {
   console.log("Extension installed");
 });
@@ -13,7 +19,7 @@ browser.runtime.onMessage.addListener(
     let browserTabId = sender.tab.id;
 
     if (subject == "isStackOverflow") {
-      browser.action.setIcon({ path: '../icons/StackMeFirst.png', tabId: browserTabId });
+      browserAction.setIcon({ path: '../icons/StackMeFirst.png', tabId: browserTabId });
     }
 
     if (subject == "needLogin") {
@@ -53,20 +59,20 @@ browser.tabs.onUpdated.addListener(function (tabId, change, tab) {
 function onTabUpdate(tab) {
 
   if (tab.url == undefined || tab.url.match(/https:\/\/stackoverflow\.com\/*/) == null) {
-    // browser.action.setPopup({popup: '', tabId: tabId});
+    // browserAction.setPopup({popup: '', tabId: tabId});
   }
   else {
-    // browser.action.setPopup({popup: '../html/popup.html', tabId: tabId,});
+    // browserAction.setPopup({popup: '../html/popup.html', tabId: tabId,});
 
   }
 }
 
 function UpdateBadge(badgeText, tabId, pluginTitle, color) {
-  browser.action.setBadgeText({
+  browserAction.setBadgeText({
     text: badgeText,
     tabId: tabId,
-  }, () => {
-    browser.action.setTitle({ title: pluginTitle, tabId: tabId });
-    browser.action.setBadgeBackgroundColor({ color: color, tabId: tabId });
+  }).then(() => {
+    browserAction.setTitle({ title: pluginTitle, tabId: tabId });
+    browserAction.setBadgeBackgroundColor({ color: color, tabId: tabId });
   });
 }
