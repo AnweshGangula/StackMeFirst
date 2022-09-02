@@ -186,34 +186,15 @@ function DisplayNotificaction(warningText) {
 
 function ExecuteScroll(tabId, eleID, type, offsetHeight) {
     //  reference: https://stackoverflow.com/a/70932186/6908282
+    //  reference: https://stackoverflow.com/a/17591250/6908282
     chrome.scripting.executeScript({
         target: { tabId: tabId, allFrames: false },
-        args: [eleID, type, offsetHeight + 10],
-        func: scrollToTarget
+        code: `var eleID = '${eleID}'; var type = '${type}'; var headerHeight = ${offsetHeight};`
+    }, function () {
+        chrome.scripting.executeScript({
+            target: { tabId: tabId, allFrames: false },
+            files: ['./executeScript.js'],
+        });
     });
 }
 
-
-function scrollToTarget(eleId, type, headerHeight = 40) {
-    // reference: https://stackoverflow.com/a/67647864/6908282
-    // this function is being used in popupjs for sctoll to the answer/comment clicked dby the user
-    let element = document.getElementById(eleId);
-    element.classList.add("highlighted-post"); // CSS class 'highlighted-post' has a animation called 
-
-    if (type == "comment") {
-        element = document.getElementById(eleId).getElementsByClassName("comment-text")[0];
-        element.style.backgroundColor = 'var(--yellow-100)' // comments have a transition for backgroundColor. So settimeout to remove backgroundcolor triggers that's transition
-    }
-    const elementPosition = element.getBoundingClientRect().top;
-    const offsetPosition = elementPosition - headerHeight;
-
-    window.scrollBy({
-        top: offsetPosition,
-        behavior: "smooth"
-    });
-
-    setTimeout(function () {
-        element.classList.remove("highlighted-post");
-        element.style.backgroundColor = ''
-    }, 3000);
-}
