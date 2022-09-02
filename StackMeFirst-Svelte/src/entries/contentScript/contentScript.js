@@ -6,6 +6,11 @@ export default function highlightStack() {
   const isStackOverflow = website == "stackoverflow.com"
 
   if (isStackOverflow) {
+    browser.runtime.sendMessage({
+      from: "contentScript",
+      subject: "isStackOverflow",
+    });
+
     const currUser = document.querySelector(".s-topbar--item.s-user-card");
     const isQuestion = window.location.pathname.startsWith("/questions/")
     let question, quesAuthor;

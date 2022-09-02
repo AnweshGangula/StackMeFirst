@@ -12,8 +12,11 @@ browser.runtime.onMessage.addListener(
     let subject = request.subject;
     let browserTabId = sender.tab.id;
 
-    if (subject == "needLogin") {
+    if (subject == "isStackOverflow") {
       browser.action.setIcon({ path: '../icons/StackMeFirst.png', tabId: browserTabId });
+    }
+
+    if (subject == "needLogin") {
       browser.action.setBadgeText({
         text: "Login",
         tabId: browserTabId,
@@ -26,8 +29,6 @@ browser.runtime.onMessage.addListener(
     if (subject == "loggedIn") {
       let badgeText = `${content.answerCount}A,${content.commentCount}C`
       let pluginTitle = `${content.answerCount} Answers, ${content.commentCount} Comments\n`
-
-      browser.action.setIcon({ path: '../icons/StackMeFirst.png', tabId: browserTabId });
 
       browser.action.setBadgeText({
         text: badgeText,
