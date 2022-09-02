@@ -17,26 +17,20 @@ browser.runtime.onMessage.addListener(
     }
 
     if (subject == "needLogin") {
-      browser.action.setBadgeText({
-        text: "Login",
-        tabId: browserTabId,
-      }, () => {
-        browser.action.setTitle({ title: "Login to Stack Overflow to highlight your answers", tabId: browserTabId });
-        browser.action.setBadgeBackgroundColor({ color: "firebrick", tabId: browserTabId });
-      });
+      const badgeText = "Login";
+      const pluginTitle = "Login to Stack Overflow to highlight your answers";
+      const color = "firebrick";
+
+      UpdateBadge(badgeText, browserTabId, pluginTitle, color);
+
     }
 
     if (subject == "loggedIn") {
-      let badgeText = `${content.answerCount}A,${content.commentCount}C`
-      let pluginTitle = `${content.answerCount} Answers, ${content.commentCount} Comments\n`
+      let badgeText = `${content.answerCount}A,${content.commentCount}C`;
+      let pluginTitle = `${content.answerCount} Answers, ${content.commentCount} Comments\n`;
+      const color = "green";
 
-      browser.action.setBadgeText({
-        text: badgeText,
-        tabId: browserTabId,
-      }, () => {
-        browser.action.setTitle({ title: pluginTitle, tabId: browserTabId });
-        browser.action.setBadgeBackgroundColor({ color: "green", tabId: browserTabId });
-      });
+      UpdateBadge(badgeText, browserTabId, pluginTitle, color);
     }
     sendResponse();
   }
@@ -67,3 +61,12 @@ function onTabUpdate(tab) {
   }
 }
 
+function UpdateBadge(badgeText, tabId, pluginTitle, color) {
+  browser.action.setBadgeText({
+    text: badgeText,
+    tabId: tabId,
+  }, () => {
+    browser.action.setTitle({ title: pluginTitle, tabId: tabId });
+    browser.action.setBadgeBackgroundColor({ color: color, tabId: tabId });
+  });
+}
