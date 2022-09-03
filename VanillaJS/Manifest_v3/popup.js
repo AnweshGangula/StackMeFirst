@@ -185,15 +185,12 @@ function DisplayNotificaction(warningText) {
 }
 
 function ExecuteScroll(tabId, eleID, type, offsetHeight) {
-    //  reference: https://stackoverflow.com/a/70932186/6908282
-    //  reference: https://stackoverflow.com/a/17591250/6908282
-    chrome.scripting.executeScript({
-        target: { tabId: tabId, allFrames: false },
-        code: `var eleID = '${eleID}'; var type = '${type}'; var headerHeight = ${offsetHeight};`
-    }, function () {
+    chrome.scripting.executeScript({ target: { tabId }, files: ['./executeScript.js'] }, () => {
+        // https://stackoverflow.com/a/73586624/6908282
         chrome.scripting.executeScript({
-            target: { tabId: tabId, allFrames: false },
-            files: ['./executeScript.js'],
+            target: { tabId },
+            args: [eleID, type, offsetHeight + 10],
+            func: (...args) => scrollToTarget(...args),
         });
     });
 }
