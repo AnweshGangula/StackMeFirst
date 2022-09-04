@@ -217,14 +217,12 @@
 				func: scrollToTarget,
 			});
 		} else {
-			//  old reference for code : https://stackoverflow.com/a/38579393/6908282
-			browser.tabs.executeScript(tabId, { file: "/assets/executeScript.js" }).then(() => {
-				// https://stackoverflow.com/a/73597865/6908282
-				// https://stackoverflow.com/questions/73591695/#comment129965659_73591695
-				browser.tabs.executeScript(tabId, {
-					allFrames: false,
-					code: "scrollToTarget('" + eleID + "', '" + type + "', " + (offsetHeight + 10) + "); ",
-				});
+			browser.tabs.executeScript(tabId, {
+				// firefox not working with import function
+				// solved by explosing scrollToTarget globally: https://stackoverflow.com/a/39383274/6908282
+				// reference: https://stackoverflow.com/a/73599962/6908282
+				allFrames: false,
+				code: "window.scrollToTarget('" + eleID + "', '" + type + "', " + (offsetHeight + 10) + "); ",
 			});
 		}
 	}

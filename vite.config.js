@@ -20,14 +20,14 @@ export default defineConfig(({ mode }) => {
           //   }
           //   return `assets/${extType}/[name]-[hash][extname]`;
           // },
-          chunkFileNames: (chunkInfo) => {
-            // reference: https://github.com/rollup/rollup/issues/2793#issuecomment-1011011760
-            let hash = '-[hash]'
-            if (chunkInfo.name == "executeScript") {
-              hash = "";
-            }
-            return `assets/[name]${hash}.js`;
-          },
+          // chunkFileNames: (chunkInfo) => {
+          //   // reference: https://github.com/rollup/rollup/issues/2793#issuecomment-1011011760
+          //   let hash = '-[hash]'
+          //   if (chunkInfo.name == "executeScript") {
+          //     hash = "";
+          //   }
+          //   return `assets/[name]${hash}.js`;
+          // },
           // entryFileNames: (chunkInfo) => {
           //   // https://stackoverflow.com/a/72750548/6908282
           //   // assetInfo.facadeModuleId contains the file's full path

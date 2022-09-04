@@ -1,6 +1,7 @@
 import browser from "webextension-polyfill";
 
 import scrollToTarget from "../executeScript/executeScript"
+window.scrollToTarget = scrollToTarget;
 
 export default function highlightStack() {
     const currURL = window.location.href // .at(-1)
