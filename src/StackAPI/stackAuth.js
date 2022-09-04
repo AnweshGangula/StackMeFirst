@@ -1,10 +1,10 @@
 // refefrence: https://github.com/GanguLabs/StackFave/blob/master/src/utils/api.js
 
-const baseURL = 'https://api.stackexchange.com/2.2';
-const key = '1WP26yIS*3APRVewJHDjww((';
+const baseURL = 'https://api.stackexchange.com/2.3';
+const key = '<API_KEY>';
 
 // generated from createFilter method
-const filter = '!0XXAMzZV3)6nNHjQ18538kAUL';
+const filter = '<filter_name>';
 
 export default class Api {
     constructor(token) {
@@ -101,5 +101,19 @@ export default class Api {
             hasMore = has_more;
         } while (hasMore);
         return favorites;
+    }
+
+    auth(sendResponse) {
+        const scope = 'read_inbox,no_expiry,private_info';
+        const clientId = 'xxxxx';
+        const redirectUrl = chrome.identity.getRedirectURL('oauth2');
+        const url = `https://stackoverflow.com/oauth/dialog?client_id=${clientId}&scope=${scope}&redirect_uri=${redirectUrl}`;
+        chrome.identity.launchWebAuthFlow(
+            { url: url, interactive: true },
+            redirect_url => {
+                const token = redirect_url.match(/access_token=(.+)/)[1];
+                sendResponse({ token });
+            }
+        );
     }
 }
