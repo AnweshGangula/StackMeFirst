@@ -1,6 +1,4 @@
 
-scrollToTarget(eleID, type, headerHeight);
-
 function scrollToTarget(eleID, type, headerHeight = 40) {
     // reference: https://stackoverflow.com/a/67647864/6908282
     // this function is being used in popupjs for sctoll to the answer/comment clicked dby the user

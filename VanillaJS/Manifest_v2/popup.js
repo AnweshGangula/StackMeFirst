@@ -205,11 +205,12 @@ function DisplayNotificaction(warningText, type) {
 }
 
 function ExecuteScroll(tabId, eleID, type, offsetHeight) {
-    //  reference: https://stackoverflow.com/a/17591250/6908282
-    chrome.tabs.executeScript(tabId, {
-        code: `var eleID = '${eleID}'; var type = '${type}'; var headerHeight = ${offsetHeight};`
-    }, function () {
-        chrome.tabs.executeScript(tabId, { file: './executeScript.js' });
+    //  reference: https://stackoverflow.com/a/73597865/6908282
+    chrome.tabs.executeScript(tabId, { file: './executeScript.js' }, () => {
+        chrome.tabs.executeScript(tabId, {
+            allFrames: false,
+            code: "scrollToTarget('" + eleID + "', '" + type + "', '" + offsetHeight + "'); ",
+        });
     });
     //  old reference for code : https://stackoverflow.com/a/38579393/6908282
 }
