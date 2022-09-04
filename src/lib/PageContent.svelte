@@ -218,7 +218,7 @@
 			});
 		} else {
 			//  old reference for code : https://stackoverflow.com/a/38579393/6908282
-			browser.tabs.executeScript(tabId, { file: "/assets/executeScript_bc3446a0.js" }).then(() => {
+			browser.tabs.executeScript(tabId, { file: "/assets/executeScript.js" }).then(() => {
 				// https://stackoverflow.com/a/73597865/6908282
 				// https://stackoverflow.com/questions/73591695/#comment129965659_73591695
 				browser.tabs.executeScript(tabId, {
