@@ -39,11 +39,11 @@
 					<input type="checkbox" id="hlAnswers" name="hlAnswers" value="Highlight my Answers" />
 					<label for="hlAnswers">Highlight my Answers</label>
 				</div>
-				<br />
 				<div>
 					<input type="checkbox" id="srtAns" name="srtAns" value="Bring My Answers to Top" />
 					<label for="srtAns">Bring My Answers to Top</label><br />
 				</div>
+				<br />
 				<div>
 					<input type="checkbox" id="hlComments" name="hlComments" value="Highlight Comments" />
 					<label for="hlComments">Highlight my Comments</label><br />

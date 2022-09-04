@@ -27,6 +27,7 @@ const sharedManifest = {
 };
 
 const browserAction = {
+  default_title: "Stack Me First",
   default_icon: "./icons/StackMeFirst_disabled.png",
   default_popup: "src/entries/popup/index.html",
 };
@@ -45,6 +46,12 @@ const ManifestV2 = {
     chrome_style: false,
   },
   permissions: [...v2Permissions, "*://*.stackoverflow.com/*"],
+  browser_specific_settings: {
+    gecko: {
+      id: "{d86c700e-ef2b-4ce4-a2b1-23156eaeb2b5}",
+      strict_min_version: "79.0"
+    }
+  },
 };
 
 const ManifestV3 = {
@@ -59,10 +66,10 @@ const ManifestV3 = {
 export function getManifest(manifestVersion) {
   const manifest = {
     manifest_version: manifestVersion,
-    author: pkg.author,
-    description: pkg.description,
     name: pkg.displayName ?? pkg.name,
     version: pkg.version,
+    description: pkg.description,
+    author: pkg.author,
   };
 
   if (manifestVersion === 2) {

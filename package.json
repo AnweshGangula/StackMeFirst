@@ -1,6 +1,6 @@
 {
 	"name": "stack-me-first",
-	"version": "2.1.0",
+	"version": "3.0.0",
 	"displayName": "Stack Me First",
 	"author": "Anwesh Gangula",
 	"description": "Highlight and sort answers posted by current user in Stack overflow to the top",

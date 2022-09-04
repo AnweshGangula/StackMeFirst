@@ -10,6 +10,10 @@ All of the current user's answers will be highlighted with a green border and li
 ![Screenshot 2](./Assets/Screenshots/Screenshot%202.png)
 ![Screenshot 3](./Assets/Screenshots/Screenshot%203.png)
 
+# Contribution
+
+Checkout the contribution instructions in the [following file](./Contribution.md)
+
 ---
 
 # StackMeFirst-Svelte.js
