@@ -209,7 +209,7 @@
 	}
 
 	function ExecuteScroll(tabId, eleID, type, offsetHeight) {
-		if ((manifestVer = 3)) {
+		if (manifestVer == 3) {
 			//  reference: https://stackoverflow.com/a/70932186/6908282
 			browser.scripting.executeScript({
 				target: { tabId: tabId, allFrames: false },
@@ -217,10 +217,14 @@
 				func: scrollToTarget,
 			});
 		} else {
-			//  reference: https://stackoverflow.com/a/38579393/6908282
-			browser.tabs.executeScript(tabId, {
-				allFrames: false,
-				code: "scrollToTarget('" + eleID + "', '" + type + "', " + (offsetHeight + 10) + "); ",
+			//  old reference for code : https://stackoverflow.com/a/38579393/6908282
+			browser.tabs.executeScript(tabId, { file: "/assets/executeScript_bc3446a0.js" }).then(() => {
+				// https://stackoverflow.com/a/73597865/6908282
+				// https://stackoverflow.com/questions/73591695/#comment129965659_73591695
+				browser.tabs.executeScript(tabId, {
+					allFrames: false,
+					code: "scrollToTarget('" + eleID + "', '" + type + "', " + (offsetHeight + 10) + "); ",
+				});
 			});
 		}
 	}

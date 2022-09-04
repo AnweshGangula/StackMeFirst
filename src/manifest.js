@@ -45,9 +45,6 @@ const ManifestV2 = {
     chrome_style: false,
   },
   permissions: [...v2Permissions, "*://*.stackoverflow.com/*"],
-  web_accessible_resources: [
-    "src/entries/executeScript/executeScript.js"
-  ],
 };
 
 const ManifestV3 = {

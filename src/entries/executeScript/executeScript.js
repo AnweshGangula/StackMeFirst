@@ -1,4 +1,8 @@
-export default function scrollToTarget(eleId, type, headerHeight = 40) {
+window.scrollToTarget = function (eleId, type, headerHeight = 40) {
+    scrollToTraget_Main(eleId, type, headerHeight)
+}
+
+export default function scrollToTraget_Main(eleId, type, headerHeight = 40) {
     // reference: https://stackoverflow.com/a/67647864/6908282
     // this function is being used in popupjs for sctoll to the answer/comment clicked dby the user
     if (type == "question") {
