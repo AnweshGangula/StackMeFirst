@@ -31,6 +31,8 @@ const browserAction = {
   default_popup: "src/entries/popup/index.html",
 };
 
+// remove "scripting" from manifest v2 permissions
+const v2Permissions = [...sharedManifest.permissions].filter((x) => !["scripting"].includes(x)) // reference: https://stackoverflow.com/a/68230395/6908282
 const ManifestV2 = {
   ...sharedManifest,
   background: {
@@ -42,7 +44,7 @@ const ManifestV2 = {
     ...sharedManifest.options_ui,
     chrome_style: false,
   },
-  permissions: [...sharedManifest.permissions, "*://*.stackoverflow.com/*"],
+  permissions: [...v2Permissions, "*://*.stackoverflow.com/*"],
 };
 
 const ManifestV3 = {
@@ -56,6 +58,7 @@ const ManifestV3 = {
 
 export function getManifest(manifestVersion) {
   const manifest = {
+    manifest_version: manifestVersion,
     author: pkg.author,
     description: pkg.description,
     name: pkg.displayName ?? pkg.name,
@@ -66,7 +69,6 @@ export function getManifest(manifestVersion) {
     return {
       ...manifest,
       ...ManifestV2,
-      manifest_version: manifestVersion,
     };
   }
 
@@ -74,7 +76,6 @@ export function getManifest(manifestVersion) {
     return {
       ...manifest,
       ...ManifestV3,
-      manifest_version: manifestVersion,
     };
   }
 
