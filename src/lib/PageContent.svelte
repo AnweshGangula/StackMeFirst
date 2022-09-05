@@ -9,7 +9,8 @@
 	import scrollToTarget from "../entries/executeScript/executeScript";
 
 	export let pageType = "popup";
-	let warningText, warningType;
+	let warningText;
+	let warningType = new Set();
 	let isStackOverflow;
 	let glCurrTab;
 
@@ -54,7 +55,7 @@
 				// }
 			} else {
 				warningText = "! Please open a Stack Overflow question to use this addin.";
-				warningType = "warn";
+				warningType.add("warn");
 			}
 		});
 	}
@@ -65,19 +66,19 @@
 		const metaData = info.metaData;
 		if (metaData.currUser == undefined) {
 			warningText = "! Login to Stack Overflow to highlight your answers";
-			warningType = "warn";
-			return;
-		}
-
-		if (info.commentList.length == 0 && info.answerList.length == 0) {
-			warningText = "! This question doesn't have any answers/comments submitted by you.";
-			warningType = "warn";
+			warningType.add("warn");
 			return;
 		}
 
 		if (metaData.currUser == metaData.quesAuthor) {
-			warningText = "You are the author of this question.";
-			warningType = "notify_author";
+			warningText = "";
+			warningType.add("notify_author");
+		}
+
+		if (info.commentList.length == 0 && info.answerList.length == 0) {
+			warningText = "! This question doesn't have any answers/comments submitted by you.";
+			warningType.add("warn");
+			return;
 		}
 
 		let answerList = info.answerList;
@@ -229,23 +230,7 @@
 </script>
 
 <Popup {pageType} {isStackOverflow}>
-	<Notification {warningType}>
-		<p>
-			{#if warningType == "notify_author"}
-				You are the author of
-				<a
-					href={glCurrTab.url}
-					target="_blank"
-					rel="noopener noreferrer"
-					on:click|preventDefault={() => ExecuteScroll(glCurrTab.id, null, "question", 0)}
-				>
-					this question
-				</a>
-			{:else}
-				{warningText}
-			{/if}
-		</p>
-	</Notification>
+	<Notification {warningType} {warningText} {glCurrTab} {ExecuteScroll} />
 </Popup>
 
 <style>

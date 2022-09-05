@@ -1,29 +1,47 @@
 <script>
-	export let warningType = "";
+	export let warningType = new Set(),
+		warningText,
+		glCurrTab,
+		ExecuteScroll;
 </script>
 
-{#if warningType != ""}
-	<div id="notification" class={warningType}>
-		<slot />
+{#if warningType.size != 0}
+	<div id="notification">
+		{#if warningType.has("notify_author")}
+			<p class="notify_author">
+				You are the author of
+				<a
+					href={glCurrTab.url}
+					target="_blank"
+					rel="noopener noreferrer"
+					on:click|preventDefault={() => ExecuteScroll(glCurrTab.id, null, "question", 0)}
+				>
+					this question
+				</a>
+			</p>
+		{/if}
+		{#if warningText != ""}
+			<p class="warn">{warningText}</p>
+		{/if}
 	</div>
 {/if}
 
 <style>
-	#notification {
-		margin: 15px 5px;
-		padding: 0 5px;
+	#notification > * {
+		margin: 10px 0px;
+		padding: 5px;
 		background-color: mistyrose;
 		color: firebrick;
 		border: 1px solid firebrick;
 	}
 
-	#notification.warn {
+	#notification .warn {
 		background-color: mistyrose;
 		color: firebrick;
 		border-color: firebrick;
 	}
 
-	#notification.notify_author {
+	#notification .notify_author {
 		background-color: palegreen;
 		color: darkgreen;
 		border-color: darkgreen;
