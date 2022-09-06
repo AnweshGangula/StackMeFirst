@@ -16,7 +16,7 @@ browser.runtime.onMessage.addListener(
     // console.log("message received");
     let content = request.content;
     let subject = request.subject;
-    let browserTabId = sender.tab.id;
+    let browserTabId = request.from == "popup" ? null : sender.tab.id;
     let badgeText, pluginTitle, color;
 
     switch (subject) {
@@ -38,6 +38,9 @@ browser.runtime.onMessage.addListener(
         color = "green";
 
         UpdateBadge(badgeText, browserTabId, pluginTitle, color);
+        break;
+      case 'AUTH':
+        alert("Message Received");
         break;
       default:
         console.log(`no matched action: ${subject}`);

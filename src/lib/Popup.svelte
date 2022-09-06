@@ -1,4 +1,18 @@
 <script>
+	import browser from "webextension-polyfill";
+
+	async function login() {
+		// this.setState({ loading: true });
+		alert("Sending Message to backgroundScript to login");
+		browser.runtime
+			.sendMessage({
+				from: "popup",
+				subject: "AUTH",
+			})
+			.then(alert("check if token is received"));
+		return true;
+	}
+
 	export let pageType = "popup";
 	export let isStackOverflow = true;
 </script>
@@ -6,6 +20,7 @@
 <header>
 	<img id="logo" src="/icons/StackMeFirst.png" alt="Stack Me First Logo" width="20" height="20" />
 	<h1>Stack Me First</h1>
+	<button on:click|preventDefault={() => login()}>Login</button>
 </header>
 
 <main>
