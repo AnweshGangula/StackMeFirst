@@ -17,28 +17,33 @@ browser.runtime.onMessage.addListener(
     let content = request.content;
     let subject = request.subject;
     let browserTabId = sender.tab.id;
+    let badgeText, pluginTitle, color;
 
-    if (subject == "isStackOverflow") {
-      browserAction.setIcon({ path: '../icons/StackMeFirst.png', tabId: browserTabId });
+    switch (subject) {
+      case "isStackOverflow":
+        browserAction.setIcon({ path: '../icons/StackMeFirst.png', tabId: browserTabId });
+        // return true; // must return true to signal asynchronous
+        break;
+      case "needLogin":
+        badgeText = "Login";
+        pluginTitle = "Login to Stack Overflow to highlight your answers";
+        color = "firebrick";
+
+        UpdateBadge(badgeText, browserTabId, pluginTitle, color);
+        // return true; // must return true to signal asynchronous
+        break;
+      case "loggedIn":
+        badgeText = `${content.answerCount}A,${content.commentCount}C`;
+        pluginTitle = `${content.answerCount} Answers, ${content.commentCount} Comments\n`;
+        color = "green";
+
+        UpdateBadge(badgeText, browserTabId, pluginTitle, color);
+        break;
+      default:
+        console.log(`no matched action: ${subject}`);
     }
+    return true; // must return true to signal asynchronous
 
-    if (subject == "needLogin") {
-      const badgeText = "Login";
-      const pluginTitle = "Login to Stack Overflow to highlight your answers";
-      const color = "firebrick";
-
-      UpdateBadge(badgeText, browserTabId, pluginTitle, color);
-
-    }
-
-    if (subject == "loggedIn") {
-      let badgeText = `${content.answerCount}A,${content.commentCount}C`;
-      let pluginTitle = `${content.answerCount} Answers, ${content.commentCount} Comments\n`;
-      const color = "green";
-
-      UpdateBadge(badgeText, browserTabId, pluginTitle, color);
-    }
-    sendResponse();
   }
 );
 
