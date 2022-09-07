@@ -1,6 +1,9 @@
 <script>
 	import browser from "webextension-polyfill";
+	import Api from "~/StackAPI/stackAuth";
 
+	let stackAPI;
+	let loggedIn = false;
 	async function login() {
 		// this.setState({ loading: true });
 		browser.runtime
@@ -8,11 +11,14 @@
 				from: "popup",
 				subject: "AUTH",
 			})
-			.then(({ token, error }) => {
+			.then(async ({ token, error }) => {
 				console.log(`Action 'AUTH' success`);
 				if (token) {
-					console.log("Logged in");
-					// this.api = new Api(token);
+					// console.log("Logged in");
+					loggedIn = true;
+					stackAPI = new Api(token);
+					const myData = await stackAPI.getMyDetails();
+					document.getElementById("btnUserName").textContent = myData[0].display_name;
 					// this.setState({ token, view: VIEWS.DEFAULT });
 				} else {
 					console.log("Unable to login");
@@ -29,7 +35,12 @@
 <header>
 	<img id="logo" src="/icons/StackMeFirst.png" alt="Stack Me First Logo" width="20" height="20" />
 	<h1>Stack Me First</h1>
-	<button on:click|preventDefault={() => login()}>Login</button>
+
+	{#if loggedIn}
+		<button id="btnUserName" class="loginBtn" on:click|preventDefault>Logged in</button>
+	{:else}
+		<button id="btnLogin" class="loginBtn" on:click|preventDefault={() => login()}>Login</button>
+	{/if}
 </header>
 
 <main>
@@ -129,5 +140,9 @@
 		color: white;
 		padding: 0 5px;
 		text-align: center;
+	}
+
+	.loginBtn {
+		margin-left: auto;
 	}
 </style>

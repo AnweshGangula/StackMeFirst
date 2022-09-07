@@ -1,10 +1,10 @@
 // refefrence: https://github.com/GanguLabs/StackFave/blob/master/src/utils/api.js
 
 const baseURL = 'https://api.stackexchange.com/2.3';
-const key = '<API_KEY>';
+const key = '1jY1xGKt)NGfZQwE3RbWHQ((';
 
 // generated from createFilter method
-const filter = '<filter_name>';
+const filter = '!0XXAMzZV3)6nNHjQ18538kAUL';
 
 export default class Api {
     constructor(token) {
@@ -101,6 +101,24 @@ export default class Api {
             hasMore = has_more;
         } while (hasMore);
         return favorites;
+    }
+
+    async getMyDetails(queriesObj = {}) {
+        let myDetails = [];
+        let hasMore = false;
+        const mergedQuery = Object.assign({ page: 1, filter }, queriesObj);
+        do {
+            if (hasMore) {
+                mergedQuery.page += 1;
+            }
+            const { items, has_more } = await this._fetch(
+                '/me',
+                mergedQuery
+            );
+            myDetails = myDetails.concat(items);
+            hasMore = has_more;
+        } while (hasMore);
+        return myDetails;
     }
 
 }
