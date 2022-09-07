@@ -3,14 +3,23 @@
 
 	async function login() {
 		// this.setState({ loading: true });
-		alert("Sending Message to backgroundScript to login");
 		browser.runtime
 			.sendMessage({
 				from: "popup",
 				subject: "AUTH",
 			})
-			.then(alert("check if token is received"));
-		return true;
+			.then(({ token, error }) => {
+				console.log(`Action 'AUTH' success`);
+				if (token) {
+					console.log("Logged in");
+					// this.api = new Api(token);
+					// this.setState({ token, view: VIEWS.DEFAULT });
+				} else {
+					console.log("Unable to login");
+					// this.setState({ error });
+				}
+			});
+		// return true;
 	}
 
 	export let pageType = "popup";

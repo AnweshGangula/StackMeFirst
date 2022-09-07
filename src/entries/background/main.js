@@ -40,12 +40,12 @@ browser.runtime.onMessage.addListener(
         UpdateBadge(badgeText, browserTabId, pluginTitle, color);
         break;
       case 'AUTH':
-        alert("Message Received");
+        auth(sendResponse);
+        return true; // must return true to signal asynchronous
         break;
       default:
         console.log(`no matched action: ${subject}`);
     }
-    return true; // must return true to signal asynchronous
 
   }
 );
@@ -83,4 +83,18 @@ function UpdateBadge(badgeText, tabId, pluginTitle, color) {
     browserAction.setTitle({ title: pluginTitle, tabId: tabId });
     browserAction.setBadgeBackgroundColor({ color: color, tabId: tabId });
   });
+}
+
+function auth(sendResponse) {
+  const scope = 'read_inbox,no_expiry,private_info';
+  const clientId = '24029';
+  const redirectUrl = browser.identity.getRedirectURL('oauth2');
+  const url = `https://stackoverflow.com/oauth/dialog?client_id=${clientId}&scope=${scope}&redirect_uri=${redirectUrl}`;
+  browser.identity.launchWebAuthFlow(
+    { url: url, interactive: true }).then(
+      redirect_url => {
+        const token = redirect_url.match(/access_token=(.+)/)[1];
+        sendResponse({ token });
+      }
+    );
 }
