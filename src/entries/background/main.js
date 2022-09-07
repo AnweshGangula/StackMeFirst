@@ -16,29 +16,37 @@ browser.runtime.onMessage.addListener(
     // console.log("message received");
     let content = request.content;
     let subject = request.subject;
-    let browserTabId = sender.tab.id;
+    let browserTabId = request.from == "popup" ? null : sender.tab.id;
+    let badgeText, pluginTitle, color;
 
-    if (subject == "isStackOverflow") {
-      browserAction.setIcon({ path: '../icons/StackMeFirst.png', tabId: browserTabId });
+    switch (subject) {
+      case "isStackOverflow":
+        browserAction.setIcon({ path: '../icons/StackMeFirst.png', tabId: browserTabId });
+        // return true; // must return true to signal asynchronous
+        break;
+      case "needLogin":
+        badgeText = "Login";
+        pluginTitle = "Login to Stack Overflow to highlight your answers";
+        color = "firebrick";
+
+        UpdateBadge(badgeText, browserTabId, pluginTitle, color);
+        // return true; // must return true to signal asynchronous
+        break;
+      case "loggedIn":
+        badgeText = `${content.answerCount}A,${content.commentCount}C`;
+        pluginTitle = `${content.answerCount} Answers, ${content.commentCount} Comments\n`;
+        color = "green";
+
+        UpdateBadge(badgeText, browserTabId, pluginTitle, color);
+        break;
+      case 'AUTH':
+        auth(sendResponse);
+        return true; // must return true to signal asynchronous
+        break;
+      default:
+        console.log(`no matched action: ${subject}`);
     }
 
-    if (subject == "needLogin") {
-      const badgeText = "Login";
-      const pluginTitle = "Login to Stack Overflow to highlight your answers";
-      const color = "firebrick";
-
-      UpdateBadge(badgeText, browserTabId, pluginTitle, color);
-
-    }
-
-    if (subject == "loggedIn") {
-      let badgeText = `${content.answerCount}A,${content.commentCount}C`;
-      let pluginTitle = `${content.answerCount} Answers, ${content.commentCount} Comments\n`;
-      const color = "green";
-
-      UpdateBadge(badgeText, browserTabId, pluginTitle, color);
-    }
-    sendResponse();
   }
 );
 
@@ -75,4 +83,18 @@ function UpdateBadge(badgeText, tabId, pluginTitle, color) {
     browserAction.setTitle({ title: pluginTitle, tabId: tabId });
     browserAction.setBadgeBackgroundColor({ color: color, tabId: tabId });
   });
+}
+
+function auth(sendResponse) {
+  const scope = 'read_inbox,no_expiry,private_info';
+  const clientId = '24029';
+  const redirectUrl = browser.identity.getRedirectURL('oauth2');
+  const url = `https://stackoverflow.com/oauth/dialog?client_id=${clientId}&scope=${scope}&redirect_uri=${redirectUrl}`;
+  browser.identity.launchWebAuthFlow(
+    { url: url, interactive: true }).then(
+      redirect_url => {
+        const token = redirect_url.match(/access_token=(.+)/)[1];
+        sendResponse({ token });
+      }
+    );
 }
