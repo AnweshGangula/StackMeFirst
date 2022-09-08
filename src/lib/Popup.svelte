@@ -1,6 +1,6 @@
 <script>
 	import browser from "webextension-polyfill";
-	import Api from "~/StackAPI/stackAuth";
+	import Api from "~/utils/stackAPI";
 
 	let stackAPI;
 	let loggedIn = false;
