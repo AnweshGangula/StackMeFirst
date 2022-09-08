@@ -7,6 +7,7 @@
 
 	const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION);
 	import scrollToTarget from "../entries/executeScript/executeScript";
+	import { ignoreUrlList } from "~/utils/constants";
 
 	export let pageType = "popup";
 	let warningText;
@@ -39,7 +40,9 @@
 			let website = activeURL.host;
 			let URLpathname = activeURL.pathname;
 			isStackOverflow = website == "stackoverflow.com";
-			const isQuestion = activeURL.pathname.startsWith("/questions/");
+
+			const ignoreURL = ignoreUrlList.some((url) => URLpathname.includes(url));
+			const isQuestion = URLpathname.startsWith("/questions/") && !ignoreURL;
 			if (isStackOverflow && isQuestion) {
 				browser.tabs.sendMessage(tabs[0].id, { from: "popup", subject: "popupDOM" }).then(
 					// ...also specifying a callback to be called

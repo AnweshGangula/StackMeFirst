@@ -1,5 +1,7 @@
 import browser from "webextension-polyfill";
 
+import { ignoreUrlList } from "~/utils/constants";
+
 import scrollToTarget from "../executeScript/executeScript"
 window.scrollToTarget = scrollToTarget;
 
@@ -15,7 +17,9 @@ export default function highlightStack() {
         });
 
         const currUser = document.querySelector(".s-topbar--item.s-user-card");
-        const isQuestion = window.location.pathname.startsWith("/questions/")
+        const URLpathname = window.location.pathname;
+        const ignoreURL = ignoreUrlList.some((url) => URLpathname.includes(url))
+        const isQuestion = (URLpathname.startsWith("/questions/") && !ignoreURL)
         let question, quesAuthor;
         // const currUser = document.getElementsByClassName("s-user-card")[0]; // this is not correct if user I not logged in at this URL: https://stackoverflow.com/questions
         let myAnsList, myCmmtList;
