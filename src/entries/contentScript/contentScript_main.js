@@ -43,53 +43,74 @@ export default function highlightStack() {
             quesAuthor = document.querySelector(".post-signature.owner").getElementsByTagName("a")[0];
             let allAnswers = [];
             let ansIsAPI = true;
+            let allComments = [];
+            let idforCmts = [];
+            let cmtIsAPI = true;
 
             const getAnswers = stackAPI.getAnswers(question.dataset.questionid);
-
-            Promise.all([getAnswers]).then(responses => {
-                allAnswers = responses[0];
+            idforCmts.push(question.dataset.questionid)
+            Promise.resolve(getAnswers).then(response => {
+                allAnswers = response;
                 if (allAnswers == []) {
                     allAnswers = document.getElementsByClassName('answer');
                     ansIsAPI = false;
-                    console.log("API did not work")
+                    console.log("Answers API did not work")
                 }
-                const allComments = document.getElementsByClassName("comment");
 
-                const queryParams = new Proxy(new URLSearchParams(window.location.search), {
-                    get: (searchParams, prop) => searchParams.get(prop),
+                allAnswers.forEach(answer => {
+                    if (ansIsAPI) {
+                        idforCmts.push(answer.answer_id)
+                    } else {
+                        idforCmts.push(answer.id)
+                    }
                 });
-                const isSorted = queryParams.answertab != undefined;
 
-                const DOM_Opts = { currUser, isSorted }
+                console.log(idforCmts.join(";"))
+                const getComments = stackAPI.getComments(idforCmts.join(";"));
+                Promise.resolve(getComments).then(res => {
+                    allComments = res;
+                    if (allComments == []) {
+                        allAnswers = document.getElementsByClassName("comment");
+                        cmtIsAPI = false;
+                        console.log("Comments API did not work")
+                    }
 
-                let defaultConfig = {
-                    // You can set default for values not in the storage by providing a dictionary:
-                    // reference: https://stackoverflow.com/a/26898749/6908282
-                    hlAns: true,
-                    srtAns: true,
-                    hlCmnts: false,
-                }
-
-                browser.storage.sync.get({ 'stackMeData': defaultConfig }).then(function (result) {
-                    let userConfig = result.stackMeData;
-                    // You can set default for values not in the storage by providing a dictionary:
-                    // reference: https://stackoverflow.com/a/26898749/6908282
-
-
-                    myAnsList = highlightAnswer(allAnswers, ansIsAPI, userConfig, DOM_Opts);
-                    myCmmtList = highlightComments(allComments, userConfig, DOM_Opts);
-                    browser.runtime.sendMessage({
-                        //  reference: https://stackoverflow.com/a/20021813/6908282
-                        from: "contentScript",
-                        subject: "loggedIn",
-                        content: {
-                            answerCount: myAnsList == "N/A" ? "?" : myAnsList.length,
-                            commentCount: myCmmtList == "N/A" ? "?" : myCmmtList.length
-                        }
-                    }).then(function () {
-                        // console.log("sending message");
+                    const queryParams = new Proxy(new URLSearchParams(window.location.search), {
+                        get: (searchParams, prop) => searchParams.get(prop),
                     });
+                    const isSorted = queryParams.answertab != undefined;
 
+                    const DOM_Opts = { currUser, isSorted }
+
+                    let defaultConfig = {
+                        // You can set default for values not in the storage by providing a dictionary:
+                        // reference: https://stackoverflow.com/a/26898749/6908282
+                        hlAns: true,
+                        srtAns: true,
+                        hlCmnts: false,
+                    }
+
+                    browser.storage.sync.get({ 'stackMeData': defaultConfig }).then(function (result) {
+                        let userConfig = result.stackMeData;
+                        // You can set default for values not in the storage by providing a dictionary:
+                        // reference: https://stackoverflow.com/a/26898749/6908282
+
+
+                        myAnsList = highlightAnswer(allAnswers, ansIsAPI, userConfig, DOM_Opts);
+                        myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
+                        browser.runtime.sendMessage({
+                            //  reference: https://stackoverflow.com/a/20021813/6908282
+                            from: "contentScript",
+                            subject: "loggedIn",
+                            content: {
+                                answerCount: myAnsList == "N/A" ? "?" : myAnsList.length,
+                                commentCount: myCmmtList == "N/A" ? "?" : myCmmtList.length
+                            }
+                        }).then(function () {
+                            // console.log("sending message");
+                        });
+
+                    })
                 })
             })
         }
@@ -159,18 +180,32 @@ export default function highlightStack() {
         return answerList;
     }
 
-    function highlightComments(comments, userConfig, DOM_Opts) {
+    function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
         const hlCmnts = userConfig.hlCmnts;
         const currUser = DOM_Opts.currUser;
+
 
         let commentList = [];
         if (hlCmnts == true) {
             for (let comment of comments) {
-                const commentUser = comment.getElementsByClassName("comment-user")[0];
-                if (commentUser.href == currUser.href) {
-                    const commentToHighlight = comment.getElementsByClassName("comment-text")[0];
-                    commentToHighlight.style.cssText = "border: 2px solid darkgreen; border-radius: 5px; margin: 5px;"
-                    commentList.push(comment.id);
+                let commentUser, commentId;
+                if (cmtIsAPI) {
+                    commentUser = comment.owner.link;
+                    commentId = comment.comment_id;
+                } else {
+                    commentUser = comment.getElementsByClassName("comment-user")[0].href;
+                    answerId = answer.dataset.answerid;
+                }
+                if (commentUser == currUser.href) {
+                    const commentEle = document.getElementById("comment-" + commentId);
+                    if (commentEle == null) {
+                        console.log("Hidden comment: #comment-" + commentId)
+                    } else {
+                        const commentToHighlight = commentEle.getElementsByClassName("comment-text")[0];
+                        commentToHighlight.style.cssText = "border: 2px solid darkgreen; border-radius: 5px; margin: 5px;"
+                    }
+
+                    commentList.push("comment-" + commentId);
                 }
             }
         }
