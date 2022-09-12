@@ -2,10 +2,13 @@ import browser from "webextension-polyfill";
 
 import { ignoreUrlList } from "~/utils/constants";
 
+import Api from "~/utils/stackAPI";
+
 import scrollToTarget from "../executeScript/executeScript"
 window.scrollToTarget = scrollToTarget;
 
 export default function highlightStack() {
+    let stackAPI = new Api("");
     const currURL = window.location.href // .at(-1)
     const website = window.location.host;
     const isStackOverflow = website == "stackoverflow.com"
@@ -38,45 +41,56 @@ export default function highlightStack() {
         } else if (isQuestion) {
             question = document.getElementById('question');
             quesAuthor = document.querySelector(".post-signature.owner").getElementsByTagName("a")[0];
-            const allAnswers = document.getElementsByClassName('answer');
-            const allComments = document.getElementsByClassName("comment");
-            const answersHeader = document.getElementById('answers-header');
+            let allAnswers = [];
+            let ansIsAPI = true;
 
-            const queryParams = new Proxy(new URLSearchParams(window.location.search), {
-                get: (searchParams, prop) => searchParams.get(prop),
-            });
-            const isSorted = queryParams.answertab != undefined;
+            const getAnswers = stackAPI.getAnswers(question.dataset.questionid);
 
-            const DOM_Opts = { currUser, answersHeader, isSorted }
+            Promise.all([getAnswers]).then(responses => {
+                allAnswers = responses[0];
+                if (allAnswers == []) {
+                    allAnswers = document.getElementsByClassName('answer');
+                    ansIsAPI = false;
+                    console.log("API did not work")
+                }
+                const allComments = document.getElementsByClassName("comment");
 
-            let defaultConfig = {
-                // You can set default for values not in the storage by providing a dictionary:
-                // reference: https://stackoverflow.com/a/26898749/6908282
-                hlAns: true,
-                srtAns: true,
-                hlCmnts: false,
-            }
-
-            browser.storage.sync.get({ 'stackMeData': defaultConfig }).then(function (result) {
-                let userConfig = result.stackMeData;
-                // You can set default for values not in the storage by providing a dictionary:
-                // reference: https://stackoverflow.com/a/26898749/6908282
-
-
-                myAnsList = highlightAnswer(allAnswers, userConfig, DOM_Opts);
-                myCmmtList = highlightComments(allComments, userConfig, DOM_Opts);
-                browser.runtime.sendMessage({
-                    //  reference: https://stackoverflow.com/a/20021813/6908282
-                    from: "contentScript",
-                    subject: "loggedIn",
-                    content: {
-                        answerCount: myAnsList == "N/A" ? "?" : myAnsList.length,
-                        commentCount: myCmmtList == "N/A" ? "?" : myCmmtList.length
-                    }
-                }).then(function () {
-                    // console.log("sending message");
+                const queryParams = new Proxy(new URLSearchParams(window.location.search), {
+                    get: (searchParams, prop) => searchParams.get(prop),
                 });
+                const isSorted = queryParams.answertab != undefined;
 
+                const DOM_Opts = { currUser, isSorted }
+
+                let defaultConfig = {
+                    // You can set default for values not in the storage by providing a dictionary:
+                    // reference: https://stackoverflow.com/a/26898749/6908282
+                    hlAns: true,
+                    srtAns: true,
+                    hlCmnts: false,
+                }
+
+                browser.storage.sync.get({ 'stackMeData': defaultConfig }).then(function (result) {
+                    let userConfig = result.stackMeData;
+                    // You can set default for values not in the storage by providing a dictionary:
+                    // reference: https://stackoverflow.com/a/26898749/6908282
+
+
+                    myAnsList = highlightAnswer(allAnswers, ansIsAPI, userConfig, DOM_Opts);
+                    myCmmtList = highlightComments(allComments, userConfig, DOM_Opts);
+                    browser.runtime.sendMessage({
+                        //  reference: https://stackoverflow.com/a/20021813/6908282
+                        from: "contentScript",
+                        subject: "loggedIn",
+                        content: {
+                            answerCount: myAnsList == "N/A" ? "?" : myAnsList.length,
+                            commentCount: myCmmtList == "N/A" ? "?" : myCmmtList.length
+                        }
+                    }).then(function () {
+                        // console.log("sending message");
+                    });
+
+                })
             })
         }
 
@@ -100,34 +114,41 @@ export default function highlightStack() {
         });
     }
 
-    function highlightAnswer(answers, userConfig, DOM_Opts) {
+    function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts) {
         const hlAns = userConfig.hlAns;
         const srtAns = userConfig.srtAns;
         const isSorted = DOM_Opts.isSorted;
-        const answersHeader = DOM_Opts.answersHeader;
+        const answersHeader = document.getElementById('answers-header');
         const currUser = DOM_Opts.currUser;
 
         let answerList = [];
         if (hlAns || srtAns) {
             for (let answer of answers) {
-                const userDetails = answer.querySelectorAll('.user-details');
-                const userHTML = userDetails[userDetails.length - 1];
-                const answerUser = userHTML.children.item(0);
-                if (answerUser.href == currUser.href) {
-                    const answerToHighlight = answer;
+                let answerUser, answerId;
+                if (ansIsAPI) {
+                    answerUser = answer.owner.link;
+                    answerId = answer.answer_id;
+                } else {
+                    const userDetails = answer.querySelectorAll('.user-details');
+                    const userHTML = userDetails[userDetails.length - 1];
+                    answerUser = userHTML.children.item(0).href;
+                    answerId = answer.dataset.answerid;
+                }
+                if (answerUser == currUser.href) {
+                    const answerToHighlight = document.querySelector("#answer-" + answerId);
                     if (!isSorted && srtAns) {
                         insertAfter(answersHeader, answerToHighlight);
                     }
                     if (hlAns) {
                         answerToHighlight.style.cssText = "border: 2px solid darkgreen; border-radius: 5px; margin: 20px 0; padding-left: 5px;"
                     }
-                    answerList.push(answer.id);
+                    answerList.push("answer-" + answerId);
                 }
 
-                if (currURL.indexOf(answer.dataset.answerid) > -1) {
+                if (currURL.indexOf(answerId) > -1) {
                     // if the user clicks on a link to a specific answer, scroll that into view
                     // answer.scrollIntoView();
-                    scrollToTarget(answer.id, "answer", 40)
+                    scrollToTarget("answer-" + answerId, "answer", 40)
                 }
             }
         }
