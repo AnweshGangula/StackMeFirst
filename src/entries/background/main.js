@@ -94,9 +94,11 @@ function auth(sendResponse) {
   const clientId = '24029';
   const redirectUrl = browser.identity.getRedirectURL('oauth2');
   const url = `https://stackoverflow.com/oauth/dialog?client_id=${clientId}&scope=${scope}&redirect_uri=${redirectUrl}`;
+  alert(redirectUrl)
   browser.identity.launchWebAuthFlow(
     { url: url, interactive: true }).then(
       redirect_url => {
+        console.log(redirect_url);
         const token = redirect_url.match(/access_token=(.+)/)[1];
         sendResponse({ token });
       }

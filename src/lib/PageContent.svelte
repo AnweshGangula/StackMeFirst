@@ -123,7 +123,8 @@
 			let activeURL = new URL(tab.url);
 			let linkRef = "";
 			if (type == "comment") {
-				linkRef = activeURL.href + eleID;
+				const quesId = activeURL.pathname.replace("/questions/", "").split("/")[0];
+				linkRef = activeURL.href + "#" + eleID.replace("-", "") + "_" + quesId;
 			}
 			if (type == "answer") {
 				const ref = eleID.replace("answer-", "");
@@ -132,7 +133,11 @@
 			link.setAttribute("href", linkRef);
 			link.addEventListener("click", function () {
 				window.event.preventDefault();
-				ExecuteScroll(tab.id, eleID, type, offsetHeight);
+				if (eleClass == "hidden") {
+					browser.tabs.create({ url: linkRef });
+				} else {
+					ExecuteScroll(tab.id, eleID, type, offsetHeight);
+				}
 			});
 
 			ansEle.appendChild(link);
