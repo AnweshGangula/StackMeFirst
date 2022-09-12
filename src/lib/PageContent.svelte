@@ -43,7 +43,7 @@
 
 			const ignoreURL = ignoreUrlList.some((url) => URLpathname.includes(url));
 			const isQuestion = URLpathname.startsWith("/questions/") && !ignoreURL;
-			if (isStackOverflow && isQuestion) {
+			if (isStackOverflow) {
 				browser.tabs.sendMessage(tabs[0].id, { from: "popup", subject: "popupDOM" }).then(
 					// ...also specifying a callback to be called
 					//    from the receiving end (content script).
@@ -69,6 +69,17 @@
 		const metaData = info.metaData;
 		if (metaData.currUser == undefined) {
 			warningText = "! Login to Stack Overflow to highlight your answers";
+			warningType.add("warn");
+			return;
+		}
+
+		let activeURL = new URL(currTab.url);
+		let URLpathname = activeURL.pathname;
+		const ignoreURL = ignoreUrlList.some((url) => URLpathname.includes(url));
+		const isQuestion = URLpathname.startsWith("/questions/") && !ignoreURL;
+
+		if (!isQuestion) {
+			warningText = "! Please open a Stack Overflow question to use this addin.";
 			warningType.add("warn");
 			return;
 		}
