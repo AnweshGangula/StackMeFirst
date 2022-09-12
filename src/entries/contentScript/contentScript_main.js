@@ -73,7 +73,6 @@ export default function highlightStack() {
                     }
                 });
 
-                console.log(idforCmts.join(";"))
                 const getComments = stackAPI.getComments(idforCmts.join(";"));
                 Promise.resolve(getComments).then(res => {
                     allComments = res;
@@ -147,8 +146,11 @@ export default function highlightStack() {
         const hlAns = userConfig.hlAns;
         const srtAns = userConfig.srtAns;
         const isSorted = DOM_Opts.isSorted;
-        const answersHeader = document.getElementById('answers-header');
         const currUser = DOM_Opts.currUser;
+
+        const answersHeader = document.getElementById('answers-header');
+        const pagination = document.querySelector(".s-pagination.pager-answers");
+        const topEle = pagination == null ? answersHeader : pagination;
 
         let answerList = [];
         if (hlAns || srtAns) {
@@ -165,19 +167,27 @@ export default function highlightStack() {
                 }
                 if (answerUser == currUser.href) {
                     const answerToHighlight = document.querySelector("#answer-" + answerId);
-                    if (!isSorted && srtAns) {
-                        insertAfter(answersHeader, answerToHighlight);
+                    const isAnsVisible = answerToHighlight != null
+                    let suffix = ""
+                    if (isAnsVisible) {
+                        // if answer is paginated, it will not be visible in current page.
+                        // Eg: https://stackoverflow.com/questions/7244321/how-do-i-update-or-sync-a-forked-repository-on-github?page=2&tab=scoredesc#tab-top 
+                        if (!isSorted && srtAns) {
+                            insertAfter(topEle, answerToHighlight);
+                        }
+                        if (hlAns) {
+                            answerToHighlight.style.cssText = "border: 2px solid darkgreen; border-radius: 5px; margin: 20px 0; padding-left: 5px;"
+                        }
+                    } else {
+                        suffix = " (hidden)"
                     }
-                    if (hlAns) {
-                        answerToHighlight.style.cssText = "border: 2px solid darkgreen; border-radius: 5px; margin: 20px 0; padding-left: 5px;"
-                    }
-                    answerList.push("answer-" + answerId);
+                    answerList.push("answer-" + answerId + suffix);
                 }
 
                 if (currURL.indexOf(answerId) > -1) {
                     // if the user clicks on a link to a specific answer, scroll that into view
                     // answer.scrollIntoView();
-                    scrollToTarget("answer-" + answerId, "answer", 40)
+                    scrollToTarget("answer-" + answerId, "answer", 60)
                 }
             }
         }
@@ -208,6 +218,7 @@ export default function highlightStack() {
                     const commentEle = document.getElementById("comment-" + commentId);
                     let suffix = ""
                     if (commentEle == null) {
+                        // if comment is hidden
                         suffix = " (hidden)"
                         console.log("Hidden comment: #comment-" + commentId)
                     } else {

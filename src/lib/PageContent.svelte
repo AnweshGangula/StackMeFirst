@@ -121,6 +121,7 @@
 			link.textContent = eleID;
 
 			let activeURL = new URL(tab.url);
+			const baseURL = activeURL.protocol + "//" + activeURL.host + activeURL.pathname; // ref: https://stackoverflow.com/a/6257480/6908282
 			let linkRef = "";
 			if (type == "comment") {
 				const quesId = activeURL.pathname.replace("/questions/", "").split("/")[0];
@@ -128,7 +129,7 @@
 			}
 			if (type == "answer") {
 				const ref = eleID.replace("answer-", "");
-				linkRef = activeURL.href + "/" + ref + "#" + ref;
+				linkRef = baseURL + "/" + ref + "#" + ref;
 			}
 			link.setAttribute("href", linkRef);
 			link.addEventListener("click", function () {
