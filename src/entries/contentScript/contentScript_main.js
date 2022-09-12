@@ -39,6 +39,14 @@ export default function highlightStack() {
                 // console.log("sending message");
             });
         } else if (isQuestion) {
+            browser.runtime.sendMessage({
+                //  reference: https://stackoverflow.com/a/20021813/6908282
+                from: "contentScript",
+                subject: "loading",
+            }).then(function () {
+                // console.log("sending message");
+            });
+
             question = document.getElementById('question');
             quesAuthor = document.querySelector(".post-signature.owner").getElementsByTagName("a")[0];
             let allAnswers = [];

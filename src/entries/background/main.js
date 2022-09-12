@@ -32,6 +32,10 @@ browser.runtime.onMessage.addListener(
         UpdateBadge(badgeText, browserTabId, pluginTitle, color);
         // return true; // must return true to signal asynchronous
         break;
+      case "loading":
+        UpdateBadge("...", browserTabId, "Loading...", "orange");
+        // return true; // must return true to signal asynchronous
+        break;
       case "loggedIn":
         badgeText = `${content.answerCount}A,${content.commentCount}C`;
         pluginTitle = `${content.answerCount} Answers, ${content.commentCount} Comments\n`;
