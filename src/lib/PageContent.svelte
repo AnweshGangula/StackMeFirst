@@ -107,8 +107,17 @@
 		let offsetHeight = document.getElementsByTagName("header")[0].offsetHeight;
 
 		eleList.forEach((eleID) => {
+			let suffix = " (hidden)";
+			let eleClass = "";
+			if (eleID.includes(suffix)) {
+				eleClass = "hidden";
+				eleID = eleID.replace(suffix, "");
+			} else {
+				suffix = "";
+			}
 			let ansEle = document.createElement("li");
 			let link = document.createElement("a");
+			link.className = eleClass;
 			link.textContent = eleID;
 
 			let activeURL = new URL(tab.url);
@@ -127,6 +136,7 @@
 			});
 
 			ansEle.appendChild(link);
+			ansEle.append(suffix);
 			myContent.appendChild(ansEle);
 		});
 
@@ -237,4 +247,18 @@
 </Popup>
 
 <style>
+	:global(a.hidden) {
+		background-color: darkgrey;
+		/* margin: 2px; */
+		padding: 0 3px;
+		border-radius: 3px;
+		/* color: white; */
+		font-style: italic;
+	}
+
+	:global(a.hidden::before) {
+		/* Reference: https://stackoverflow.com/a/52058198/6908282 */
+		content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
+		margin: 0 3px 0 5px;
+	}
 </style>

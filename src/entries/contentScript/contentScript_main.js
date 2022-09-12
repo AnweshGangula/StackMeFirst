@@ -206,14 +206,16 @@ export default function highlightStack() {
                 }
                 if (commentUser == currUser.href) {
                     const commentEle = document.getElementById("comment-" + commentId);
+                    let suffix = ""
                     if (commentEle == null) {
+                        suffix = " (hidden)"
                         console.log("Hidden comment: #comment-" + commentId)
                     } else {
                         const commentToHighlight = commentEle.getElementsByClassName("comment-text")[0];
                         commentToHighlight.style.cssText = "border: 2px solid darkgreen; border-radius: 5px; margin: 5px;"
                     }
 
-                    commentList.push("comment-" + commentId);
+                    commentList.push("comment-" + commentId + suffix);
                 }
             }
         }
