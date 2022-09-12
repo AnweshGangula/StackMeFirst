@@ -10,6 +10,7 @@ export default defineConfig(({ mode }) => {
 
   if (Number(env.VITE_MANIFEST_VERSION) == 2) {
     buildOptions = {
+      sourcemap: true,
       rollupOptions: {
         output: {
           // assetFileNames: (assetInfo) => {
