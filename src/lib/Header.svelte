@@ -45,11 +45,18 @@
 	{#if loggedIn}
 		<button id="btnLogout" class="loginBtn" on:click|preventDefault>Logout</button>
 	{:else}
-		<button id="btnLogin" class="loginBtn" on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow">Login</button>
+		<button id="btnLogin" class="loginBtn" on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights"
+			>Login</button
+		>
 	{/if}
 </header>
 
 <style>
+	header {
+		display: flex;
+		align-items: center;
+	}
+
 	#logo {
 		margin: 5px;
 	}

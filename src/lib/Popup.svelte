@@ -38,10 +38,6 @@
 		/* height: 300px; */
 	}
 
-	:global(header) {
-		display: flex;
-		align-items: center;
-	}
 	hr {
 		/* reference: https://stackoverflow.com/a/5619906/6908282 */
 		margin-top: 5px;
