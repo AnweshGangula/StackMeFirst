@@ -1,33 +1,28 @@
 <script>
 	import Preferences from "~/lib/Preferences.svelte";
 	import Header from "~/lib/Header.svelte";
-
-	export let pageType = "popup";
-	export let isStackOverflow = true;
 </script>
 
 <Header />
 <main>
 	<slot />
-	{#if pageType == "popup" && isStackOverflow}
-		<div id="myStack">
-			<details id="ansList" open>
-				<summary>
-					<b><span id="ansCount">0</span> Answer/s</b> posted by you:
-				</summary>
+	<div id="myStack">
+		<details id="ansList" open>
+			<summary>
+				<b><span id="ansCount">0</span> Answer/s</b> posted by you:
+			</summary>
 
-				<p id="ansOff" class="featureOff" />
-			</details>
+			<p id="ansOff" class="featureOff" />
+		</details>
 
-			<details id="commList" open>
-				<summary>
-					<b><span id="commCount">0</span> Comment/s</b> posted by you:
-				</summary>
-				<p id="commOff" class="featureOff" />
-			</details>
-			<hr />
-		</div>
-	{/if}
+		<details id="commList" open>
+			<summary>
+				<b><span id="commCount">0</span> Comment/s</b> posted by you:
+			</summary>
+			<p id="commOff" class="featureOff" />
+		</details>
+		<hr />
+	</div>
 
 	<Preferences />
 </main>

@@ -9,10 +9,8 @@
 	import scrollToTarget from "../executeScript/executeScript";
 	import { ignoreUrlList } from "~/utils/constants";
 
-	export let pageType = "popup";
 	let warningText;
 	let warningType = new Set();
-	let isStackOverflow;
 	let glCurrTab;
 
 	// Once the DOM is ready...
@@ -27,7 +25,7 @@
 			let currURL = activeURL.href; // .at(-1)
 			let website = activeURL.host;
 			let URLpathname = activeURL.pathname;
-			isStackOverflow = website == "stackoverflow.com";
+			const isStackOverflow = website == "stackoverflow.com";
 
 			const ignoreURL = ignoreUrlList.some((url) => URLpathname.includes(url));
 			const isQuestion = URLpathname.startsWith("/questions/") && !ignoreURL;
@@ -148,18 +146,6 @@
 		return myContent;
 	}
 
-	function DisplayNotificaction(warningText, type) {
-		let notifyEle = document.getElementById("notification");
-
-		if (warningText == "" || pageType == "options") {
-			notifyEle.style.display = "none";
-		} else {
-			notifyEle.textContent = warningText;
-			notifyEle.style.display = "block";
-			notifyEle.classList.add(type);
-		}
-	}
-
 	function ExecuteScroll(tabId, eleID, type, offsetHeight) {
 		if (manifestVer == 3) {
 			//  reference: https://stackoverflow.com/a/70932186/6908282
@@ -180,7 +166,7 @@
 	}
 </script>
 
-<Popup {pageType} {isStackOverflow}>
+<Popup>
 	<Notification {warningType} {warningText} {glCurrTab} {ExecuteScroll} />
 </Popup>
 
