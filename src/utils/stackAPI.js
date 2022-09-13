@@ -1,4 +1,6 @@
-// refefrence: https://github.com/GanguLabs/StackFave/blob/master/src/utils/api.js
+import { customFilterEg } from "./constants";
+
+// reference: https://github.com/GanguLabs/StackFave/blob/master/src/utils/api.js
 
 const baseURL = 'https://api.stackexchange.com/2.3';
 const key = '1jY1xGKt)NGfZQwE3RbWHQ((';
@@ -38,41 +40,15 @@ export default class Api {
     }
 
     // used during development to generate filter
-    async _createFilter() {
-        const includeFeilds = [
-            'question.title',
-            'question.creation_date',
-            'question.view_count',
-            'question.favorite_count',
-            'question.up_vote_count',
-            'question.tags',
-            'question.link',
-        ];
-        const excludeFeilds = [
-            'question.accepted_answer_id',
-            'question.answer_count',
-            'question.bounty_amount',
-            'question.bounty_closes_date',
-            'question.closed_date',
-            'question.closed_reason',
-            'question.community_owned_date',
-            'question.is_answered',
-            'question.last_activity_date',
-            'question.last_edit_date',
-            'question.locked_date',
-            'question.migrated_from',
-            'question.migrated_to',
-            'question.owner',
-            'question.protected_date',
-            'question.question_id',
-            'question.score',
-        ];
+    async _createFilter(filterOpts = customFilterEg) {
+        const includeFeilds = filterOpts.includeFeilds;
+        const excludeFeilds = filterOpts.excludeFeilds;
         const { items } = await this._fetch(
             '/filters/create',
             {
                 include: includeFeilds.join(';'),
                 exclude: excludeFeilds.join(';'),
-                base: 'default',
+                base: filterOpts.base,
                 unsafe: false,
             },
             ''
