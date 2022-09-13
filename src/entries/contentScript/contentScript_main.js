@@ -110,8 +110,8 @@ export default function highlightStack() {
                             from: "contentScript",
                             subject: "loggedIn",
                             content: {
-                                answerCount: myAnsList == "N/A" ? "?" : myAnsList.length,
-                                commentCount: myCmmtList == "N/A" ? "?" : myCmmtList.length
+                                answerCount: myAnsList ? myAnsList.length : "?",
+                                commentCount: myCmmtList ? myCmmtList.length : "?",
                             }
                         }).then(function () {
                             // console.log("sending message");
@@ -192,7 +192,7 @@ export default function highlightStack() {
             }
         }
         else {
-            answerList = "N/A"
+            answerList = undefined;
         }
 
         return answerList;
@@ -231,7 +231,7 @@ export default function highlightStack() {
             }
         }
         else {
-            commentList = "N/A"
+            commentList = undefined;
         }
 
         return commentList;
