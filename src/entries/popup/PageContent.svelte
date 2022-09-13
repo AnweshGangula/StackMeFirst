@@ -6,7 +6,7 @@
 	import Notification from "./Notification.svelte";
 
 	const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION);
-	import scrollToTarget from "../entries/executeScript/executeScript";
+	import scrollToTarget from "../executeScript/executeScript";
 	import { ignoreUrlList } from "~/utils/constants";
 
 	export let pageType = "popup";

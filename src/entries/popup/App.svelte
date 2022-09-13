@@ -1,5 +1,5 @@
 <script>
-	import PageContent from "~/lib/PageContent.svelte";
+	import PageContent from "./PageContent.svelte";
 </script>
 
 <PageContent />

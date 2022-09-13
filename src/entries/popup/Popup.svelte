@@ -1,6 +1,6 @@
 <script>
 	import Preferences from "~/lib/Preferences.svelte";
-	import Header from "./Header.svelte";
+	import Header from "~/lib/Header.svelte";
 
 	export let pageType = "popup";
 	export let isStackOverflow = true;
