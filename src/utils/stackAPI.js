@@ -20,7 +20,7 @@ export default class Api {
             ...(site && { site }),
             ...queriesObj,
         })}`;
-        const url = `${baseURL}${endpoint}${query}`;
+        const url = encodeURI(`${baseURL}${endpoint}${query}`);
         return url;
     }
 
@@ -124,7 +124,7 @@ export default class Api {
                 mergedQuery.page += 1;
             }
             const { items, has_more } = await this._fetch(
-                `/questions/${ids}/comments`,
+                `/posts/${ids}/comments`,
                 mergedQuery
             );
             myDetails = myDetails.concat(items);
