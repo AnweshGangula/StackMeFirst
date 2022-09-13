@@ -77,7 +77,7 @@ export default function highlightStack() {
                 Promise.resolve(getComments).then(res => {
                     allComments = res;
                     if (allComments == []) {
-                        allAnswers = document.getElementsByClassName("comment");
+                        allComments = document.getElementsByClassName("comment");
                         cmtIsAPI = false;
                         console.log("Comments API did not work")
                     }
@@ -212,7 +212,7 @@ export default function highlightStack() {
                     commentId = comment.comment_id;
                 } else {
                     commentUser = comment.getElementsByClassName("comment-user")[0].href;
-                    answerId = answer.dataset.answerid;
+                    commentId = comment.dataset.commentId;
                 }
                 if (commentUser == currUser.href) {
                     const commentEle = document.getElementById("comment-" + commentId);
