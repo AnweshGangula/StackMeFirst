@@ -5,7 +5,7 @@
 
 <Header />
 <main>
-	<Preferences />
+	<Preferences pageType="options" />
 </main>
 
 <style>
