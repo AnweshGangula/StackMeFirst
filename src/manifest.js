@@ -24,6 +24,10 @@ const sharedManifest = {
     open_in_tab: true,
   },
   permissions: ["tabs", "webNavigation", "storage", "scripting", "identity"],
+  oauth2: {
+    client_id: "24029",
+    scopes: ["read_inbox", "no_expiry", "private_info"]
+  }
 };
 
 const browserAction = {

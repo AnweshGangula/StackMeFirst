@@ -43,7 +43,7 @@
 
 			const ignoreURL = ignoreUrlList.some((url) => URLpathname.includes(url));
 			const isQuestion = URLpathname.startsWith("/questions/") && !ignoreURL;
-			if (isStackOverflow && isQuestion) {
+			if (isStackOverflow) {
 				browser.tabs.sendMessage(tabs[0].id, { from: "popup", subject: "popupDOM" }).then(
 					// ...also specifying a callback to be called
 					//    from the receiving end (content script).
@@ -69,6 +69,17 @@
 		const metaData = info.metaData;
 		if (metaData.currUser == undefined) {
 			warningText = "! Login to Stack Overflow to highlight your answers";
+			warningType.add("warn");
+			return;
+		}
+
+		let activeURL = new URL(currTab.url);
+		let URLpathname = activeURL.pathname;
+		const ignoreURL = ignoreUrlList.some((url) => URLpathname.includes(url));
+		const isQuestion = URLpathname.startsWith("/questions/") && !ignoreURL;
+
+		if (!isQuestion) {
+			warningText = "! Please open a Stack Overflow question to use this addin.";
 			warningType.add("warn");
 			return;
 		}
@@ -107,26 +118,42 @@
 		let offsetHeight = document.getElementsByTagName("header")[0].offsetHeight;
 
 		eleList.forEach((eleID) => {
+			let suffix = " (hidden)";
+			let eleClass = "";
+			if (eleID.includes(suffix)) {
+				eleClass = "hidden";
+				eleID = eleID.replace(suffix, "");
+			} else {
+				suffix = "";
+			}
 			let ansEle = document.createElement("li");
 			let link = document.createElement("a");
+			link.className = eleClass;
 			link.textContent = eleID;
 
 			let activeURL = new URL(tab.url);
+			const baseURL = activeURL.protocol + "//" + activeURL.host + activeURL.pathname; // ref: https://stackoverflow.com/a/6257480/6908282
 			let linkRef = "";
 			if (type == "comment") {
-				linkRef = activeURL.href + eleID;
+				const quesId = activeURL.pathname.replace("/questions/", "").split("/")[0];
+				linkRef = activeURL.href + "#" + eleID.replace("-", "") + "_" + quesId;
 			}
 			if (type == "answer") {
 				const ref = eleID.replace("answer-", "");
-				linkRef = activeURL.href + "/" + ref + "#" + ref;
+				linkRef = baseURL + "/" + ref + "#" + ref;
 			}
 			link.setAttribute("href", linkRef);
 			link.addEventListener("click", function () {
 				window.event.preventDefault();
-				ExecuteScroll(tab.id, eleID, type, offsetHeight);
+				if (eleClass == "hidden") {
+					browser.tabs.create({ url: linkRef });
+				} else {
+					ExecuteScroll(tab.id, eleID, type, offsetHeight);
+				}
 			});
 
 			ansEle.appendChild(link);
+			ansEle.append(suffix);
 			myContent.appendChild(ansEle);
 		});
 
@@ -237,4 +264,18 @@
 </Popup>
 
 <style>
+	:global(a.hidden) {
+		background-color: darkgrey;
+		/* margin: 2px; */
+		padding: 0 3px;
+		border-radius: 3px;
+		/* color: white; */
+		font-style: italic;
+	}
+
+	:global(a.hidden::before) {
+		/* Reference: https://stackoverflow.com/a/52058198/6908282 */
+		content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
+		margin: 0 3px 0 5px;
+	}
 </style>

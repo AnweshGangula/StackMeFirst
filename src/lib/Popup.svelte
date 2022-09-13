@@ -6,6 +6,8 @@
 	let loggedIn = false;
 	async function login() {
 		// this.setState({ loading: true });
+		alert("Sending Message to backgroundScript to login");
+
 		browser.runtime
 			.sendMessage({
 				from: "popup",
@@ -19,7 +21,14 @@
 					stackAPI = new Api(token);
 					const myData = await stackAPI.getMyDetails();
 					document.getElementById("btnUserName").textContent = myData[0].display_name;
-					// this.setState({ token, view: VIEWS.DEFAULT });
+
+					const apiData = {
+						token: token,
+						userName: myData[0].display_name,
+					};
+					browser.storage.sync.set({ apiData: apiData }).then(function () {
+						// UpdateStatus("Options Saved");
+					});
 				} else {
 					console.log("Unable to login");
 					// this.setState({ error });
