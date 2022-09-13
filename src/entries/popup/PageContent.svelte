@@ -4,7 +4,7 @@
 	// let console = browser.extension.getBackgroundPage().console;
 	import Popup from "./Components/Popup.svelte";
 	import Notification from "./Components/Notification.svelte";
-
+	import { restore_options } from "./popupUtils";
 	import { ignoreUrlList } from "~/utils/constants";
 	import StackContent from "./Components/StackContent.svelte";
 
@@ -14,7 +14,7 @@
 	let answerList, commentList;
 
 	// Once the DOM is ready...
-	const dispDOM = displayHTML();
+	const dispDOM = displayHTML().then(() => restore_options("popup"));
 
 	async function displayHTML() {
 		await browser.tabs.query({ active: true, lastFocusedWindow: true }).then(async function (tabs) {

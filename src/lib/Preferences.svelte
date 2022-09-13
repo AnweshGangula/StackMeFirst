@@ -1,14 +1,10 @@
 <script>
 	import browser from "webextension-polyfill";
+	import { defaultOptions, restore_options, UpdateUI } from "~/entries/popup/popupUtils";
 
 	export let pageType = "";
 
-	let defaultOptions = {
-		hlAns: true,
-		srtAns: true,
-		hlCmnts: false,
-	};
-	restore_options();
+	restore_options(pageType);
 
 	// https://developer.browser.com/docs/extensions/mv3/options/
 	async function save_options() {
@@ -22,22 +18,14 @@
 		};
 		browser.storage.sync.set({ stackMeData: stackMeData }).then(function () {
 			UpdateStatus("Options Saved");
-		});
-	}
-
-	// Restores select box and checkbox state using the preferences stored in browser.storage.
-	function restore_options() {
-		// https://developer.chrome.com/docs/extensions/mv3/options/
-		browser.storage.sync.get({ stackMeData: defaultOptions }).then(function (result) {
-			// if stackMeData is not found, use defaultOptions for a first time user
-			UpdateUI(result.stackMeData);
+			UpdateUI(stackMeData, pageType);
 		});
 	}
 
 	async function reset_options() {
 		browser.storage.sync.set({ stackMeData: defaultOptions }).then(() => {
 			// reset to defaultOptions
-			UpdateUI(defaultOptions);
+			UpdateUI(defaultOptions, pageType);
 		});
 
 		UpdateStatus("Options reset");
@@ -53,28 +41,6 @@
 		setTimeout(function () {
 			status.style.visibility = "hidden";
 		}, 5000);
-	}
-
-	function UpdateUI(Options) {
-		document.getElementById("hlAnswers").checked = Options.hlAns;
-		document.getElementById("srtAns").checked = Options.srtAns;
-		document.getElementById("hlComments").checked = Options.hlCmnts;
-
-		if (pageType == "popup") {
-			if (!Options.hlAns) {
-				const msg = "highlighting answers is disabled";
-				document.getElementById("ansList").title = msg;
-				document.getElementById("ansOff").textContent = msg;
-				document.getElementById("ansCount").textContent = "?";
-			}
-
-			if (!Options.hlCmnts) {
-				const msg = "highlighting comments is disabled";
-				document.getElementById("commList").title = msg;
-				document.getElementById("commOff").textContent = msg;
-				document.getElementById("commCount").textContent = "?";
-			}
-		}
 	}
 </script>
 
