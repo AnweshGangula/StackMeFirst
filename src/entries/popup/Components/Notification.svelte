@@ -1,8 +1,9 @@
 <script>
+	import ExecuteScroll from "../popupUtils";
+
 	export let warningType = new Set(),
 		warningText,
-		glCurrTab,
-		ExecuteScroll;
+		glCurrTab;
 </script>
 
 {#if warningType.size != 0}

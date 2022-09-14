@@ -133,4 +133,22 @@ export default class Api {
         return myDetails;
     }
 
+    async getLinkedQues(ids, queriesObj = {}) {
+        let myDetails = [];
+        let hasMore = false;
+        const mergedQuery = Object.assign({ page: 1, filter }, queriesObj);
+        do {
+            if (hasMore) {
+                mergedQuery.page += 1;
+            }
+            const { items, has_more } = await this._fetch(
+                `/questions/${ids}/linked`,
+                mergedQuery
+            );
+            myDetails = myDetails.concat(items);
+            hasMore = has_more;
+        } while (hasMore);
+        return myDetails;
+    }
+
 }

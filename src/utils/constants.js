@@ -3,6 +3,15 @@ export const ignoreUrlList = [
     "/tagged",
 ];
 
+export const upvoteFilter = {
+    includeFeilds: [
+        "question.upvoted",
+        "answer.upvoted",
+    ],
+    excludeFeilds: [],
+    base: "none",
+}
+
 export const customFilterEg = {
     includeFeilds: [
         'question.title',
