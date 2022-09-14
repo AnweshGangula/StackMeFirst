@@ -6,6 +6,7 @@
 	import { QuesIdUrl } from "~/utils/utils";
 
 	let glCurrTab;
+	let loggedIn = false;
 	const apiData = {
 		token: "",
 		userName: "",
@@ -18,6 +19,7 @@
 			const token = result.apiData.token;
 
 			if (token != "") {
+				loggedIn = true;
 				await browser.tabs.query({ active: true, lastFocusedWindow: true }).then(async function (tabs) {
 					glCurrTab = tabs[0];
 					const quesId = QuesIdUrl(glCurrTab.url);
@@ -38,7 +40,11 @@
 </script>
 
 {#await upvotedLinks}
-	<p>Login to Stack Overflow to get Linked Question Upvoted by you</p>
+	<p>Loading Upvoted Linked Questions...</p>
 {:then linkqIds}
-	<StackContent eleList={linkqIds} type="linkq" tab={glCurrTab} />
+	{#if loggedIn}
+		<StackContent eleList={linkqIds} type="linkq" tab={glCurrTab} />
+	{:else}
+		<p>Login to Stack Overflow to get Linked Question Upvoted by you</p>
+	{/if}
 {/await}
