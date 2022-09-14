@@ -9,6 +9,7 @@
 	import Header from "~/lib/Header.svelte";
 	import Preferences from "~/lib/Preferences.svelte";
 	import Loader from "./Components/Loader.svelte";
+	import LinkedQues from "./Components/LinkedQues.svelte";
 
 	let warningText;
 	let warningType = new Set();
@@ -62,6 +63,7 @@
 		<div id="myStack">
 			<StackContent eleList={answerList} type="answer" tab={glCurrTab} />
 			<StackContent eleList={commentList} type="comment" tab={glCurrTab} />
+			<LinkedQues />
 			<hr />
 		</div>
 		<Preferences pageType="popup" />

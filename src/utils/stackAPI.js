@@ -134,6 +134,7 @@ export default class Api {
     }
 
     async getLinkedQues(ids, queriesObj = {}) {
+        const filter = "!nKzQUQzHEe"
         let myDetails = [];
         let hasMore = false;
         const mergedQuery = Object.assign({ page: 1, filter }, queriesObj);
