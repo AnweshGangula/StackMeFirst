@@ -1,6 +1,7 @@
 <script>
 	import browser from "webextension-polyfill";
 	import ExecuteScroll from "../popupUtils.js";
+	import { LinkToComment, LinkToAnswer } from "~/utils/utils.js";
 
 	export let eleList = [];
 	export let type;
@@ -29,16 +30,12 @@
 			suffix = "";
 		}
 
-		let activeURL = new URL(tab.url);
-		const baseURL = activeURL.protocol + "//" + activeURL.host + activeURL.pathname; // ref: https://stackoverflow.com/a/6257480/6908282
 		let linkRef = "";
 		if (type == "comment") {
-			const quesId = activeURL.pathname.replace("/questions/", "").split("/")[0];
-			linkRef = activeURL.href + "#" + eleId.replace("-", "") + "_" + quesId;
+			linkRef = LinkToComment(tab.url, eleId);
 		}
 		if (type == "answer") {
-			const ref = eleId.replace("answer-", "");
-			linkRef = baseURL + "/" + ref + "#" + ref;
+			LinkToAnswer(tab.url, eleId);
 		}
 
 		return { eleId, eleClass, linkRef, suffix };

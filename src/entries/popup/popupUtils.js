@@ -1,7 +1,7 @@
 import browser from "webextension-polyfill";
 
 import scrollToTarget from "../executeScript/executeScript";
-import { ignoreUrlList } from "~/utils/constants";
+import { IsQuestion } from "~/utils/utils";
 
 const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION);
 export const defaultOptions = {
@@ -69,11 +69,7 @@ export function UpdateUI(Options, pageType) {
 export function CheckWarnings(currTab, info) {
     let warningText = "";
     let warningType = new Set();
-
-    let activeURL = new URL(currTab.url);
-    let URLpathname = activeURL.pathname;
-    const ignoreURL = ignoreUrlList.some((url) => URLpathname.includes(url));
-    const isQuestion = URLpathname.startsWith("/questions/") && !ignoreURL;
+    const isQuestion = IsQuestion(currTab.url);
 
     //  reference: https://stackoverflow.com/a/20023723/6908282
     const metaData = info.metaData;
