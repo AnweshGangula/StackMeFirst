@@ -8,6 +8,7 @@
 	export let tab = { id: 0, url: "https://stackoverflow.com/" };
 	let OffsetHeight = 60;
 	const count = eleList ? eleList.length : 0;
+	const itemVerb = type == "linkq" ? "upvoted" : "posted";
 
 	function onClickEvent(data) {
 		const dest = data.dest;
@@ -46,7 +47,8 @@
 
 <details id="{type}List" open>
 	<summary>
-		<b class="itemCount"><span id="{type}Count">{count}</span> {type}/s</b> posted by you:
+		<b class="itemCount"><span id="{type}Count">{count}</span> {type}/s</b>
+		{itemVerb} by you:
 	</summary>
 	{#if count > 0}
 		<ul>
