@@ -8,6 +8,7 @@
 	import StackContent from "./Components/StackContent.svelte";
 	import Header from "~/lib/Header.svelte";
 	import Preferences from "~/lib/Preferences.svelte";
+	import Loader from "./Components/Loader.svelte";
 
 	let warningText;
 	let warningType = new Set();
@@ -62,7 +63,7 @@
 <Header />
 <main>
 	{#await dispDOM}
-		<p>loading</p>
+		<Loader />
 	{:then result}
 		<Notification {warningType} {warningText} {glCurrTab} />
 		<div id="myStack">
