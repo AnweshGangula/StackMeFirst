@@ -1,5 +1,7 @@
 import browser from "webextension-polyfill";
+
 import scrollToTarget from "../executeScript/executeScript";
+import { ignoreUrlList } from "~/utils/constants";
 
 const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION);
 export const defaultOptions = {
@@ -61,4 +63,35 @@ export function UpdateUI(Options, pageType) {
             document.getElementById("CommentOff").textContent = "";
         }
     }
+}
+
+// Update the relevant fields with the new data.
+export function CheckWarnings(currTab, info) {
+    let warningText = "";
+    let warningType = new Set();
+
+    let activeURL = new URL(currTab.url);
+    let URLpathname = activeURL.pathname;
+    const ignoreURL = ignoreUrlList.some((url) => URLpathname.includes(url));
+    const isQuestion = URLpathname.startsWith("/questions/") && !ignoreURL;
+
+    //  reference: https://stackoverflow.com/a/20023723/6908282
+    const metaData = info.metaData;
+    if (metaData.currUser == undefined) {
+        warningText = "! Login to Stack Overflow to highlight your answers";
+        warningType.add("warn");
+    } else if (!isQuestion) {
+        warningText = "! Please open a Stack Overflow question to use this addin.";
+        warningType.add("warn");
+    } else if ((info.commentList == undefined || info.commentList.length == 0) && (info.answerList == undefined || info.answerList.length == 0)) {
+        warningText = "! This question doesn't have any answers/comments submitted by you.";
+        warningType.add("warn");
+    }
+
+    if (metaData.currUser == metaData.quesAuthor) {
+        // warningText = "";
+        warningType.add("notify_author");
+    }
+    const output = { warningText, warningType }
+    return output;
 }

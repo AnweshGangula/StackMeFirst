@@ -3,7 +3,7 @@
 	// browser.storage.sync.clear(); // use this while development to clear any existing options
 	// let console = browser.extension.getBackgroundPage().console;
 	import Notification from "./Components/Notification.svelte";
-	import { restore_options } from "./popupUtils";
+	import { restore_options, CheckWarnings } from "./popupUtils";
 	import { ignoreUrlList } from "~/utils/constants";
 	import StackContent from "./Components/StackContent.svelte";
 	import Header from "~/lib/Header.svelte";
@@ -35,7 +35,15 @@
 					// ...also specifying a callback to be called
 					//    from the receiving end (content script).
 					function (info) {
-						SetPopupContent(tabs[0], info);
+						const warn = CheckWarnings(tabs[0], info);
+						warningText = warn.warningText;
+						warningType = warn.warningType;
+
+						if (warningType.has("warn")) {
+							return;
+						}
+						answerList = info.answerList;
+						commentList = info.commentList;
 					}
 				);
 				// if (website != "stackoverflow.com" || website != "extensions") {
@@ -48,42 +56,6 @@
 				warningType.add("warn");
 			}
 		});
-	}
-
-	// Update the relevant fields with the new data.
-	function SetPopupContent(currTab, info) {
-		//  reference: https://stackoverflow.com/a/20023723/6908282
-		const metaData = info.metaData;
-		if (metaData.currUser == undefined) {
-			warningText = "! Login to Stack Overflow to highlight your answers";
-			warningType.add("warn");
-			return;
-		}
-
-		let activeURL = new URL(currTab.url);
-		let URLpathname = activeURL.pathname;
-		const ignoreURL = ignoreUrlList.some((url) => URLpathname.includes(url));
-		const isQuestion = URLpathname.startsWith("/questions/") && !ignoreURL;
-
-		if (!isQuestion) {
-			warningText = "! Please open a Stack Overflow question to use this addin.";
-			warningType.add("warn");
-			return;
-		}
-
-		if (metaData.currUser == metaData.quesAuthor) {
-			warningText = "";
-			warningType.add("notify_author");
-		}
-
-		if ((info.commentList == undefined || info.commentList.length == 0) && (info.answerList == undefined || info.answerList.length == 0)) {
-			warningText = "! This question doesn't have any answers/comments submitted by you.";
-			warningType.add("warn");
-			return;
-		}
-
-		answerList = info.answerList;
-		commentList = info.commentList;
 	}
 </script>
 
