@@ -4,10 +4,12 @@
 	// let console = browser.extension.getBackgroundPage().console;
 	import Notification from "./Components/Notification.svelte";
 	import { restore_options, CheckWarnings } from "./popupUtils";
-	import { ignoreUrlList } from "~/utils/constants";
+	import { IsStackOverflow } from "~/utils/utils";
 	import StackContent from "./Components/StackContent.svelte";
 	import Header from "~/lib/Header.svelte";
 	import Preferences from "~/lib/Preferences.svelte";
+	import Loader from "./Components/Loader.svelte";
+	import LinkedQues from "./Components/LinkedQues.svelte";
 
 	let warningText;
 	let warningType = new Set();
@@ -22,15 +24,8 @@
 			// get current Tab - https://stackoverflow.com/a/29151677/6908282
 			let activeTab = tabs[0];
 			glCurrTab = tabs[0];
-			let activeURL = new URL(activeTab.url);
-			let currURL = activeURL.href; // .at(-1)
-			let website = activeURL.host;
-			let URLpathname = activeURL.pathname;
-			const isStackOverflow = website == "stackoverflow.com";
 
-			const ignoreURL = ignoreUrlList.some((url) => URLpathname.includes(url));
-			const isQuestion = URLpathname.startsWith("/questions/") && !ignoreURL;
-			if (isStackOverflow) {
+			if (IsStackOverflow(activeTab.url)) {
 				await browser.tabs.sendMessage(tabs[0].id, { from: "popup", subject: "popupDOM" }).then(
 					// ...also specifying a callback to be called
 					//    from the receiving end (content script).
@@ -62,12 +57,13 @@
 <Header />
 <main>
 	{#await dispDOM}
-		<p>loading</p>
+		<Loader />
 	{:then result}
 		<Notification {warningType} {warningText} {glCurrTab} />
 		<div id="myStack">
 			<StackContent eleList={answerList} type="answer" tab={glCurrTab} />
 			<StackContent eleList={commentList} type="comment" tab={glCurrTab} />
+			<LinkedQues />
 			<hr />
 		</div>
 		<Preferences pageType="popup" />

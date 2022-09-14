@@ -1,6 +1,7 @@
 <script>
 	import browser from "webextension-polyfill";
 	import ExecuteScroll from "../popupUtils.js";
+	import { LinkToComment, LinkToAnswer, LinkToLinkQ } from "~/utils/utils.js";
 
 	export let eleList = [];
 	export let type;
@@ -12,7 +13,7 @@
 		const dest = data.dest;
 		const eleId = data.eleId;
 
-		if (dest == "hidden") {
+		if (dest == "redirect") {
 			browser.tabs.create({ url: data.url });
 		} else {
 			ExecuteScroll(tab.id, eleId, type, OffsetHeight);
@@ -20,25 +21,24 @@
 	}
 
 	function updateVars(eleId) {
+		console.log(eleId);
 		let suffix = " (hidden)";
 		let eleClass = "";
 		if (eleId.includes(suffix)) {
-			eleClass = "hidden";
+			eleClass = "redirect";
 			eleId = eleId.replace(suffix, "");
 		} else {
 			suffix = "";
 		}
 
-		let activeURL = new URL(tab.url);
-		const baseURL = activeURL.protocol + "//" + activeURL.host + activeURL.pathname; // ref: https://stackoverflow.com/a/6257480/6908282
 		let linkRef = "";
 		if (type == "comment") {
-			const quesId = activeURL.pathname.replace("/questions/", "").split("/")[0];
-			linkRef = activeURL.href + "#" + eleId.replace("-", "") + "_" + quesId;
-		}
-		if (type == "answer") {
-			const ref = eleId.replace("answer-", "");
-			linkRef = baseURL + "/" + ref + "#" + ref;
+			linkRef = LinkToComment(tab.url, eleId);
+		} else if (type == "answer") {
+			linkRef = LinkToAnswer(tab.url, eleId);
+		} else if (type == "linkq") {
+			eleClass = "redirect";
+			linkRef = LinkToLinkQ(tab.url, eleId);
 		}
 
 		return { eleId, eleClass, linkRef, suffix };
@@ -47,7 +47,7 @@
 
 <details id="{type}List" open>
 	<summary>
-		<b><span id="{type}Count">{count}</span> {type}/s</b> posted by you:
+		<b class="itemCount"><span id="{type}Count">{count}</span> {type}/s</b> posted by you:
 	</summary>
 	{#if count > 0}
 		<ul>
@@ -70,6 +70,17 @@
 </details>
 
 <style>
+	details {
+		margin: 5px 0;
+	}
+
+	li {
+		margin: 3px 0;
+	}
+	.itemCount {
+		background-color: gold;
+		padding: 0 2px;
+	}
 	.featureOff {
 		background-color: firebrick;
 		color: white;
@@ -77,16 +88,17 @@
 		text-align: center;
 	}
 
-	a.hidden {
-		background-color: darkgrey;
+	a.redirect {
+		background-color: lightgray;
 		/* margin: 2px; */
 		padding: 0 3px;
 		border-radius: 3px;
 		/* color: white; */
 		font-style: italic;
+		padding: 0 3px;
 	}
 
-	a.hidden::before {
+	a.redirect::before {
 		/* Reference: https://stackoverflow.com/a/52058198/6908282 */
 		content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
 		margin: 0 3px 0 5px;

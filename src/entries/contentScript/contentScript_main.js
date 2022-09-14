@@ -1,7 +1,6 @@
 import browser from "webextension-polyfill";
 
-import { ignoreUrlList } from "~/utils/constants";
-
+import { IsStackOverflow, IsQuestion } from "~/utils/utils";
 import Api from "~/utils/stackAPI";
 
 import scrollToTarget from "../executeScript/executeScript"
@@ -10,19 +9,15 @@ window.scrollToTarget = scrollToTarget;
 export default function highlightStack() {
     let stackAPI = new Api("");
     const currURL = window.location.href // .at(-1)
-    const website = window.location.host;
-    const isStackOverflow = website == "stackoverflow.com"
 
-    if (isStackOverflow) {
+    if (IsStackOverflow(currURL)) {
         browser.runtime.sendMessage({
             from: "contentScript",
             subject: "isStackOverflow",
         });
 
         const currUser = document.querySelector(".s-topbar--item.s-user-card");
-        const URLpathname = window.location.pathname;
-        const ignoreURL = ignoreUrlList.some((url) => URLpathname.includes(url))
-        const isQuestion = (URLpathname.startsWith("/questions/") && !ignoreURL)
+        const isQuestion = IsQuestion(window.location.href)
         let question, quesAuthor;
         // const currUser = document.getElementsByClassName("s-user-card")[0]; // this is not correct if user I not logged in at this URL: https://stackoverflow.com/questions
         let myAnsList, myCmmtList;
@@ -220,7 +215,7 @@ export default function highlightStack() {
                     if (commentEle == null) {
                         // if comment is hidden
                         suffix = " (hidden)"
-                        console.log("Hidden comment: #comment-" + commentId)
+                        // console.log("Hidden comment: #comment-" + commentId)
                     } else {
                         const commentToHighlight = commentEle.getElementsByClassName("comment-text")[0];
                         commentToHighlight.style.cssText = "border: 2px solid darkgreen; border-radius: 5px; margin: 5px;"
