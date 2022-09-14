@@ -1,7 +1,7 @@
 <script>
 	import browser from "webextension-polyfill";
 	import ExecuteScroll from "../popupUtils.js";
-	import { LinkToComment, LinkToAnswer } from "~/utils/utils.js";
+	import { LinkToComment, LinkToAnswer, LinkToLinkQ } from "~/utils/utils.js";
 
 	export let eleList = [];
 	export let type;
@@ -13,7 +13,7 @@
 		const dest = data.dest;
 		const eleId = data.eleId;
 
-		if (dest == "hidden") {
+		if (dest == "redirect") {
 			browser.tabs.create({ url: data.url });
 		} else {
 			ExecuteScroll(tab.id, eleId, type, OffsetHeight);
@@ -21,10 +21,11 @@
 	}
 
 	function updateVars(eleId) {
+		console.log(eleId);
 		let suffix = " (hidden)";
 		let eleClass = "";
 		if (eleId.includes(suffix)) {
-			eleClass = "hidden";
+			eleClass = "redirect";
 			eleId = eleId.replace(suffix, "");
 		} else {
 			suffix = "";
@@ -33,9 +34,11 @@
 		let linkRef = "";
 		if (type == "comment") {
 			linkRef = LinkToComment(tab.url, eleId);
-		}
-		if (type == "answer") {
-			LinkToAnswer(tab.url, eleId);
+		} else if (type == "answer") {
+			linkRef = LinkToAnswer(tab.url, eleId);
+		} else if (type == "linkq") {
+			eleClass = "redirect";
+			linkRef = LinkToLinkQ(tab.url, eleId);
 		}
 
 		return { eleId, eleClass, linkRef, suffix };
@@ -67,7 +70,14 @@
 </details>
 
 <style>
-	:global(.itemCount) {
+	details {
+		margin: 5px 0;
+	}
+
+	li {
+		margin: 3px 0;
+	}
+	.itemCount {
 		background-color: gold;
 		padding: 0 2px;
 	}
@@ -78,16 +88,17 @@
 		text-align: center;
 	}
 
-	a.hidden {
-		background-color: darkgrey;
+	a.redirect {
+		background-color: lightgray;
 		/* margin: 2px; */
 		padding: 0 3px;
 		border-radius: 3px;
 		/* color: white; */
 		font-style: italic;
+		padding: 0 3px;
 	}
 
-	a.hidden::before {
+	a.redirect::before {
 		/* Reference: https://stackoverflow.com/a/52058198/6908282 */
 		content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
 		margin: 0 3px 0 5px;

@@ -75,10 +75,6 @@
 		width: 350px;
 		/* height: 300px; */
 	}
-
-	:global(details) {
-		margin: 5px 0;
-	}
 	hr {
 		/* reference: https://stackoverflow.com/a/5619906/6908282 */
 		margin-top: 5px;

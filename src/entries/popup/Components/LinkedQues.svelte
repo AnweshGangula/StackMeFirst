@@ -28,7 +28,7 @@
 
 					allLinkedQs.forEach((ques) => {
 						if (ques.upvoted) {
-							linkedQ.push(ques.question_id);
+							linkedQ.push(ques.question_id.toString());
 						}
 					});
 				});
@@ -42,23 +42,6 @@
 
 {#await upvotedLinks}
 	<p>Login to Stack Overflow to get Linked Question Upvoted by you</p>
-{:then linkIds}
-	<details id="upvotedLinks">
-		<summary>
-			<b class="itemCount"><span id="linksCount">{linkIds.length}</span> link/s</b> upvoted by you:
-		</summary>
-		{#if linkIds.length > 0}
-			<ul>
-				{#each linkIds as linkQ}
-					{@const href = `https://stackoverflow.com/q/${linkQ}?lq=1`}
-					<li>
-						<a {href} on:click|preventDefault={() => browser.tabs.create({ url: href })}>
-							{linkQ}
-						</a>
-						<!-- {meta.suffix} -->
-					</li>
-				{/each}
-			</ul>
-		{/if}
-	</details>
+{:then linkqIds}
+	<StackContent eleList={linkqIds} type="linkq" tab={glCurrTab} />
 {/await}
