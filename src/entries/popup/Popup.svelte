@@ -2,11 +2,12 @@
 	import browser from "webextension-polyfill";
 	// browser.storage.sync.clear(); // use this while development to clear any existing options
 	// let console = browser.extension.getBackgroundPage().console;
-	import Popup from "./Components/Popup.svelte";
 	import Notification from "./Components/Notification.svelte";
 	import { restore_options } from "./popupUtils";
 	import { ignoreUrlList } from "~/utils/constants";
 	import StackContent from "./Components/StackContent.svelte";
+	import Header from "~/lib/Header.svelte";
+	import Preferences from "~/lib/Preferences.svelte";
 
 	let warningText;
 	let warningType = new Set();
@@ -86,7 +87,8 @@
 	}
 </script>
 
-<Popup>
+<Header />
+<main>
 	{#await dispDOM}
 		<p>loading</p>
 	{:then result}
@@ -96,10 +98,15 @@
 			<StackContent eleList={commentList} type="Comment" tab={glCurrTab} />
 			<hr />
 		</div>
+		<Preferences pageType="popup" />
 	{/await}
-</Popup>
+</main>
 
 <style>
+	:global(body) {
+		width: 350px;
+		/* height: 300px; */
+	}
 	hr {
 		/* reference: https://stackoverflow.com/a/5619906/6908282 */
 		margin-top: 5px;

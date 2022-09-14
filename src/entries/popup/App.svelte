@@ -1,8 +1,8 @@
 <script>
-	import PageContent from "./PageContent.svelte";
+	import Popup from "./Popup.svelte";
 </script>
 
-<PageContent />
+<Popup />
 
 <style>
 </style>
