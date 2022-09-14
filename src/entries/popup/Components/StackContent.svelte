@@ -44,7 +44,7 @@
 
 <details id="{type}List" open>
 	<summary>
-		<b><span id="{type}Count">{count}</span> {type}/s</b> posted by you:
+		<b class="itemCount"><span id="{type}Count">{count}</span> {type}/s</b> posted by you:
 	</summary>
 	{#if count > 0}
 		<ul>
@@ -67,6 +67,10 @@
 </details>
 
 <style>
+	:global(.itemCount) {
+		background-color: gold;
+		padding: 0 2px;
+	}
 	.featureOff {
 		background-color: firebrick;
 		color: white;
