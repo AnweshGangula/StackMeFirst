@@ -1,19 +1,6 @@
 import browser from "webextension-polyfill";
 import { ignoreUrlList } from "./constants";
 
-export async function GetLocalToken() {
-    const apiData = {
-        token: "",
-        userName: "",
-    };
-    let token = false;
-    await browser.storage.sync.get({ apiData: apiData }).then(async function (result) {
-        token = result.apiData.token;
-        return token;
-    });
-
-}
-
 export function IsStackOverflow(baseUrl) {
     let activeURL = new URL(baseUrl);
     let website = activeURL.host;

@@ -1,11 +1,18 @@
 <script>
 	import browser from "webextension-polyfill";
 	import Api from "~/utils/stackAPI";
-	import { GetLocalToken } from "~/utils/utils";
 
 	let stackAPI;
-	let localToken = GetLocalToken();
+	let localToken = false;
 	let loginError = false;
+
+	const apiData = {
+		token: "",
+		userName: "",
+	};
+	browser.storage.sync.get({ apiData: apiData }).then(async function (result) {
+		localToken = result.apiData.token;
+	});
 
 	async function login() {
 		// this.setState({ loading: true });
@@ -13,13 +20,13 @@
 		browser.runtime
 			.sendMessage({
 				from: "popup",
-				subject: "AUTH",
+				subject: "GET_TOKEN",
 			})
 			.then(async ({ token, error }) => {
 				console.log(`Action 'AUTH' success`);
 				if (token) {
 					// console.log("Logged in");
-					localToken = true;
+					localToken = token;
 					stackAPI = new Api(token);
 					const myData = await stackAPI.getMyDetails();
 					document.getElementById("btnLogout").title = myData[0].display_name;
@@ -39,6 +46,23 @@
 			});
 		// return true;
 	}
+
+	async function RemoveToken() {
+		browser.runtime
+			.sendMessage({
+				from: "popup",
+				subject: "REMOVE_TOKEN",
+				content: { token: localToken },
+			})
+			.then(({ error }) => {
+				if (!error) {
+					console.log(`Action 'REMOVE_TOKEN' success`);
+					localToken = false;
+				} else {
+					//  unable to remove token
+				}
+			});
+	}
 </script>
 
 <header>
@@ -50,7 +74,7 @@
 
 	{#await localToken then}
 		{#if localToken}
-			<button id="btnLogout" class="loginBtn" on:click|preventDefault>Logout</button>
+			<button id="btnLogout" class="loginBtn" on:click|preventDefault={() => RemoveToken()}>Logout</button>
 		{:else}
 			<button id="btnLogin" class="loginBtn" on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights">
 				Login
