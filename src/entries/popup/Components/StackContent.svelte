@@ -21,7 +21,6 @@
 	}
 
 	function updateVars(eleId) {
-		console.log(eleId);
 		let suffix = " (hidden)";
 		let eleClass = "";
 		if (eleId.includes(suffix)) {

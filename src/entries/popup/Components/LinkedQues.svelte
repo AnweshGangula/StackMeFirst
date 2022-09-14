@@ -24,7 +24,6 @@
 
 					const stackApi = new Api(token);
 					const allLinkedQs = await stackApi.getLinkedQues(quesId);
-					console.log(allLinkedQs);
 
 					allLinkedQs.forEach((ques) => {
 						if (ques.upvoted) {
@@ -33,8 +32,6 @@
 					});
 				});
 			}
-
-			console.log(linkedQ);
 		});
 		return linkedQ;
 	}

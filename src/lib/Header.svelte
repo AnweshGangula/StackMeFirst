@@ -6,7 +6,6 @@
 	let loggedIn = false;
 	async function login() {
 		// this.setState({ loading: true });
-		alert("Sending Message to backgroundScript to login");
 
 		browser.runtime
 			.sendMessage({
@@ -30,7 +29,7 @@
 						// UpdateStatus("Options Saved");
 					});
 				} else {
-					console.log("Unable to login");
+					// console.log("Unable to login");
 					// this.setState({ error });
 				}
 			});
