@@ -1,4 +1,4 @@
-export default function scrollToTarget_Main(eleId, type, headerHeight = 40) {
+export default function scrollToTarget_Main(eleId, type, headerHeight = 60) {
     // reference: https://stackoverflow.com/a/67647864/6908282
     // this function is being used in popupjs for sctoll to the answer/comment clicked dby the user
     if (type == "question") {

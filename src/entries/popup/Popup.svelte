@@ -66,8 +66,8 @@
 	{:then result}
 		<Notification {warningType} {warningText} {glCurrTab} />
 		<div id="myStack">
-			<StackContent eleList={answerList} type="Answer" tab={glCurrTab} />
-			<StackContent eleList={commentList} type="Comment" tab={glCurrTab} />
+			<StackContent eleList={answerList} type="answer" tab={glCurrTab} />
+			<StackContent eleList={commentList} type="comment" tab={glCurrTab} />
 			<hr />
 		</div>
 		<Preferences pageType="popup" />

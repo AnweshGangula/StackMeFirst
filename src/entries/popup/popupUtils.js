@@ -45,22 +45,22 @@ export function UpdateUI(Options, pageType) {
     if (pageType == "popup") {
         if (!Options.hlAns) {
             const msg = "highlighting answers is disabled";
-            document.getElementById("AnswerList").title = msg;
-            document.getElementById("AnswerOff").textContent = msg;
-            document.getElementById("AnswerCount").textContent = "?";
+            document.getElementById("answerList").title = msg;
+            document.getElementById("answerOff").textContent = msg;
+            document.getElementById("answerCount").textContent = "?";
         } else {
-            document.getElementById("AnswerList").title = "";
-            document.getElementById("AnswerOff").textContent = "";
+            document.getElementById("answerList").title = "";
+            document.getElementById("answerOff").textContent = "";
         }
 
         if (!Options.hlCmnts) {
             const msg = "highlighting comments is disabled";
-            document.getElementById("CommentList").title = msg;
-            document.getElementById("CommentOff").textContent = msg;
-            document.getElementById("CommentCount").textContent = "?";
+            document.getElementById("commentList").title = msg;
+            document.getElementById("commentOff").textContent = msg;
+            document.getElementById("commentCount").textContent = "?";
         } else {
-            document.getElementById("CommentList").title = "";
-            document.getElementById("CommentOff").textContent = "";
+            document.getElementById("commentList").title = "";
+            document.getElementById("commentOff").textContent = "";
         }
     }
 }

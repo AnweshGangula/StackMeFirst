@@ -32,11 +32,11 @@
 		let activeURL = new URL(tab.url);
 		const baseURL = activeURL.protocol + "//" + activeURL.host + activeURL.pathname; // ref: https://stackoverflow.com/a/6257480/6908282
 		let linkRef = "";
-		if (type == "Comment") {
+		if (type == "comment") {
 			const quesId = activeURL.pathname.replace("/questions/", "").split("/")[0];
 			linkRef = activeURL.href + "#" + eleId.replace("-", "") + "_" + quesId;
 		}
-		if (type == "Answer") {
+		if (type == "answer") {
 			const ref = eleId.replace("answer-", "");
 			linkRef = baseURL + "/" + ref + "#" + ref;
 		}

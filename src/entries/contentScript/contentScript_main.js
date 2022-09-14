@@ -184,7 +184,7 @@ export default function highlightStack() {
                     answerList.push("answer-" + answerId + suffix);
                 }
 
-                if (currURL.indexOf(answerId) > -1) {
+                if (currURL.indexOf(answerId + "#" + answerId) > -1) {
                     // if the user clicks on a link to a specific answer, scroll that into view
                     // answer.scrollIntoView();
                     scrollToTarget("answer-" + answerId, "answer", 60)
