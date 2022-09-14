@@ -13,13 +13,13 @@
 		browser.runtime
 			.sendMessage({
 				from: "popup",
-				subject: "AUTH",
+				subject: "GET_TOKEN",
 			})
 			.then(async ({ token, error }) => {
 				console.log(`Action 'AUTH' success`);
 				if (token) {
 					// console.log("Logged in");
-					localToken = true;
+					localToken = token;
 					stackAPI = new Api(token);
 					const myData = await stackAPI.getMyDetails();
 					document.getElementById("btnLogout").title = myData[0].display_name;
@@ -39,6 +39,23 @@
 			});
 		// return true;
 	}
+
+	async function RemoveToken(tokenVar) {
+		browser.runtime
+			.sendMessage({
+				from: "popup",
+				subject: "REMOVE_TOKEN",
+				content: { token: tokenVar },
+			})
+			.then(({ error }) => {
+				if (!error) {
+					console.log(`Action 'REMOVE_TOKEN' success`);
+					localToken = false;
+				} else {
+					//  unable to remove token
+				}
+			});
+	}
 </script>
 
 <header>
@@ -48,9 +65,9 @@
 		<p id="loginError">Unable to Login. Please Try Again</p>
 	{/if}
 
-	{#await localToken then}
-		{#if localToken}
-			<button id="btnLogout" class="loginBtn" on:click|preventDefault>Logout</button>
+	{#await localToken then token}
+		{#if token}
+			<button id="btnLogout" class="loginBtn" on:click|preventDefault={() => RemoveToken(token)}>Logout</button>
 		{:else}
 			<button id="btnLogin" class="loginBtn" on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights">
 				Login

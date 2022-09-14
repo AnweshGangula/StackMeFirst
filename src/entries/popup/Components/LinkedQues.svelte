@@ -3,20 +3,17 @@
 	import StackContent from "./StackContent.svelte";
 
 	import Api from "~/utils/stackAPI";
-	import { QuesIdUrl } from "~/utils/utils";
+	import { QuesIdUrl, GetLocalToken } from "~/utils/utils";
 
 	let glCurrTab;
 	let loggedIn = false;
-	const apiData = {
-		token: "",
-		userName: "",
-	};
 	const upvotedLinks = GetUpvotedLinks();
 
 	async function GetUpvotedLinks() {
+		// TODO: convert this - send message to Popup and highlight linked question in website and return id's
 		let linkedQ = [];
-		await browser.storage.sync.get({ apiData: apiData }).then(async function (result) {
-			const token = result.apiData.token;
+		await GetLocalToken().then(async function (result) {
+			const token = result;
 
 			if (token != "") {
 				loggedIn = true;

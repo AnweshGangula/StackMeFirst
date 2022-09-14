@@ -43,8 +43,23 @@ browser.runtime.onMessage.addListener(
 
         UpdateBadge(badgeText, browserTabId, pluginTitle, color);
         break;
-      case 'AUTH':
+      case 'GET_TOKEN':
         auth(sendResponse);
+        return true; // must return true to signal asynchronous
+        break;
+      case 'REMOVE_TOKEN':
+        const apiData = {
+          token: "",
+          userName: "",
+        };
+        const token = content.token;
+        browser.identity.removeCachedAuthToken({ token }, () => {
+          sendResponse({ message: 'successfully removed token' });
+        });
+
+        browser.storage.sync.set({ apiData: apiData }).then(function () {
+          // UpdateStatus("Options Saved");
+        });
         return true; // must return true to signal asynchronous
         break;
       default:

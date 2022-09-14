@@ -7,11 +7,12 @@ export async function GetLocalToken() {
         userName: "",
     };
     let token = false;
-    await browser.storage.sync.get({ apiData: apiData }).then(async function (result) {
-        token = result.apiData.token;
-        return token;
+    token = await browser.storage.sync.get({ apiData: apiData }).then(async function (result) {
+        let localToken = result.apiData.token;
+        return localToken;
     });
 
+    return token
 }
 
 export function IsStackOverflow(baseUrl) {
