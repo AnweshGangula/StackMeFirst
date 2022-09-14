@@ -1,18 +1,11 @@
 <script>
 	import browser from "webextension-polyfill";
 	import Api from "~/utils/stackAPI";
+	import { GetLocalToken } from "~/utils/utils";
 
 	let stackAPI;
-	let localToken = false;
+	let localToken = GetLocalToken();
 	let loginError = false;
-
-	const apiData = {
-		token: "",
-		userName: "",
-	};
-	browser.storage.sync.get({ apiData: apiData }).then(async function (result) {
-		localToken = result.apiData.token;
-	});
 
 	async function login() {
 		// this.setState({ loading: true });
@@ -47,12 +40,12 @@
 		// return true;
 	}
 
-	async function RemoveToken() {
+	async function RemoveToken(tokenVar) {
 		browser.runtime
 			.sendMessage({
 				from: "popup",
 				subject: "REMOVE_TOKEN",
-				content: { token: localToken },
+				content: { token: tokenVar },
 			})
 			.then(({ error }) => {
 				if (!error) {
@@ -72,9 +65,9 @@
 		<p id="loginError">Unable to Login. Please Try Again</p>
 	{/if}
 
-	{#await localToken then}
-		{#if localToken}
-			<button id="btnLogout" class="loginBtn" on:click|preventDefault={() => RemoveToken()}>Logout</button>
+	{#await localToken then token}
+		{#if token}
+			<button id="btnLogout" class="loginBtn" on:click|preventDefault={() => RemoveToken(token)}>Logout</button>
 		{:else}
 			<button id="btnLogin" class="loginBtn" on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights">
 				Login
