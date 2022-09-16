@@ -56,12 +56,21 @@
 			</div>
 			<div>
 				<input type="checkbox" id="srtAns" name="srtAns" value="Bring My Answers to Top" />
-				<label for="srtAns">Bring My Answers to Top</label><br />
+				<label for="srtAns">Bring My Answers to Top</label>
+				<br />
 			</div>
-			<br />
+			<hr />
 			<div>
 				<input type="checkbox" id="hlComments" name="hlComments" value="Highlight Comments" />
-				<label for="hlComments">Highlight my Comments</label><br />
+				<label for="hlComments">Highlight my Comments</label>
+				<br />
+			</div>
+			<hr />
+			<div>
+				<input type="checkbox" id="hlLinkQs" name="hlLinkQs" value="Highlight LinkQs" />
+				<label for="hlLinkQs">Highlight Upvoted Linked Questions</label>
+				<i id="loginTooltip" title="Needs StackOverflow Login">i</i>
+				<br />
 			</div>
 		</fieldset>
 	</form>
@@ -79,6 +88,14 @@
 		margin-left: 5px;
 	}
 
+	hr {
+		/* reference: https://stackoverflow.com/a/5619906/6908282 */
+		margin-top: 5px;
+		height: 0.1px;
+		border: none;
+		background: lightgray;
+	}
+
 	#buttons {
 		margin: 10px;
 		text-align: end;
@@ -90,5 +107,14 @@
 		background-color: darkseagreen;
 		margin: 5px;
 		padding: 5px;
+	}
+
+	#loginTooltip {
+		cursor: default;
+		border-radius: 100%;
+		background-color: firebrick;
+		font-size: smaller;
+		padding: 0 6px;
+		color: white;
 	}
 </style>
