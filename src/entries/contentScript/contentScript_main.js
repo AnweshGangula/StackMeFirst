@@ -1,7 +1,7 @@
 import browser from "webextension-polyfill";
 
 import { IsStackOverflow, IsQuestion, GetLocalToken } from "~/utils/utils";
-import { defaultPreferances } from "~/utils/constants";
+import { defaultPreferances, cssStyle } from "~/utils/constants";
 import Api from "~/utils/stackAPI";
 
 import scrollToTarget from "../executeScript/executeScript"
@@ -44,6 +44,7 @@ export default function highlightStack() {
             });
 
             question = document.getElementById('question');
+            const qId = question.dataset.questionid;
             quesAuthor = document.querySelector(".post-signature.owner").getElementsByTagName("a")[0];
             let allAnswers = [];
             let ansIsAPI = true;
@@ -51,8 +52,8 @@ export default function highlightStack() {
             let idforCmts = [];
             let cmtIsAPI = true;
 
-            const getAnswers = stackAPI.getAnswers(question.dataset.questionid);
-            idforCmts.push(question.dataset.questionid)
+            const getAnswers = stackAPI.getAnswers(qId);
+            idforCmts.push(qId)
             Promise.resolve(getAnswers).then(response => {
                 allAnswers = response;
                 if (allAnswers == []) {
@@ -93,7 +94,7 @@ export default function highlightStack() {
 
                         myAnsList = highlightAnswer(allAnswers, ansIsAPI, userConfig, DOM_Opts);
                         myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
-                        const links = HighlightLinks(userConfig, question.dataset.questionid);
+                        const links = HighlightLinks(userConfig, qId);
                         browser.runtime.sendMessage({
                             //  reference: https://stackoverflow.com/a/20021813/6908282
                             from: "contentScript",
@@ -165,7 +166,7 @@ export default function highlightStack() {
                             insertAfter(topEle, answerToHighlight);
                         }
                         if (hlAns) {
-                            answerToHighlight.style.cssText = "border: 2px solid darkgreen; border-radius: 5px; margin: 20px 0; padding-left: 5px;"
+                            answerToHighlight.style.cssText = cssStyle + "margin: 20px 0; padding-left: 5px;"
                         }
                     } else {
                         suffix = " (hidden)"
@@ -212,7 +213,7 @@ export default function highlightStack() {
                         // console.log("Hidden comment: #comment-" + commentId)
                     } else {
                         const commentToHighlight = commentEle.getElementsByClassName("comment-text")[0];
-                        commentToHighlight.style.cssText = "border: 2px solid darkgreen; border-radius: 5px; margin: 5px;"
+                        commentToHighlight.style.cssText = cssStyle + "margin: 5px;"
                     }
 
                     commentList.push("comment-" + commentId + suffix);
@@ -243,7 +244,7 @@ export default function highlightStack() {
 
                         for (let link of domLinkedQ.children) {
                             if (linkedQids.some(id => link.dataset.gpsTrack.includes(id))) {
-                                link.style.cssText = "border: 2px solid darkgreen; border-radius: 5px; padding: 5px;"
+                                link.style.cssText = cssStyle + "padding: 5px;"
                             }
                         }
                     });

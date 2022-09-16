@@ -105,7 +105,7 @@
 
 	#status {
 		visibility: hidden;
-		color: green;
+		color: darkgreen;
 		background-color: darkseagreen;
 		margin: 5px;
 		padding: 5px;

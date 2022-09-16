@@ -9,6 +9,11 @@ export const defaultPreferances = {
     hlCmnts: false,
     hlLinkQs: false,
 };
+
+export const cssStyle = `
+    border: 2px solid darkgreen;
+    border-radius: 5px;
+`
 export const defaultApiData = {
     token: "",
     userName: "",
