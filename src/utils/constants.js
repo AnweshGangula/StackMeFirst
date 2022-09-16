@@ -7,6 +7,7 @@ export const defaultPreferances = {
     hlAns: true,
     srtAns: true,
     hlCmnts: false,
+    hlLinkQs: false,
 };
 export const defaultApiData = {
     token: "",

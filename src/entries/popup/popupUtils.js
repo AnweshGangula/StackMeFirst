@@ -38,6 +38,7 @@ export function UpdateUI(Options, pageType) {
     document.getElementById("hlAnswers").checked = Options.hlAns;
     document.getElementById("srtAns").checked = Options.srtAns;
     document.getElementById("hlComments").checked = Options.hlCmnts;
+    document.getElementById("hlLinkQs").checked = Options.hlLinkQs;
 
     if (pageType == "popup") {
         if (!Options.hlAns) {
@@ -58,6 +59,10 @@ export function UpdateUI(Options, pageType) {
         } else {
             document.getElementById("commentList").title = "";
             document.getElementById("commentOff").textContent = "";
+        }
+
+        if (Options.hlLinkQs) {
+            document.getElementById("linkQsOff").textContent = "";
         }
     }
 }

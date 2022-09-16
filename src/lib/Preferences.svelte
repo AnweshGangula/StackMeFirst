@@ -12,10 +12,12 @@
 		const hlAnswers = document.getElementById("hlAnswers").checked;
 		const srtAns = document.getElementById("srtAns").checked;
 		const hlComments = document.getElementById("hlComments").checked;
+		const hlLinkQs = document.getElementById("hlLinkQs").checked;
 		let stackMeData = {
 			hlAns: hlAnswers,
 			srtAns: srtAns,
 			hlCmnts: hlComments,
+			hlLinkQs: hlLinkQs,
 		};
 		browser.storage.sync.set({ stackMeData: stackMeData }).then(function () {
 			UpdateStatus("Options Saved");
