@@ -61,7 +61,10 @@ export function UpdateUI(Options, pageType) {
             document.getElementById("commentOff").textContent = "";
         }
 
-        if (Options.hlLinkQs) {
+        if (!Options.hlLinkQs) {
+            const msg = "highlighting Links is disabled";
+            document.getElementById("linkQsOff").textContent = msg;
+        } else {
             document.getElementById("linkQsOff").textContent = "";
         }
     }

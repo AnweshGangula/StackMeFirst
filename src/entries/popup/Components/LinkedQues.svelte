@@ -62,10 +62,9 @@
 				<p>Login to Stack Overflow to get Linked Question Upvoted by you</p>
 			{/if}
 		{/await}
-	{:else}
-		<p id="linkQsOff" class="featureOff">Highlighting Links is disabled</p>
 	{/if}
 {/await}
+<p id="linkQsOff" class="featureOff" />
 
 <style>
 	.featureOff {

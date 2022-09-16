@@ -73,7 +73,7 @@
 <style>
 	:global(body) {
 		width: 350px;
-		/* height: 300px; */
+		height: 0px; /* this doesn't show scrollbar is height is close to scroll */
 	}
 	hr {
 		/* reference: https://stackoverflow.com/a/5619906/6908282 */
