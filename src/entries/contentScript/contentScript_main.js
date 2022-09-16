@@ -1,6 +1,7 @@
 import browser from "webextension-polyfill";
 
 import { IsStackOverflow, IsQuestion } from "~/utils/utils";
+import { defaultOptions } from "../popup/popupUtils";
 import Api from "~/utils/stackAPI";
 
 import scrollToTarget from "../executeScript/executeScript"
@@ -84,15 +85,7 @@ export default function highlightStack() {
 
                     const DOM_Opts = { currUser, isSorted }
 
-                    let defaultConfig = {
-                        // You can set default for values not in the storage by providing a dictionary:
-                        // reference: https://stackoverflow.com/a/26898749/6908282
-                        hlAns: true,
-                        srtAns: true,
-                        hlCmnts: false,
-                    }
-
-                    browser.storage.sync.get({ 'stackMeData': defaultConfig }).then(function (result) {
+                    browser.storage.sync.get({ 'stackMeData': defaultOptions }).then(function (result) {
                         let userConfig = result.stackMeData;
                         // You can set default for values not in the storage by providing a dictionary:
                         // reference: https://stackoverflow.com/a/26898749/6908282

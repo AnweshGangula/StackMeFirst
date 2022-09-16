@@ -33,6 +33,8 @@ export default function ExecuteScroll(tabId, eleId, type, offsetHeight) {
 export function restore_options(pageType) {
     // https://developer.chrome.com/docs/extensions/mv3/options/
     browser.storage.sync.get({ stackMeData: defaultOptions }).then(function (result) {
+        // You can set default for values not in the storage by providing a dictionary:
+        // reference: https://stackoverflow.com/a/26898749/6908282
         // if stackMeData is not found, use defaultOptions for a first time user
         UpdateUI(result.stackMeData, pageType);
     });

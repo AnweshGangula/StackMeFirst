@@ -1,13 +1,13 @@
 import browser from "webextension-polyfill";
 import { ignoreUrlList } from "./constants";
 
+export const defaultApiData = {
+    token: "",
+    userName: "",
+};
 export async function GetLocalToken() {
-    const apiData = {
-        token: "",
-        userName: "",
-    };
     let token = false;
-    token = await browser.storage.sync.get({ apiData: apiData }).then(async function (result) {
+    token = await browser.storage.sync.get({ apiData: defaultApiData }).then(async function (result) {
         let localToken = result.apiData.token;
         return localToken;
     });

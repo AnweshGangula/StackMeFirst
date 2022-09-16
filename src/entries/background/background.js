@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import { defaultApiData } from "~/utils/utils";
 
 const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION)
 let browserAction = browser.action;
@@ -48,16 +49,12 @@ browser.runtime.onMessage.addListener(
         return true; // must return true to signal asynchronous
         break;
       case 'REMOVE_TOKEN':
-        const apiData = {
-          token: "",
-          userName: "",
-        };
         const token = content.token;
         browser.identity.removeCachedAuthToken({ token }, () => {
           sendResponse({ message: 'successfully removed token' });
         });
 
-        browser.storage.sync.set({ apiData: apiData }).then(function () {
+        browser.storage.sync.set({ apiData: defaultApiData }).then(function () {
           // UpdateStatus("Options Saved");
         });
         return true; // must return true to signal asynchronous
