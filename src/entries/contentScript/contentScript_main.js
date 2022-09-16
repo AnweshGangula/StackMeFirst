@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 
-import { IsStackOverflow, IsQuestion } from "~/utils/utils";
+import { IsStackOverflow, IsQuestion, GetLocalToken } from "~/utils/utils";
 import { defaultPreferances } from "~/utils/constants";
 import Api from "~/utils/stackAPI";
 
@@ -93,6 +93,7 @@ export default function highlightStack() {
 
                         myAnsList = highlightAnswer(allAnswers, ansIsAPI, userConfig, DOM_Opts);
                         myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
+                        const links = HighlightLinks(userConfig, question.dataset.questionid);
                         browser.runtime.sendMessage({
                             //  reference: https://stackoverflow.com/a/20021813/6908282
                             from: "contentScript",
@@ -223,6 +224,34 @@ export default function highlightStack() {
         }
 
         return commentList;
+    }
+
+    function HighlightLinks(preferences, currentQid) {
+        let linkedQids = [];
+        if (preferences.hlLinkQs) {
+            Promise.resolve(GetLocalToken()).then(async function (token) {
+                if (token != "") {
+                    const stackAPI = new Api(token);
+                    const getLinkQs = stackAPI.getLinkedQues(currentQid);
+                    Promise.resolve(getLinkQs).then(async allLinkedQs => {
+                        const domLinkedQ = document.getElementById("h-linked").parentNode.querySelector(".linked")
+                        allLinkedQs.forEach((ques) => {
+                            if (ques.upvoted) {
+                                linkedQids.push(ques.question_id.toString());
+                            }
+                        });
+
+                        for (let link of domLinkedQ.children) {
+                            if (linkedQids.some(id => link.dataset.gpsTrack.includes(id))) {
+                                link.style.cssText = "border: 2px solid darkgreen; border-radius: 5px; padding: 5px;"
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        return linkedQids
     }
 
     function insertAfter(referenceNode, newNode) {
