@@ -1,6 +1,7 @@
 <script>
 	import browser from "webextension-polyfill";
-	import { defaultOptions, restore_options, UpdateUI } from "~/entries/popup/popupUtils";
+	import { restore_options, UpdateUI } from "~/entries/popup/popupUtils";
+	import { defaultPreferances } from "~/utils/constants";
 
 	export let pageType = "";
 
@@ -23,9 +24,9 @@
 	}
 
 	async function reset_options() {
-		browser.storage.sync.set({ stackMeData: defaultOptions }).then(() => {
-			// reset to defaultOptions
-			UpdateUI(defaultOptions, pageType);
+		browser.storage.sync.set({ stackMeData: defaultPreferances }).then(() => {
+			// reset to defaultPreferances
+			UpdateUI(defaultPreferances, pageType);
 		});
 
 		UpdateStatus("Options reset");

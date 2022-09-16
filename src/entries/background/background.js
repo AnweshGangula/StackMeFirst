@@ -1,5 +1,5 @@
 import browser from "webextension-polyfill";
-import { defaultApiData } from "~/utils/utils";
+import { defaultApiData } from "~/utils/constants";
 
 const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION)
 let browserAction = browser.action;

@@ -3,6 +3,16 @@ export const ignoreUrlList = [
     "/tagged",
 ];
 
+export const defaultPreferances = {
+    hlAns: true,
+    srtAns: true,
+    hlCmnts: false,
+};
+export const defaultApiData = {
+    token: "",
+    userName: "",
+};
+
 export const upvoteFilter = {
     includeFeilds: [
         "question.upvoted",

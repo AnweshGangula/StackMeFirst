@@ -1,7 +1,7 @@
 import browser from "webextension-polyfill";
 
 import { IsStackOverflow, IsQuestion } from "~/utils/utils";
-import { defaultOptions } from "../popup/popupUtils";
+import { defaultPreferances } from "~/utils/constants";
 import Api from "~/utils/stackAPI";
 
 import scrollToTarget from "../executeScript/executeScript"
@@ -85,7 +85,7 @@ export default function highlightStack() {
 
                     const DOM_Opts = { currUser, isSorted }
 
-                    browser.storage.sync.get({ 'stackMeData': defaultOptions }).then(function (result) {
+                    browser.storage.sync.get({ 'stackMeData': defaultPreferances }).then(function (result) {
                         let userConfig = result.stackMeData;
                         // You can set default for values not in the storage by providing a dictionary:
                         // reference: https://stackoverflow.com/a/26898749/6908282
