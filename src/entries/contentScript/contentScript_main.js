@@ -55,6 +55,7 @@ export default function highlightStack() {
             const getAnswers = stackAPI.getAnswers(qId);
             idforCmts.push(qId)
             Promise.resolve(getAnswers).then(response => {
+                // TODO: Replace Promise with Async-Await
                 allAnswers = response;
                 if (allAnswers == []) {
                     allAnswers = document.getElementsByClassName('answer');
@@ -72,6 +73,7 @@ export default function highlightStack() {
 
                 const getComments = stackAPI.getComments(idforCmts.join(";"));
                 Promise.resolve(getComments).then(res => {
+                    // TODO: Replace Promise with Async-Await
                     allComments = res;
                     if (allComments == []) {
                         allComments = document.getElementsByClassName("comment");
@@ -128,11 +130,6 @@ export default function highlightStack() {
                     commentList: myCmmtList,
                 };
                 response(popupContent); // this sends popupContent dict to SetPopupContent function in popup.js
-            }
-
-            if ((msg.from === 'popup') && (msg.subject === 'popupLinkQs')) {
-                // send data to list answers in popup
-                response(linkData); // this sends linkData dict to Linkedues.svelte
             }
         });
     }
@@ -237,11 +234,13 @@ export default function highlightStack() {
         let token = "";
         if (preferences.hlLinkQs) {
             Promise.resolve(GetLocalToken()).then(async function (result) {
+                // TODO: Replace Promise with Async-Await
                 token = result;
                 if (token != "") {
                     const stackAPI = new Api(token);
                     const getLinkQs = stackAPI.getLinkedQues(currentQid);
                     Promise.resolve(getLinkQs).then(async allLinkedQs => {
+                        // TODO: Replace Promise with Async-Await
                         const domLinkedQ = document.getElementById("h-linked").parentNode.querySelector(".linked")
                         allLinkedQs.forEach((ques) => {
                             if (ques.upvoted) {
@@ -257,14 +256,19 @@ export default function highlightStack() {
                             }
                         });
 
+                        browser.runtime.onMessage.addListener((msg, sender, response) => {
+
+                            if ((msg.from === 'popup') && (msg.subject === 'popupLinkQs')) {
+                                response({ token, linkedQids }); // this sends linkData dict to Linkedues.svelte
+                            }
+                        });
+
                     });
                 }
 
             });
 
         }
-
-        return { token, linkedQids }
     }
 
     function insertAfter(referenceNode, newNode) {
