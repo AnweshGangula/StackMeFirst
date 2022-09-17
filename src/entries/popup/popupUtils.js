@@ -41,25 +41,30 @@ export function UpdateUI(Options, pageType) {
     document.getElementById("hlLinkQs").checked = Options.hlLinkQs;
 
     if (pageType == "popup") {
+        const ansList = document.getElementById("answerList");
+        const ansOff = document.getElementById("answerOff");
+        const cmtList = document.getElementById("commentList");
+        const cmtOff = document.getElementById("commentOff");
         const linkOff = document.getElementById("linkQsOff");
+
         if (!Options.hlAns) {
             const msg = "highlighting answers is disabled";
-            document.getElementById("answerList").title = msg;
-            document.getElementById("answerOff").textContent = msg;
+            ansList.title = msg;
+            ansOff.textContent = msg;
             document.getElementById("answerCount").textContent = "?";
         } else {
-            document.getElementById("answerList").title = "";
-            document.getElementById("answerOff").textContent = "";
+            ansList.title = "";
+            ansOff.textContent = "";
         }
 
         if (!Options.hlCmnts) {
             const msg = "highlighting comments is disabled";
-            document.getElementById("commentList").title = msg;
-            document.getElementById("commentOff").textContent = msg;
+            cmtList.title = msg;
+            cmtOff.textContent = msg;
             document.getElementById("commentCount").textContent = "?";
         } else {
-            document.getElementById("commentList").title = "";
-            document.getElementById("commentOff").textContent = "";
+            cmtList.title = "";
+            cmtOff.textContent = "";
         }
 
         if (!Options.hlLinkQs && linkOff) {

@@ -9,7 +9,7 @@
 	export let tab = { id: 0, url: "https://stackoverflow.com/" };
 	let OffsetHeight = 60;
 	const count = eleList ? eleList.length : 0;
-	const itemVerb = type == "linkq" ? "upvoted" : "posted";
+	const itemVerb = type == "linkq" ? "upvoted/favorited" : "posted";
 	const classList = {
 		redirect: "redirect",
 		favorite: "favorite",
@@ -51,7 +51,6 @@
 			linkRef = LinkToLinkQ(eleId);
 		}
 
-		console.log(Array.from(eleClass).join(" "));
 		return { eleId, eleClass, linkRef, suffixDOM };
 	}
 </script>
