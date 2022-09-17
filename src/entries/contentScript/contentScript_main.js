@@ -256,12 +256,6 @@ export default function highlightStack() {
                             }
                         });
 
-                        browser.runtime.onMessage.addListener((msg, sender, response) => {
-
-                            if ((msg.from === 'popup') && (msg.subject === 'popupLinkQs')) {
-                                response({ token, linkedQids }); // this sends linkData dict to Linkedues.svelte
-                            }
-                        });
 
                     });
                 }
@@ -269,6 +263,12 @@ export default function highlightStack() {
             });
 
         }
+        browser.runtime.onMessage.addListener((msg, sender, response) => {
+
+            if ((msg.from === 'popup') && (msg.subject === 'popupLinkQs')) {
+                response({ token, linkedQids }); // this sends linkData dict to Linkedues.svelte
+            }
+        });
     }
 
     function insertAfter(referenceNode, newNode) {
