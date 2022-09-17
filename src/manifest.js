@@ -4,8 +4,13 @@ const sharedManifest = {
   content_scripts: [
     {
       js: ["src/entries/contentScript/primary/main.js"],
+      css: ["src/entries/contentScript/primary/content.css"],
       matches: ["*://*.stackoverflow.com/*"],
     },
+  ],
+  web_accessible_resources: [
+    // Reference: 
+    "src/entries/contentScript/primary/content.css"
   ],
   icons: {
     16: "icons/16.png",

@@ -1,7 +1,7 @@
 import browser from "webextension-polyfill";
 
 import { IsStackOverflow, IsQuestion, GetLocalToken } from "~/utils/utils";
-import { defaultPreferances, cssStyle } from "~/utils/constants";
+import { defaultPreferances } from "~/utils/constants";
 import Api from "~/utils/stackAPI";
 
 import scrollToTarget from "../executeScript/executeScript"
@@ -170,7 +170,7 @@ export default async function highlightStack() {
                             insertAfter(topEle, answerToHighlight);
                         }
                         if (hlAns) {
-                            answerToHighlight.style.cssText = cssStyle + "margin: 20px 0; padding-left: 5px;"
+                            answerToHighlight.classList.add("smcHighlight", "smfAnswer");
                         }
                     } else {
                         suffix = " (hidden)"
@@ -217,7 +217,7 @@ export default async function highlightStack() {
                         // console.log("Hidden comment: #comment-" + commentId)
                     } else {
                         const commentToHighlight = commentEle.getElementsByClassName("comment-text")[0];
-                        commentToHighlight.style.cssText = cssStyle + "margin: 5px;"
+                        commentToHighlight.classList.add("smcHighlight", "smfCmtLnk")
                     }
 
                     commentList.push("comment-" + commentId + suffix);
@@ -250,7 +250,10 @@ export default async function highlightStack() {
                                 const isUpvoted = (("gpsTrack" in link.dataset) && link.dataset.gpsTrack.includes(ques.question_id));
                                 if (isLink && isUpvoted) {
                                     isHidden = ""
-                                    link.style.cssText = cssStyle + "padding: 5px;"
+                                    link.classList.add("smcHighlight", "smfCmtLnk");
+                                    if (ques.favorited) {
+                                        link.classList.add("smfFavorite")
+                                    }
                                 }
                             }
 
