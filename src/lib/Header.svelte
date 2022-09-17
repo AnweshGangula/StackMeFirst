@@ -4,8 +4,17 @@
 	import { GetLocalToken } from "~/utils/utils";
 
 	let stackAPI;
-	let localToken = GetLocalToken();
+	let profileImage;
+	let profileUrl;
+	let localToken = headerDOM();
 	let loginError = false;
+
+	async function headerDOM() {
+		const token = await GetLocalToken();
+		const myData = await myStackDetails(token);
+
+		return { token, myData };
+	}
 
 	async function login() {
 		// this.setState({ loading: true });
@@ -20,13 +29,12 @@
 				if (token) {
 					// console.log("Logged in");
 					localToken = token;
-					stackAPI = new Api(token);
-					const myData = await stackAPI.getMyDetails();
-					document.getElementById("btnLogout").title = myData[0].display_name;
+					const myData = await myStackDetails(token);
+					document.getElementById("btnLogout").title = myData.display_name;
 
 					const apiData = {
 						token: token,
-						userName: myData[0].display_name,
+						userName: myData.display_name,
 					};
 					browser.storage.sync.set({ apiData: apiData }).then(function () {
 						// UpdateStatus("Options Saved");
@@ -38,6 +46,15 @@
 				}
 			});
 		// return true;
+	}
+
+	async function myStackDetails(token) {
+		stackAPI = new Api(token);
+		const myData = await stackAPI.getMyDetails();
+		profileImage = myData[0].profile_image;
+		profileUrl = myData[0].link;
+
+		return myData[0];
 	}
 
 	async function RemoveToken(tokenVar) {
@@ -65,9 +82,12 @@
 		<p id="loginError">Unable to Login. Please Try Again</p>
 	{/if}
 
-	{#await localToken then token}
-		{#if token}
-			<button id="btnLogout" class="loginBtn" on:click|preventDefault={() => RemoveToken(token)}>Logout</button>
+	{#await localToken then result}
+		{#if result.token}
+			<a id="profilePic" href={profileUrl} title={profileUrl} on:click|preventDefault={() => browser.tabs.create({ url: profileUrl })}>
+				<img width="35" height="35" src={profileImage} alt="Stack Exchange Profile Pic of Gangula" />
+			</a>
+			<button id="btnLogout" class="loginBtn" on:click|preventDefault={() => RemoveToken(result.token)}>Logout</button>
 		{:else}
 			<button id="btnLogin" class="loginBtn" on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights">
 				Login
@@ -87,7 +107,15 @@
 	}
 
 	.loginBtn {
+		margin-left: 5px;
+	}
+
+	#profilePic {
 		margin-left: auto;
+	}
+
+	#profilePic img {
+		border-radius: 100%;
 	}
 
 	#loginError {
