@@ -45,7 +45,7 @@ export function UpdateUI(Options, pageType) {
         const ansOff = document.getElementById("answerOff");
         const cmtList = document.getElementById("commentList");
         const cmtOff = document.getElementById("commentOff");
-        const linkOff = document.getElementById("linkQsOff");
+        const linkOff = document.getElementById("linkqOff");
 
         if (!Options.hlAns) {
             const msg = "highlighting answers is disabled";

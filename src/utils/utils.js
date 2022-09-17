@@ -23,7 +23,7 @@ export function IsQuestion(baseUrl) {
     const ignoreURL = ignoreUrlList.some((url) => URLpathname.includes(url))
     const isQuestion = URLpathname.startsWith("/questions/");
 
-    return isQuestion && !ignoreURL
+    return IsStackOverflow(baseUrl) && isQuestion && !ignoreURL
 }
 
 export function QuesIdUrl(baseUrl) {

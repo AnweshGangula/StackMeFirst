@@ -3,11 +3,13 @@
 	import StackContent from "./StackContent.svelte";
 
 	import { defaultPreferances } from "~/utils/constants";
+	import { IsQuestion } from "~/utils/utils";
 
 	const currPref = GetPreferences();
 	let glCurrTab;
 	let token;
 	let linkedQ = [];
+	let isQ;
 	GetUpvotedLinks();
 
 	async function GetPreferences() {
@@ -31,28 +33,30 @@
 
 	function GetUpvotedLinks() {
 		browser.tabs.query({ active: true, lastFocusedWindow: true }).then(function (tabs) {
-			browser.tabs.sendMessage(tabs[0].id, { from: "popup", subject: "popupLinkQs" }).then((info) => {
-				token = info.token;
-				glCurrTab = tabs[0];
-				const allLinkedQs = info.linkedQids;
+			isQ = IsQuestion(tabs[0].url);
+			if (isQ) {
+				browser.tabs.sendMessage(tabs[0].id, { from: "popup", subject: "popupLinkQs" }).then((info) => {
+					token = info.token;
+					glCurrTab = tabs[0];
+					const allLinkedQs = info.linkedQids;
 
-				allLinkedQs.forEach((ques) => {
-					if (ques.linkJson.upvoted || ques.linkJson.favorited) {
-						let suffix = ques.hidden;
-						suffix += ques.linkJson.favorited ? " (favorite)" : "";
-						linkedQ.push(ques.linkJson.question_id.toString() + suffix);
-					}
+					allLinkedQs.forEach((ques) => {
+						if (ques.linkJson.upvoted || ques.linkJson.favorited) {
+							let suffix = ques.hidden;
+							suffix += ques.linkJson.favorited ? " (favorite)" : "";
+							linkedQ.push(ques.linkJson.question_id.toString() + suffix);
+						}
+					});
 				});
-			});
+			}
 		});
 	}
 </script>
 
 {#await currPref then Options}
-	{#if Options.hlLinkQs}
+	{#if isQ && Options.hlLinkQs}
 		{#if token}
 			<StackContent eleList={linkedQ} type="linkq" tab={glCurrTab} />
-			<p id="linkQsOff" class="featureOff" />
 		{:else}
 			<p class="featureOff">Login to Stack Overflow to get Linked Question Upvoted by you</p>
 		{/if}
