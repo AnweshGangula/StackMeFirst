@@ -7,7 +7,7 @@ import Api from "~/utils/stackAPI";
 import scrollToTarget from "../executeScript/executeScript"
 window.scrollToTarget = scrollToTarget;
 
-export default function highlightStack() {
+export default async function highlightStack() {
     let stackAPI = new Api("");
     const currURL = window.location.href // .at(-1)
 
@@ -46,24 +46,65 @@ export default function highlightStack() {
             question = document.getElementById('question');
             const qId = question.dataset.questionid;
             quesAuthor = document.querySelector(".post-signature.owner").getElementsByTagName("a")[0];
-            let allAnswers = [];
+            let ansJson = [];
             let ansIsAPI = true;
             let allComments = [];
             let idforCmts = [];
             let cmtIsAPI = true;
 
-            const getAnswers = stackAPI.getAnswers(qId);
-            idforCmts.push(qId)
-            Promise.resolve(getAnswers).then(response => {
-                // TODO: Replace Promise with Async-Await
-                allAnswers = response;
-                if (allAnswers == []) {
-                    allAnswers = document.getElementsByClassName('answer');
+            const getAnswers = await stackAPI.getAnswers(qId);
+            ansJson = getAnswers;
+            idforCmts.push(qId);
+            const cmtIds = getCmtIds(getAnswers);
+            idforCmts.push(...cmtIds)
+
+            const getComments = await stackAPI.getComments(idforCmts.join(";"));
+            allComments = getComments;
+            if (allComments == []) {
+                allComments = document.getElementsByClassName("comment");
+                cmtIsAPI = false;
+                console.log("Comments API did not work")
+            }
+
+            const queryParams = new Proxy(new URLSearchParams(window.location.search), {
+                get: (searchParams, prop) => searchParams.get(prop),
+            });
+            const isSorted = queryParams.answertab != undefined;
+
+            const DOM_Opts = { currUser, isSorted }
+
+            browser.storage.sync.get({ 'stackMeData': defaultPreferances }).then(function (result) {
+                let userConfig = result.stackMeData;
+                // You can set default for values not in the storage by providing a dictionary:
+                // reference: https://stackoverflow.com/a/26898749/6908282
+
+
+                myAnsList = highlightAnswer(ansJson, ansIsAPI, userConfig, DOM_Opts);
+                myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
+                linkData = HighlightLinks(userConfig, qId);
+                browser.runtime.sendMessage({
+                    //  reference: https://stackoverflow.com/a/20021813/6908282
+                    from: "contentScript",
+                    subject: "loggedIn",
+                    content: {
+                        answerCount: myAnsList ? myAnsList.length : "?",
+                        commentCount: myCmmtList ? myCmmtList.length : "?",
+                    }
+                }).then(function () {
+                    // console.log("sending message");
+                });
+
+            })
+
+            function getCmtIds(ansJson) {
+                let idforCmts = [];
+                if (ansJson == []) {
+                    ansJson = document.getElementsByClassName('answer');
                     ansIsAPI = false;
                     console.log("Answers API did not work")
                 }
 
-                allAnswers.forEach(answer => {
+                ansJson.forEach(answer => {
                     if (ansIsAPI) {
                         idforCmts.push(answer.answer_id)
                     } else {
@@ -71,47 +112,8 @@ export default function highlightStack() {
                     }
                 });
 
-                const getComments = stackAPI.getComments(idforCmts.join(";"));
-                Promise.resolve(getComments).then(res => {
-                    // TODO: Replace Promise with Async-Await
-                    allComments = res;
-                    if (allComments == []) {
-                        allComments = document.getElementsByClassName("comment");
-                        cmtIsAPI = false;
-                        console.log("Comments API did not work")
-                    }
-
-                    const queryParams = new Proxy(new URLSearchParams(window.location.search), {
-                        get: (searchParams, prop) => searchParams.get(prop),
-                    });
-                    const isSorted = queryParams.answertab != undefined;
-
-                    const DOM_Opts = { currUser, isSorted }
-
-                    browser.storage.sync.get({ 'stackMeData': defaultPreferances }).then(function (result) {
-                        let userConfig = result.stackMeData;
-                        // You can set default for values not in the storage by providing a dictionary:
-                        // reference: https://stackoverflow.com/a/26898749/6908282
-
-
-                        myAnsList = highlightAnswer(allAnswers, ansIsAPI, userConfig, DOM_Opts);
-                        myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
-                        linkData = HighlightLinks(userConfig, qId);
-                        browser.runtime.sendMessage({
-                            //  reference: https://stackoverflow.com/a/20021813/6908282
-                            from: "contentScript",
-                            subject: "loggedIn",
-                            content: {
-                                answerCount: myAnsList ? myAnsList.length : "?",
-                                commentCount: myCmmtList ? myCmmtList.length : "?",
-                            }
-                        }).then(function () {
-                            // console.log("sending message");
-                        });
-
-                    })
-                })
-            })
+                return idforCmts
+            }
         }
 
         browser.runtime.onMessage.addListener((msg, sender, response) => {
@@ -238,28 +240,25 @@ export default function highlightStack() {
                 token = result;
                 if (token != "") {
                     const stackAPI = new Api(token);
-                    const getLinkQs = stackAPI.getLinkedQues(currentQid);
-                    Promise.resolve(getLinkQs).then(async allLinkedQs => {
-                        // TODO: Replace Promise with Async-Await
-                        const domLinkedQ = document.getElementById("h-linked").parentNode.querySelector(".linked")
-                        allLinkedQs.forEach((ques) => {
-                            if (ques.upvoted) {
-                                let isHidden = " (hidden)"
-                                for (let link of domLinkedQ.children) {
-                                    const isLink = !Array.from(link.classList).includes("more"); // if the child is "See more inked         questions DOM"
-                                    const isUpvoted = (("gpsTrack" in link.dataset) && link.dataset.gpsTrack.includes(ques.question_id));
-                                    if (isLink && isUpvoted) {
-                                        isHidden = ""
-                                        link.style.cssText = cssStyle + "padding: 5px;"
-                                    }
+                    const allLinkedQs = await stackAPI.getLinkedQues(currentQid);
+                    const domLinkedQ = document.getElementById("h-linked").parentNode.querySelector(".linked")
+                    allLinkedQs.forEach((ques) => {
+                        if (ques.upvoted) {
+                            let isHidden = " (hidden)"
+                            for (let link of domLinkedQ.children) {
+                                const isLink = !Array.from(link.classList).includes("more"); // if the child is "See more inked         questions DOM"
+                                const isUpvoted = (("gpsTrack" in link.dataset) && link.dataset.gpsTrack.includes(ques.question_id));
+                                if (isLink && isUpvoted) {
+                                    isHidden = ""
+                                    link.style.cssText = cssStyle + "padding: 5px;"
                                 }
-
-                                linkedQids.push({ linkJson: ques, hidden: isHidden });
                             }
-                        });
 
-
+                            linkedQids.push({ linkJson: ques, hidden: isHidden });
+                        }
                     });
+
+
                 }
 
             });
