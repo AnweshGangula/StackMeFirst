@@ -39,7 +39,8 @@
 
 				allLinkedQs.forEach((ques) => {
 					if (ques.linkJson.upvoted) {
-						linkedQ.push(ques.linkJson.question_id.toString());
+						const suffix = ques.hidden;
+						linkedQ.push(ques.linkJson.question_id.toString() + suffix);
 					}
 				});
 			});

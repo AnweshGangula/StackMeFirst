@@ -246,7 +246,9 @@ export default function highlightStack() {
                             if (ques.upvoted) {
                                 let isHidden = " (hidden)"
                                 for (let link of domLinkedQ.children) {
-                                    if (link.dataset.gpsTrack.includes(ques.question_id)) {
+                                    const isLink = !Array.from(link.classList).includes("more"); // if the child is "See more inked         questions DOM"
+                                    const isUpvoted = (("gpsTrack" in link.dataset) && link.dataset.gpsTrack.includes(ques.question_id));
+                                    if (isLink && isUpvoted) {
                                         isHidden = ""
                                         link.style.cssText = cssStyle + "padding: 5px;"
                                     }

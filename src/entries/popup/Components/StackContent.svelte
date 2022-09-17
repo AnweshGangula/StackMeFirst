@@ -92,16 +92,15 @@
 	a.redirect {
 		background-color: lightgray;
 		/* margin: 2px; */
-		padding: 0 3px;
+		padding: 2px;
 		border-radius: 3px;
 		/* color: white; */
 		font-style: italic;
-		padding: 0 3px;
 	}
 
 	a.redirect::before {
 		/* Reference: https://stackoverflow.com/a/52058198/6908282 */
 		content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
-		margin: 0 3px 0 5px;
+		margin: 0 2px;
 	}
 </style>
