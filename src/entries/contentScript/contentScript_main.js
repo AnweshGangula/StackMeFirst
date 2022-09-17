@@ -21,7 +21,7 @@ export default function highlightStack() {
         const isQuestion = IsQuestion(window.location.href)
         let question, quesAuthor;
         // const currUser = document.getElementsByClassName("s-user-card")[0]; // this is not correct if user I not logged in at this URL: https://stackoverflow.com/questions
-        let myAnsList, myCmmtList;
+        let myAnsList, myCmmtList, linkData;
 
         if (currUser == undefined) {
             browser.runtime.sendMessage({
@@ -94,7 +94,7 @@ export default function highlightStack() {
 
                         myAnsList = highlightAnswer(allAnswers, ansIsAPI, userConfig, DOM_Opts);
                         myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
-                        const links = HighlightLinks(userConfig, qId);
+                        linkData = HighlightLinks(userConfig, qId);
                         browser.runtime.sendMessage({
                             //  reference: https://stackoverflow.com/a/20021813/6908282
                             from: "contentScript",
@@ -128,6 +128,11 @@ export default function highlightStack() {
                     commentList: myCmmtList,
                 };
                 response(popupContent); // this sends popupContent dict to SetPopupContent function in popup.js
+            }
+
+            if ((msg.from === 'popup') && (msg.subject === 'popupLinkQs')) {
+                // send data to list answers in popup
+                response(linkData); // this sends linkData dict to Linkedues.svelte
             }
         });
     }
@@ -229,8 +234,10 @@ export default function highlightStack() {
 
     function HighlightLinks(preferences, currentQid) {
         let linkedQids = [];
+        let token = "";
         if (preferences.hlLinkQs) {
-            Promise.resolve(GetLocalToken()).then(async function (token) {
+            Promise.resolve(GetLocalToken()).then(async function (result) {
+                token = result;
                 if (token != "") {
                     const stackAPI = new Api(token);
                     const getLinkQs = stackAPI.getLinkedQues(currentQid);
@@ -238,21 +245,26 @@ export default function highlightStack() {
                         const domLinkedQ = document.getElementById("h-linked").parentNode.querySelector(".linked")
                         allLinkedQs.forEach((ques) => {
                             if (ques.upvoted) {
-                                linkedQids.push(ques.question_id.toString());
+                                let isHidden = " (hidden)"
+                                for (let link of domLinkedQ.children) {
+                                    if (link.dataset.gpsTrack.includes(ques.question_id)) {
+                                        isHidden = ""
+                                        link.style.cssText = cssStyle + "padding: 5px;"
+                                    }
+                                }
+
+                                linkedQids.push({ linkJson: ques, hidden: isHidden });
                             }
                         });
 
-                        for (let link of domLinkedQ.children) {
-                            if (linkedQids.some(id => link.dataset.gpsTrack.includes(id))) {
-                                link.style.cssText = cssStyle + "padding: 5px;"
-                            }
-                        }
                     });
                 }
+
             });
+
         }
 
-        return linkedQids
+        return { token, linkedQids }
     }
 
     function insertAfter(referenceNode, newNode) {
