@@ -45,7 +45,7 @@ export default async function highlightStack() {
 
             question = document.getElementById('question');
             const qId = question.dataset.questionid;
-            quesAuthor = document.querySelector(".post-signature.owner").getElementsByTagName("a")[0];
+            quesAuthor = document.querySelector(".post-signature.owner")?.getElementsByTagName("a")[0];
             let ansJson = [];
             let ansIsAPI = true;
             let allComments = [];

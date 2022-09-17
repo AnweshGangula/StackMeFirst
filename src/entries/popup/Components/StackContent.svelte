@@ -58,7 +58,7 @@
 <details id="{type}List" open>
 	<summary>
 		<b class="itemCount"><span id="{type}Count">{count}</span> {type}/s</b>
-		{itemVerb} by you:
+		- {itemVerb} by you:
 	</summary>
 	{#if count > 0}
 		<ul>
