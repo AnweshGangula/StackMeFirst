@@ -34,9 +34,8 @@ export default class Api {
 
     async _fetch(endpoint, queriesObj = {}, site = 'stackoverflow') {
         const url = this._buildURL(endpoint, queriesObj, site);
-        return fetch(url).then(res => {
-            return res.json();
-        });
+        const res = await fetch(url);
+        return await res.json();
     }
 
     // used during development to generate filter
@@ -98,6 +97,10 @@ export default class Api {
     }
 
     async getAnswers(ids, queriesObj = {}) {
+        if (!("pagesize" in queriesObj)) {
+            queriesObj.pagesize = 100;
+            // 100 is the max pagesize - https://api.stackexchange.com/docs/paging
+        }
         let myDetails = [];
         let hasMore = false;
         const mergedQuery = Object.assign({ page: 1, filter }, queriesObj);
@@ -116,6 +119,11 @@ export default class Api {
     }
 
     async getComments(ids, queriesObj = {}) {
+        if (!("pagesize" in queriesObj)) {
+            queriesObj.pagesize = 100;
+            // 100 is the max pagesize - https://api.stackexchange.com/docs/paging
+        }
+
         let myDetails = [];
         let hasMore = false;
         const mergedQuery = Object.assign({ page: 1, filter }, queriesObj);
@@ -133,9 +141,15 @@ export default class Api {
         return myDetails;
     }
 
-    async getLinkedQues(ids, queriesObj = { pagesize: 100 }) {
+    async getLinkedQues(ids, queriesObj = {}) {
         const filter = "!IF6sbADh-1NFXRL_9Gd7_0XJ2-(Ng*6BJ2aPkdHx6rDtBZ-"
         // Checkk filter options here: https://api.stackexchange.com/docs/read-filter#filters=!gA._5vuQCU1LfxLMryEA8lClXXUw*bEruKr&filter=default&run=true
+
+        if (!("pagesize" in queriesObj)) {
+            queriesObj.pagesize = 100;
+            // 100 is the max pagesize - https://api.stackexchange.com/docs/paging
+        }
+
         let myDetails = [];
         let hasMore = false;
         const mergedQuery = Object.assign({ page: 1, filter }, queriesObj);

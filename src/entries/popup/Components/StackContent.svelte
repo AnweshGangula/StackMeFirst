@@ -38,7 +38,7 @@
 			linkRef = LinkToAnswer(tab.url, eleId);
 		} else if (type == "linkq") {
 			eleClass = "redirect";
-			linkRef = LinkToLinkQ(tab.url, eleId);
+			linkRef = LinkToLinkQ(eleId);
 		}
 
 		return { eleId, eleClass, linkRef, suffix };

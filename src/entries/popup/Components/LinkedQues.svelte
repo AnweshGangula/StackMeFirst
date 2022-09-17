@@ -19,7 +19,11 @@
 				// You can set default for values not in the storage by providing a dictionary:
 				// reference: https://stackoverflow.com/a/26898749/6908282
 				// if stackMeData is not found, use defaultPreferances for a first time user
-				resolve(result.stackMeData);
+				if (result) {
+					resolve(result.stackMeData);
+				} else {
+					reject(new Error("throw"));
+				}
 			});
 		});
 		const savedPref = await sotrageOpts;
