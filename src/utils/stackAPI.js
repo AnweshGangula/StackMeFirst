@@ -133,8 +133,9 @@ export default class Api {
         return myDetails;
     }
 
-    async getLinkedQues(ids, queriesObj = {}) {
-        const filter = "!nKzQUQzHEe"
+    async getLinkedQues(ids, queriesObj = { pagesize: 100 }) {
+        const filter = "!IF6sbADh-1NFXRL_9Gd7_0XJ2-(Ng*6BJ2aPkdHx6rDtBZ-"
+        // Checkk filter options here: https://api.stackexchange.com/docs/read-filter#filters=!gA._5vuQCU1LfxLMryEA8lClXXUw*bEruKr&filter=default&run=true
         let myDetails = [];
         let hasMore = false;
         const mergedQuery = Object.assign({ page: 1, filter }, queriesObj);

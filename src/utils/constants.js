@@ -1,6 +1,7 @@
 export const ignoreUrlList = [
     "/ask",
     "/tagged",
+    "/linked",
 ];
 
 export const defaultPreferances = {
