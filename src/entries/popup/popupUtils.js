@@ -41,6 +41,7 @@ export function UpdateUI(Options, pageType) {
     document.getElementById("hlLinkQs").checked = Options.hlLinkQs;
 
     if (pageType == "popup") {
+        const linkOff = document.getElementById("linkQsOff");
         if (!Options.hlAns) {
             const msg = "highlighting answers is disabled";
             document.getElementById("answerList").title = msg;
@@ -61,11 +62,11 @@ export function UpdateUI(Options, pageType) {
             document.getElementById("commentOff").textContent = "";
         }
 
-        if (!Options.hlLinkQs) {
+        if (!Options.hlLinkQs && linkOff) {
             const msg = "highlighting Links is disabled";
-            document.getElementById("linkQsOff").textContent = msg;
+            linkOff.textContent = msg;
         } else {
-            document.getElementById("linkQsOff").textContent = "";
+            linkOff.textContent = "";
         }
     }
 }

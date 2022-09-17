@@ -52,12 +52,12 @@
 	{#if Options.hlLinkQs}
 		{#if token}
 			<StackContent eleList={linkedQ} type="linkq" tab={glCurrTab} />
+			<p id="linkQsOff" class="featureOff" />
 		{:else}
 			<p class="featureOff">Login to Stack Overflow to get Linked Question Upvoted by you</p>
 		{/if}
 	{/if}
 {/await}
-<p id="linkQsOff" class="featureOff" />
 
 <style>
 	.featureOff {

@@ -38,8 +38,10 @@ browser.runtime.onMessage.addListener(
         // return true; // must return true to signal asynchronous
         break;
       case "loggedIn":
-        badgeText = `${content.answerCount}A,${content.commentCount}C`;
-        pluginTitle = `${content.answerCount} Answers, ${content.commentCount} Comments\n`;
+        const linkCount = content.token ? "," + content.linkCount + "L" : ""
+        const linkCountText = content.token ? ", " + content.linkCount + " Upvoted Links" : ""
+        badgeText = `${content.answerCount}A,${content.commentCount}C${linkCount}`;
+        pluginTitle = `${content.answerCount} Answers, ${content.commentCount} Comments${linkCountText}\n`;
         color = "green";
 
         UpdateBadge(badgeText, browserTabId, pluginTitle, color);

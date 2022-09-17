@@ -73,7 +73,7 @@ export default async function highlightStack() {
 
             const DOM_Opts = { currUser, isSorted }
 
-            browser.storage.sync.get({ 'stackMeData': defaultPreferances }).then(function (result) {
+            browser.storage.sync.get({ 'stackMeData': defaultPreferances }).then(async function (result) {
                 let userConfig = result.stackMeData;
                 // You can set default for values not in the storage by providing a dictionary:
                 // reference: https://stackoverflow.com/a/26898749/6908282
@@ -81,7 +81,7 @@ export default async function highlightStack() {
 
                 myAnsList = highlightAnswer(ansJson, ansIsAPI, userConfig, DOM_Opts);
                 myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
-                linkData = HighlightLinks(userConfig, qId);
+                linkData = await HighlightLinks(userConfig, qId)
                 browser.runtime.sendMessage({
                     //  reference: https://stackoverflow.com/a/20021813/6908282
                     from: "contentScript",
@@ -89,6 +89,8 @@ export default async function highlightStack() {
                     content: {
                         answerCount: myAnsList ? myAnsList.length : "?",
                         commentCount: myCmmtList ? myCmmtList.length : "?",
+                        linkCount: linkData.getLq ? linkData.linkedQids.length : "?",
+                        token: linkData.token,
                     }
                 }).then(function () {
                     // console.log("sending message");
@@ -231,40 +233,35 @@ export default async function highlightStack() {
         return commentList;
     }
 
-    function HighlightLinks(preferences, currentQid) {
+    async function HighlightLinks(preferences, currentQid) {
         let linkedQids = [];
         let token = "";
-        if (preferences.hlLinkQs) {
-            Promise.resolve(GetLocalToken()).then(async function (result) {
-                // TODO: Replace Promise with Async-Await
-                token = result;
-                if (token != "") {
-                    const stackAPI = new Api(token);
-                    const allLinkedQs = await stackAPI.getLinkedQues(currentQid);
-                    const domLinkedQ = document.getElementById("h-linked")?.parentNode.querySelector(".linked");
-                    allLinkedQs.forEach((ques) => {
-                        if (ques.upvoted || ques.favorited) {
-                            let isHidden = " (hidden)"
-                            for (let link of domLinkedQ.children) {
-                                const isLink = !Array.from(link.classList).includes("more"); // if the child is "See more inked         questions DOM"
-                                const isUpvoted = (("gpsTrack" in link.dataset) && link.dataset.gpsTrack.includes(ques.question_id));
-                                if (isLink && isUpvoted) {
-                                    isHidden = ""
-                                    link.classList.add("smcHighlight", "smfCmtLnk");
-                                    if (ques.favorited) {
-                                        link.classList.add("smfFavorite")
-                                    }
+        const getLq = preferences.hlLinkQs;
+        if (getLq) {
+            token = await GetLocalToken();
+            if (token != "") {
+                const stackAPI = new Api(token);
+                const allLinkedQs = await stackAPI.getLinkedQues(currentQid);
+                const domLinkedQ = document.getElementById("h-linked")?.parentNode.querySelector(".linked");
+                allLinkedQs.forEach((ques) => {
+                    if (ques.upvoted || ques.favorited) {
+                        let isHidden = " (hidden)"
+                        for (let link of domLinkedQ.children) {
+                            const isLink = !Array.from(link.classList).includes("more"); // if the child is "See more inked         questions DOM"
+                            const isUpvoted = (("gpsTrack" in link.dataset) && link.dataset.gpsTrack.includes(ques.question_id));
+                            if (isLink && isUpvoted) {
+                                isHidden = ""
+                                link.classList.add("smcHighlight", "smfCmtLnk");
+                                if (ques.favorited) {
+                                    link.classList.add("smfFavorite")
                                 }
                             }
-
-                            linkedQids.push({ linkJson: ques, hidden: isHidden, isFavorite: ques.favorited });
                         }
-                    });
 
-
-                }
-
-            });
+                        linkedQids.push({ linkJson: ques, hidden: isHidden, isFavorite: ques.favorited });
+                    }
+                });
+            }
 
         }
         browser.runtime.onMessage.addListener((msg, sender, response) => {
@@ -273,6 +270,8 @@ export default async function highlightStack() {
                 response({ token, linkedQids }); // this sends linkData dict to Linkedues.svelte
             }
         });
+
+        return { getLq, linkedQids, token };
     }
 
     function insertAfter(referenceNode, newNode) {
