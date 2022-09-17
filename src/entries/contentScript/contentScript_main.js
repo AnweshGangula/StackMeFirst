@@ -241,9 +241,9 @@ export default async function highlightStack() {
                 if (token != "") {
                     const stackAPI = new Api(token);
                     const allLinkedQs = await stackAPI.getLinkedQues(currentQid);
-                    const domLinkedQ = document.getElementById("h-linked").parentNode.querySelector(".linked")
+                    const domLinkedQ = document.getElementById("h-linked")?.parentNode.querySelector(".linked");
                     allLinkedQs.forEach((ques) => {
-                        if (ques.upvoted) {
+                        if (ques.upvoted || ques.favorited) {
                             let isHidden = " (hidden)"
                             for (let link of domLinkedQ.children) {
                                 const isLink = !Array.from(link.classList).includes("more"); // if the child is "See more inked         questions DOM"
@@ -254,7 +254,7 @@ export default async function highlightStack() {
                                 }
                             }
 
-                            linkedQids.push({ linkJson: ques, hidden: isHidden });
+                            linkedQids.push({ linkJson: ques, hidden: isHidden, isFavorite: ques.favorited });
                         }
                     });
 

@@ -9,7 +9,6 @@
 	let token;
 	let linkedQ = [];
 	GetUpvotedLinks();
-	console.log(token);
 
 	async function GetPreferences() {
 		var sotrageOpts = new Promise(function (resolve, reject) {
@@ -31,19 +30,16 @@
 	}
 
 	function GetUpvotedLinks() {
-		let loggedIn = false;
-
 		browser.tabs.query({ active: true, lastFocusedWindow: true }).then(function (tabs) {
 			browser.tabs.sendMessage(tabs[0].id, { from: "popup", subject: "popupLinkQs" }).then((info) => {
-				console.log(info);
 				token = info.token;
-				loggedIn = token;
 				glCurrTab = tabs[0];
 				const allLinkedQs = info.linkedQids;
 
 				allLinkedQs.forEach((ques) => {
-					if (ques.linkJson.upvoted) {
-						const suffix = ques.hidden;
+					if (ques.linkJson.upvoted || ques.linkJson.favorited) {
+						let suffix = ques.hidden;
+						suffix += ques.linkJson.favorited ? " (favorite)" : "";
 						linkedQ.push(ques.linkJson.question_id.toString() + suffix);
 					}
 				});

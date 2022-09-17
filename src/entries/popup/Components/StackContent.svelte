@@ -2,6 +2,7 @@
 	import browser from "webextension-polyfill";
 	import ExecuteScroll from "../popupUtils.js";
 	import { LinkToComment, LinkToAnswer, LinkToLinkQ } from "~/utils/utils.js";
+	import { suffix } from "~/utils/constants";
 
 	export let eleList = [];
 	export let type;
@@ -9,12 +10,16 @@
 	let OffsetHeight = 60;
 	const count = eleList ? eleList.length : 0;
 	const itemVerb = type == "linkq" ? "upvoted" : "posted";
+	const classList = {
+		redirect: "redirect",
+		favorite: "favorite",
+	};
 
 	function onClickEvent(data) {
 		const dest = data.dest;
 		const eleId = data.eleId;
 
-		if (dest == "redirect") {
+		if (dest.has(classList.redirect)) {
 			browser.tabs.create({ url: data.url });
 		} else {
 			ExecuteScroll(tab.id, eleId, type, OffsetHeight);
@@ -22,13 +27,18 @@
 	}
 
 	function updateVars(eleId) {
-		let suffix = " (hidden)";
-		let eleClass = "";
-		if (eleId.includes(suffix)) {
-			eleClass = "redirect";
-			eleId = eleId.replace(suffix, "");
-		} else {
-			suffix = "";
+		let suffixDOM = "";
+		let eleClass = new Set();
+		if (eleId.includes(suffix.hidden)) {
+			eleClass.add(classList.redirect);
+			eleId = eleId.replace(suffix.hidden, "");
+			suffixDOM += suffix.hidden;
+		}
+
+		if (eleId.includes(suffix.favorite)) {
+			eleClass.add(classList.favorite);
+			eleId = eleId.replace(suffix.favorite, "");
+			suffixDOM += suffix.favorite;
 		}
 
 		let linkRef = "";
@@ -37,11 +47,12 @@
 		} else if (type == "answer") {
 			linkRef = LinkToAnswer(tab.url, eleId);
 		} else if (type == "linkq") {
-			eleClass = "redirect";
+			eleClass.add(classList.redirect);
 			linkRef = LinkToLinkQ(eleId);
 		}
 
-		return { eleId, eleClass, linkRef, suffix };
+		console.log(Array.from(eleClass).join(" "));
+		return { eleId, eleClass, linkRef, suffixDOM };
 	}
 </script>
 
@@ -54,15 +65,11 @@
 		<ul>
 			{#each eleList as eleId}
 				{@const meta = updateVars(eleId)}
-				<li>
-					<a
-						href={meta.linkRef}
-						class={meta.eleClass}
-						on:click|preventDefault={() => onClickEvent({ dest: meta.eleClass, eleId: meta.eleId, url: meta.linkRef })}
-					>
+				<li class={Array.from(meta.eleClass).join(" ")}>
+					<a href={meta.linkRef} on:click|preventDefault={() => onClickEvent({ dest: meta.eleClass, eleId: meta.eleId, url: meta.linkRef })}>
 						{meta.eleId}
 					</a>
-					{meta.suffix}
+					{meta.suffixDOM}
 				</li>
 			{/each}
 		</ul>
@@ -89,7 +96,18 @@
 		text-align: center;
 	}
 
-	a.redirect {
+	li.favorite {
+		background-color: lightgoldenrodyellow;
+		border: 0.5px solid orange;
+		border-radius: 5px;
+		padding: 0 2px 3px;
+	}
+	li.favorite:before {
+		content: "\2605";
+		color: orange;
+		font-size: large;
+	}
+	li.redirect a {
 		background-color: lightgray;
 		/* margin: 2px; */
 		padding: 2px;
@@ -98,7 +116,7 @@
 		font-style: italic;
 	}
 
-	a.redirect::before {
+	li.redirect a::before {
 		/* Reference: https://stackoverflow.com/a/52058198/6908282 */
 		content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
 		margin: 0 2px;

@@ -20,6 +20,11 @@ export const defaultApiData = {
     userName: "",
 };
 
+export const suffix = {
+    hidden: " (hidden)",
+    favorite: " (favorite)",
+}
+
 export const upvoteFilter = {
     includeFeilds: [
         "question.upvoted",
