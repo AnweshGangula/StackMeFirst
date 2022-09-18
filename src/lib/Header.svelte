@@ -3,11 +3,10 @@
 	import Api from "~/utils/stackAPI";
 	import { GetLocalTokenData } from "~/utils/utils";
 
-	let stackAPI;
-	let profileImage;
-	let profileUrl;
+	import ProfilePic from "./ProfilePic.svelte";
+
 	let token = false;
-	let localToken = headerDOM();
+	let domData = headerDOM();
 	let loginError = false;
 
 	async function headerDOM() {
@@ -52,10 +51,8 @@
 	}
 
 	async function myStackDetails(token) {
-		stackAPI = new Api(token);
+		const stackAPI = new Api(token);
 		const myData = await stackAPI.getMyDetails();
-		profileImage = myData[0].profile_image;
-		profileUrl = myData[0].link;
 
 		return myData[0];
 	}
@@ -85,17 +82,10 @@
 		<p id="loginError">Unable to Login. Please Try Again</p>
 	{/if}
 
-	{#await localToken then result}
+	{#await domData then result}
 		<div class="loginDiv">
 			{#if token}
-				<a
-					id="profilePic"
-					href={result.profileUrl}
-					title={result.profileUrl}
-					on:click|preventDefault={() => browser.tabs.create({ url: result.profileUrl })}
-				>
-					<img width="35" height="35" src={result.profileImage} alt="Stack Exchange Profile Pic of Gangula" />
-				</a>
+				<ProfilePic profileData={result} />
 				<button id="btnLogout" on:click|preventDefault={() => RemoveToken(result.token)}>Logout</button>
 			{:else}
 				<button id="btnLogin" on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights"> Login </button>
@@ -118,11 +108,6 @@
 		margin-left: auto;
 		display: flex;
 		align-items: center;
-	}
-
-	#profilePic img {
-		border-radius: 100%;
-		margin: 0 5px;
 	}
 
 	#loginError {
