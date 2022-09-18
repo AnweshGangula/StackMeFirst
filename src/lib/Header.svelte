@@ -1,11 +1,20 @@
 <script>
 	import browser from "webextension-polyfill";
 	import Api from "~/utils/stackAPI";
-	import { GetLocalToken } from "~/utils/utils";
+	import { GetLocalTokenData } from "~/utils/utils";
 
-	let stackAPI;
-	let localToken = GetLocalToken();
+	import ProfilePic from "./ProfilePic.svelte";
+
+	let token = false;
+	let domData = headerDOM();
 	let loginError = false;
+
+	async function headerDOM() {
+		const tokenData = await GetLocalTokenData();
+		token = tokenData.token;
+
+		return tokenData;
+	}
 
 	async function login() {
 		// this.setState({ loading: true });
@@ -15,18 +24,19 @@
 				from: "popup",
 				subject: "GET_TOKEN",
 			})
-			.then(async ({ token, error }) => {
+			.then(async ({ token: tokenMsg, error }) => {
 				console.log(`Action 'AUTH' success`);
-				if (token) {
+				if (tokenMsg) {
 					// console.log("Logged in");
-					localToken = token;
-					stackAPI = new Api(token);
-					const myData = await stackAPI.getMyDetails();
-					document.getElementById("btnLogout").title = myData[0].display_name;
+					token = tokenMsg;
+					const myData = await myStackDetails(tokenMsg);
+					document.getElementById("btnLogout").title = myData.display_name;
 
 					const apiData = {
-						token: token,
-						userName: myData[0].display_name,
+						token: tokenMsg,
+						userName: myData.display_name,
+						profileImage: myData.profile_image,
+						profileUrl: myData.link,
 					};
 					browser.storage.sync.set({ apiData: apiData }).then(function () {
 						// UpdateStatus("Options Saved");
@@ -40,6 +50,13 @@
 		// return true;
 	}
 
+	async function myStackDetails(token) {
+		const stackAPI = new Api(token);
+		const myData = await stackAPI.getMyDetails();
+
+		return myData[0];
+	}
+
 	async function RemoveToken(tokenVar) {
 		browser.runtime
 			.sendMessage({
@@ -50,7 +67,7 @@
 			.then(({ error }) => {
 				if (!error) {
 					console.log(`Action 'REMOVE_TOKEN' success`);
-					localToken = false;
+					token = false;
 				} else {
 					//  unable to remove token
 				}
@@ -65,14 +82,15 @@
 		<p id="loginError">Unable to Login. Please Try Again</p>
 	{/if}
 
-	{#await localToken then token}
-		{#if token}
-			<button id="btnLogout" class="loginBtn" on:click|preventDefault={() => RemoveToken(token)}>Logout</button>
-		{:else}
-			<button id="btnLogin" class="loginBtn" on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights">
-				Login
-			</button>
-		{/if}
+	{#await domData then result}
+		<div class="loginDiv">
+			{#if token}
+				<ProfilePic profileData={result} />
+				<button id="btnLogout" on:click|preventDefault={() => RemoveToken(result.token)}>Logout</button>
+			{:else}
+				<button id="btnLogin" on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights"> Login </button>
+			{/if}
+		</div>
 	{/await}
 </header>
 
@@ -86,8 +104,10 @@
 		margin: 5px;
 	}
 
-	.loginBtn {
+	.loginDiv {
 		margin-left: auto;
+		display: flex;
+		align-items: center;
 	}
 
 	#loginError {

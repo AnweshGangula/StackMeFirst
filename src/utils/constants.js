@@ -14,6 +14,8 @@ export const defaultPreferances = {
 export const defaultApiData = {
     token: "",
     userName: "",
+    profileImage: "",
+    profileUrl: "",
 };
 
 export const suffix = {
