@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 
-import { IsStackOverflow, IsQuestion, GetLocalToken } from "~/utils/utils";
+import { IsStackOverflow, IsQuestion, GetLocalTokenData } from "~/utils/utils";
 import { defaultPreferances } from "~/utils/constants";
 import Api from "~/utils/stackAPI";
 
@@ -238,7 +238,8 @@ export default async function highlightStack() {
         let token = "";
         const getLq = preferences.hlLinkQs;
         if (getLq) {
-            token = await GetLocalToken();
+            const tokenData = await GetLocalTokenData();
+            token = tokenData.token;
             if (token != "") {
                 const stackAPI = new Api(token);
                 const allLinkedQs = await stackAPI.getLinkedQues(currentQid);

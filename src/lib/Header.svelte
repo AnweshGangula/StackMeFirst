@@ -1,19 +1,20 @@
 <script>
 	import browser from "webextension-polyfill";
 	import Api from "~/utils/stackAPI";
-	import { GetLocalToken } from "~/utils/utils";
+	import { GetLocalTokenData } from "~/utils/utils";
 
 	let stackAPI;
 	let profileImage;
 	let profileUrl;
+	let token = false;
 	let localToken = headerDOM();
 	let loginError = false;
 
 	async function headerDOM() {
-		const token = await GetLocalToken();
-		const myData = await myStackDetails(token);
+		const tokenData = await GetLocalTokenData();
+		token = tokenData.token;
 
-		return { token, myData };
+		return tokenData;
 	}
 
 	async function login() {
@@ -24,17 +25,19 @@
 				from: "popup",
 				subject: "GET_TOKEN",
 			})
-			.then(async ({ token, error }) => {
+			.then(async ({ token: tokenMsg, error }) => {
 				console.log(`Action 'AUTH' success`);
-				if (token) {
+				if (tokenMsg) {
 					// console.log("Logged in");
-					localToken = token;
-					const myData = await myStackDetails(token);
+					token = tokenMsg;
+					const myData = await myStackDetails(tokenMsg);
 					document.getElementById("btnLogout").title = myData.display_name;
 
 					const apiData = {
-						token: token,
+						token: tokenMsg,
 						userName: myData.display_name,
+						profileImage: myData.profile_image,
+						profileUrl: myData.link,
 					};
 					browser.storage.sync.set({ apiData: apiData }).then(function () {
 						// UpdateStatus("Options Saved");
@@ -67,7 +70,7 @@
 			.then(({ error }) => {
 				if (!error) {
 					console.log(`Action 'REMOVE_TOKEN' success`);
-					localToken = false;
+					token = false;
 				} else {
 					//  unable to remove token
 				}
@@ -83,16 +86,21 @@
 	{/if}
 
 	{#await localToken then result}
-		{#if result.token}
-			<a id="profilePic" href={profileUrl} title={profileUrl} on:click|preventDefault={() => browser.tabs.create({ url: profileUrl })}>
-				<img width="35" height="35" src={profileImage} alt="Stack Exchange Profile Pic of Gangula" />
-			</a>
-			<button id="btnLogout" class="loginBtn" on:click|preventDefault={() => RemoveToken(result.token)}>Logout</button>
-		{:else}
-			<button id="btnLogin" class="loginBtn" on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights">
-				Login
-			</button>
-		{/if}
+		<div class="loginDiv">
+			{#if token}
+				<a
+					id="profilePic"
+					href={result.profileUrl}
+					title={result.profileUrl}
+					on:click|preventDefault={() => browser.tabs.create({ url: result.profileUrl })}
+				>
+					<img width="35" height="35" src={result.profileImage} alt="Stack Exchange Profile Pic of Gangula" />
+				</a>
+				<button id="btnLogout" on:click|preventDefault={() => RemoveToken(result.token)}>Logout</button>
+			{:else}
+				<button id="btnLogin" on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights"> Login </button>
+			{/if}
+		</div>
 	{/await}
 </header>
 
@@ -106,16 +114,15 @@
 		margin: 5px;
 	}
 
-	.loginBtn {
-		margin-left: 5px;
-	}
-
-	#profilePic {
+	.loginDiv {
 		margin-left: auto;
+		display: flex;
+		align-items: center;
 	}
 
 	#profilePic img {
 		border-radius: 100%;
+		margin: 0 5px;
 	}
 
 	#loginError {

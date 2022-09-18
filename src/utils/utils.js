@@ -1,13 +1,13 @@
 import browser from "webextension-polyfill";
 import { ignoreUrlList, defaultApiData } from "./constants";
-export async function GetLocalToken() {
-    let token = false;
-    token = await browser.storage.sync.get({ apiData: defaultApiData }).then(async function (result) {
-        let localToken = result.apiData.token;
-        return localToken;
+export async function GetLocalTokenData() {
+    let tokenData = false;
+    tokenData = await browser.storage.sync.get({ apiData: defaultApiData }).then(async function (result) {
+        let localTokenData = result.apiData;
+        return localTokenData;
     });
 
-    return token
+    return tokenData
 }
 
 export function IsStackOverflow(baseUrl) {
