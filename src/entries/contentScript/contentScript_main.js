@@ -9,6 +9,7 @@ window.scrollToTarget = scrollToTarget;
 
 export default async function highlightStack() {
     let stackAPI = new Api("");
+    //TODO: if logged, then add token for stackAPI above. This will help with API limitations: https://api.stackexchange.com/docs/throttle#:~:text=If%20an%20application%20does%20have%20an%20access_token
     const currURL = window.location.href // .at(-1)
 
     if (IsStackOverflow(currURL)) {
