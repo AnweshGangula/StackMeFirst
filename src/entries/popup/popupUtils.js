@@ -102,6 +102,5 @@ export function CheckWarnings(currTab, info) {
         warningType.add("notify_author");
     }
     const output = { warningText, warningType }
-    console.log(output);
     return output;
 }

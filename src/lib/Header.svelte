@@ -30,9 +30,7 @@
 				console.log(`Action 'AUTH' success`);
 				if (tokenMsg) {
 					// console.log("Logged in");
-					token = tokenMsg;
 					const myData = await myStackDetails(tokenMsg);
-					document.getElementById("btnLogout").title = myData.display_name;
 
 					const apiData = {
 						token: tokenMsg,
@@ -43,6 +41,7 @@
 
 					profileData = apiData;
 					browser.storage.sync.set({ apiData: apiData }).then(function () {
+						token = tokenMsg;
 						// UpdateStatus("Options Saved");
 					});
 				} else {
@@ -90,7 +89,7 @@
 		<div class="loginDiv">
 			{#if token}
 				<ProfilePic {profileData} />
-				<button id="btnLogout" on:click|preventDefault={() => RemoveToken(result.token)}>Logout</button>
+				<button id="btnLogout" title={profileData.userName} on:click|preventDefault={() => RemoveToken(result.token)}>Logout</button>
 			{:else}
 				<button id="btnLogin" on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights"> Login </button>
 			{/if}
