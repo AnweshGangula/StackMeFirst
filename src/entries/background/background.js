@@ -2,6 +2,7 @@ import browser from "webextension-polyfill";
 import { defaultApiData, StackAppDetails } from "~/utils/constants";
 import { GetBrowser } from "~/utils/utils";
 
+const currBrowser = GetBrowser();
 const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION)
 let browserAction = browser.action;
 
@@ -54,12 +55,15 @@ browser.runtime.onMessage.addListener(
         break;
       case 'REMOVE_TOKEN':
         const token = content.token;
-        browser.identity.removeCachedAuthToken({ token }, () => {
-          sendResponse({ message: 'successfully removed token' });
-        });
+
+        if (currBrowser != "Mozilla Firefox") {
+          browser.identity.removeCachedAuthToken({ token }, () => {
+          });
+        }
 
         browser.storage.sync.set({ apiData: defaultApiData }).then(function () {
           // UpdateStatus("Options Saved");
+          sendResponse({ message: 'successfully removed token' });
         });
         return true; // must return true to signal asynchronous
         break;
@@ -108,7 +112,7 @@ function UpdateBadge(badgeText, tabId, pluginTitle, color) {
 function auth(sendResponse) {
   let clientId;
 
-  if (GetBrowser() == "Mozilla Firefox") {
+  if (currBrowser == "Mozilla Firefox") {
     clientId = StackAppDetails.firefox.clientId;
   } else {
     clientId = StackAppDetails.chromium.clientId;
