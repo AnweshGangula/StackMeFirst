@@ -116,7 +116,7 @@
 		border-radius: 5px;
 		padding: 0 2px 3px;
 	}
-	li.favorite:before {
+	li.favorite:after {
 		content: "\2605";
 		color: orange;
 		font-size: large;
