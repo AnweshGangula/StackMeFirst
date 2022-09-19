@@ -8,10 +8,12 @@
 	let token = false;
 	let domData = headerDOM();
 	let loginError = false;
+	let profileData;
 
 	async function headerDOM() {
 		const tokenData = await GetLocalTokenData();
 		token = tokenData.token;
+		profileData = tokenData;
 
 		return tokenData;
 	}
@@ -38,6 +40,8 @@
 						profileImage: myData.profile_image,
 						profileUrl: myData.link,
 					};
+
+					profileData = apiData;
 					browser.storage.sync.set({ apiData: apiData }).then(function () {
 						// UpdateStatus("Options Saved");
 					});
@@ -85,7 +89,7 @@
 	{#await domData then result}
 		<div class="loginDiv">
 			{#if token}
-				<ProfilePic profileData={result} />
+				<ProfilePic {profileData} />
 				<button id="btnLogout" on:click|preventDefault={() => RemoveToken(result.token)}>Logout</button>
 			{:else}
 				<button id="btnLogin" on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights"> Login </button>
