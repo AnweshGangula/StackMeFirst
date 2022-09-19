@@ -82,7 +82,7 @@ export default async function highlightStack() {
 
                 myAnsList = highlightAnswer(ansJson, ansIsAPI, userConfig, DOM_Opts);
                 myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
-                linkData = await HighlightLinks(userConfig, qId)
+                linkData = await HighlightLinks(userConfig, qId, DOM_Opts)
                 browser.runtime.sendMessage({
                     //  reference: https://stackoverflow.com/a/20021813/6908282
                     from: "contentScript",
@@ -90,7 +90,7 @@ export default async function highlightStack() {
                     content: {
                         answerCount: myAnsList ? myAnsList.length : "?",
                         commentCount: myCmmtList ? myCmmtList.length : "?",
-                        linkCount: linkData.getLq ? linkData.linkedQids.length : "?",
+                        linkCount: linkData.hlLinkQ ? linkData.linkedQids.length : "?",
                         token: linkData.token,
                     }
                 }).then(function () {
@@ -234,11 +234,13 @@ export default async function highlightStack() {
         return commentList;
     }
 
-    async function HighlightLinks(preferences, currentQid) {
+    async function HighlightLinks(preferences, currentQid, DOM_Opts) {
+        // example URL: https://api.stackexchange.com/docs/linked-questions#order=desc&sort=activity&ids=73591695&site=stackoverflow&run=true
+        const currUser = DOM_Opts.currUser;
         let linkedQids = [];
         let token = "";
-        const getLq = preferences.hlLinkQs;
-        if (getLq) {
+        const hlLinkQ = preferences.hlLinkQs;
+        if (hlLinkQ) {
             const tokenData = await GetLocalTokenData();
             token = tokenData.token;
             if (token != "") {
@@ -246,8 +248,12 @@ export default async function highlightStack() {
                 const allLinkedQs = await stackAPI.getLinkedQues(currentQid);
                 const domLinkedQ = document.getElementById("h-linked")?.parentNode.querySelector(".linked");
                 allLinkedQs.forEach((ques) => {
-                    if (ques.upvoted || ques.favorited) {
-                        let isHidden = " (hidden)"
+                    const isQuesAuthor = ques.owner.link == currUser.href
+                    if (ques.upvoted || ques.favorited || isQuesAuthor) {
+                        let isHidden = " (hidden)";
+                        let isFavorite = ques.favorited ? " (favorite)" : "";
+                        let isAuthor = isQuesAuthor ? " (author)" : "";
+
                         for (let link of domLinkedQ.children) {
                             const isLink = !Array.from(link.classList).includes("more"); // if the child is "See more inked         questions DOM"
                             const isUpvoted = (("gpsTrack" in link.dataset) && link.dataset.gpsTrack.includes(ques.question_id));
@@ -260,7 +266,7 @@ export default async function highlightStack() {
                             }
                         }
 
-                        linkedQids.push({ linkJson: ques, hidden: isHidden, isFavorite: ques.favorited });
+                        linkedQids.push({ linkJson: ques, isHidden: isHidden, isFavorite: isFavorite, isAuthor: isAuthor });
                     }
                 });
             }
@@ -273,7 +279,7 @@ export default async function highlightStack() {
             }
         });
 
-        return { getLq, linkedQids, token };
+        return { hlLinkQ, linkedQids, token };
     }
 
     function insertAfter(referenceNode, newNode) {

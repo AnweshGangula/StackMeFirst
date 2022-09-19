@@ -41,11 +41,8 @@
 					const allLinkedQs = info.linkedQids;
 
 					allLinkedQs.forEach((ques) => {
-						if (ques.linkJson.upvoted || ques.linkJson.favorited) {
-							let suffix = ques.hidden;
-							suffix += ques.linkJson.favorited ? " (favorite)" : "";
-							linkedQ.push(ques.linkJson.question_id.toString() + suffix);
-						}
+						let suffix = ques.isHidden + ques.isFavorite + ques.isAuthor;
+						linkedQ.push(ques.linkJson.question_id.toString() + suffix);
 					});
 				});
 			}

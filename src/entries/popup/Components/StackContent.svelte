@@ -9,10 +9,11 @@
 	export let tab = { id: 0, url: "https://stackoverflow.com/" };
 	let OffsetHeight = 60;
 	const count = eleList ? eleList.length : 0;
-	const itemVerb = type == "linkq" ? "upvoted/favorited" : "posted";
+	const itemVerb = type == "linkq" ? "upvoted/favorited/posted" : "posted";
 	const classList = {
 		redirect: "redirect",
 		favorite: "favorite",
+		author: "author",
 	};
 
 	function onClickEvent(data) {
@@ -39,6 +40,12 @@
 			eleClass.add(classList.favorite);
 			eleId = eleId.replace(suffix.favorite, "");
 			suffixDOM += suffix.favorite;
+		}
+
+		if (eleId.includes(suffix.author)) {
+			eleClass.add(classList.author);
+			eleId = eleId.replace(suffix.author, "");
+			suffixDOM += suffix.author;
 		}
 
 		let linkRef = "";
@@ -95,6 +102,14 @@
 		text-align: center;
 	}
 
+	li.author {
+		background-color: palegreen;
+		color: darkgreen;
+		border: 0.5px solid darkgreen;
+		border-radius: 5px;
+		padding: 3px;
+	}
+
 	li.favorite {
 		background-color: lightgoldenrodyellow;
 		border: 0.5px solid orange;
@@ -109,7 +124,7 @@
 	li.redirect a {
 		background-color: lightgray;
 		/* margin: 2px; */
-		padding: 2px;
+		padding: 1px;
 		border-radius: 3px;
 		/* color: white; */
 		font-style: italic;

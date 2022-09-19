@@ -32,6 +32,7 @@ export const defaultApiData = {
 export const suffix = {
     hidden: " (hidden)",
     favorite: " (favorite)",
+    author: " (author)",
 }
 
 export const upvoteFilter = {
