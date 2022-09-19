@@ -1,14 +1,14 @@
 import { customFilterEg, StackAppDetails } from "./constants";
-const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION)
-let apiKey, ClientId;
+import { GetBrowser } from "./utils";
 
 // reference: https://github.com/GanguLabs/StackFave/blob/master/src/utils/api.js
 
 const baseURL = 'https://api.stackexchange.com/2.3';
 
-if (manifestVer == 2) {
+let apiKey;
+if (GetBrowser() == "Mozilla Firefox") {
     apiKey = StackAppDetails.firefox.key;
-} else if (manifestVer == 3) {
+} else {
     apiKey = StackAppDetails.chromium.key;
 }
 

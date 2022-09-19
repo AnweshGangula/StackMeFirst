@@ -1,8 +1,10 @@
 import browser from "webextension-polyfill";
 import { defaultApiData, StackAppDetails } from "~/utils/constants";
+import { GetBrowser } from "~/utils/utils";
 
 const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION)
 let browserAction = browser.action;
+
 if (manifestVer == 2) {
   browserAction = browser.browserAction;
 }
@@ -105,14 +107,12 @@ function UpdateBadge(badgeText, tabId, pluginTitle, color) {
 
 function auth(sendResponse) {
   let cliendId;
-  const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION);
 
-  if (manifestVer == 2) {
+  if (GetBrowser() == "Mozilla Firefox") {
     cliendId = StackAppDetails.firefox.cliendId;
-  } else if (manifestVer == 3) {
+  } else {
     cliendId = StackAppDetails.chromium.cliendId;
   }
-  const clientId = '24029';
 
   const scope = 'read_inbox,no_expiry,private_info';
   const redirectUrl = browser.identity.getRedirectURL('oauth2');
