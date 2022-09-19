@@ -1,5 +1,5 @@
 import browser from "webextension-polyfill";
-import { defaultApiData } from "~/utils/constants";
+import { defaultApiData, StackAppDetails } from "~/utils/constants";
 
 const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION)
 let browserAction = browser.action;
@@ -104,8 +104,17 @@ function UpdateBadge(badgeText, tabId, pluginTitle, color) {
 }
 
 function auth(sendResponse) {
-  const scope = 'read_inbox,no_expiry,private_info';
+  let cliendId;
+  const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION);
+
+  if (manifestVer == 2) {
+    cliendId = StackAppDetails.firefox.cliendId;
+  } else if (manifestVer == 3) {
+    cliendId = StackAppDetails.chromium.cliendId;
+  }
   const clientId = '24029';
+
+  const scope = 'read_inbox,no_expiry,private_info';
   const redirectUrl = browser.identity.getRedirectURL('oauth2');
   const url = `https://stackoverflow.com/oauth/dialog?client_id=${clientId}&scope=${scope}&redirect_uri=${redirectUrl}`;
   browser.identity.launchWebAuthFlow(

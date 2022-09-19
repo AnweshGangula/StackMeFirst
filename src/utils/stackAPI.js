@@ -1,9 +1,16 @@
-import { customFilterEg } from "./constants";
+import { customFilterEg, StackAppDetails } from "./constants";
+const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION)
+let apiKey, ClientId;
 
 // reference: https://github.com/GanguLabs/StackFave/blob/master/src/utils/api.js
 
 const baseURL = 'https://api.stackexchange.com/2.3';
-const key = '1jY1xGKt)NGfZQwE3RbWHQ((';
+
+if (manifestVer == 2) {
+    apiKey = StackAppDetails.firefox.key;
+} else if (manifestVer == 3) {
+    apiKey = StackAppDetails.chromium.key;
+}
 
 // generated from createFilter method
 const filter = '!0XXAMzZV3)6nNHjQ18538kAUL';
@@ -15,7 +22,7 @@ export default class Api {
 
     _buildURL(endpoint, queriesObj, site) {
         const query = `?${this._objToQuery({
-            key,
+            key: apiKey,
             access_token: this.token,
             ...(site && { site }),
             ...queriesObj,

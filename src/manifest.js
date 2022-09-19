@@ -29,10 +29,6 @@ const sharedManifest = {
     open_in_tab: true,
   },
   permissions: ["tabs", "webNavigation", "storage", "scripting", "identity"],
-  oauth2: {
-    client_id: "24029",
-    scopes: ["read_inbox", "no_expiry", "private_info"]
-  }
 };
 
 const browserAction = {
@@ -70,6 +66,10 @@ const ManifestV3 = {
     service_worker: "src/entries/background/serviceWorker.js",
   },
   host_permissions: ["*://*.stackoverflow.com/*"],
+  oauth2: {
+    client_id: "24029",
+    scopes: ["read_inbox", "no_expiry", "private_info"],
+  }
 };
 
 export function getManifest(manifestVersion) {
