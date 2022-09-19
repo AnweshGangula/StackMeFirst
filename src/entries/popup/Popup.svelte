@@ -73,7 +73,8 @@
 <style>
 	:global(body) {
 		width: 350px;
-		height: 0px; /* this doesn't show scrollbar is height is close to scroll */
+		/* height: 0px; this doesn't show scrollbar is height is close to scroll */
+		margin: 0 25px; /* Scrollbar is overlapping with content */
 	}
 	hr {
 		/* reference: https://stackoverflow.com/a/5619906/6908282 */

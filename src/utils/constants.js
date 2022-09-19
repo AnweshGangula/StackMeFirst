@@ -1,10 +1,10 @@
 export const StackAppDetails = {
     firefox: {
-        cliendId: 24355,
+        clientId: 24355,
         key: "GZEA1Nu3Jb4K*CvaiVi5zQ((",
     },
     chromium: {
-        cliendId: 24029,
+        clientId: 24029,
         key: "1jY1xGKt)NGfZQwE3RbWHQ((",
     }
 }

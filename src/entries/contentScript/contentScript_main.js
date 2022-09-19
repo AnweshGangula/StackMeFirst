@@ -254,7 +254,7 @@ export default async function highlightStack() {
                         let isFavorite = ques.favorited ? " (favorite)" : "";
                         let isAuthor = isQuesAuthor ? " (author)" : "";
 
-                        for (let link of domLinkedQ.children) {
+                        for (let link of domLinkedQ?.children) {
                             const isLink = !Array.from(link.classList).includes("more"); // if the child is "See more inked         questions DOM"
                             const isUpvoted = (("gpsTrack" in link.dataset) && link.dataset.gpsTrack.includes(ques.question_id));
                             if (isLink && isUpvoted) {

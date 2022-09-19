@@ -106,12 +106,12 @@ function UpdateBadge(badgeText, tabId, pluginTitle, color) {
 }
 
 function auth(sendResponse) {
-  let cliendId;
+  let clientId;
 
   if (GetBrowser() == "Mozilla Firefox") {
-    cliendId = StackAppDetails.firefox.cliendId;
+    clientId = StackAppDetails.firefox.clientId;
   } else {
-    cliendId = StackAppDetails.chromium.cliendId;
+    clientId = StackAppDetails.chromium.clientId;
   }
 
   const scope = 'read_inbox,no_expiry,private_info';

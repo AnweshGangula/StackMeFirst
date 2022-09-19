@@ -67,11 +67,13 @@ export function UpdateUI(Options, pageType) {
             cmtOff.textContent = "";
         }
 
-        if (!Options.hlLinkQs && linkOff) {
-            const msg = "highlighting Links is disabled";
-            linkOff.textContent = msg;
-        } else {
-            linkOff.textContent = "";
+        if (linkOff) {
+            if (!Options.hlLinkQs) {
+                const msg = "highlighting Links is disabled";
+                linkOff.textContent = msg;
+            } else {
+                linkOff.textContent = "";
+            }
         }
     }
 }
