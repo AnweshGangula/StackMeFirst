@@ -9,8 +9,12 @@ const sharedManifest = {
     },
   ],
   web_accessible_resources: [
-    // Reference: 
-    "src/entries/contentScript/primary/content.css"
+    // reference: https://developer.chrome.com/docs/extensions/mv3/manifest/web_accessible_resources/
+    //  reference: https://github.com/samrum/vite-plugin-web-extension/blob/86035ab7a48d52629c3c681f1ac6d9d77e091795/test/fixture/index/javascript/manifestV3/webAccessibleScript.ts#L16
+    {
+      resources: [`src/entries/contentScript/primary/content.css`],
+      matches: ["*://*.stackoverflow.com/*"],
+    },
   ],
   icons: {
     16: "icons/16.png",
