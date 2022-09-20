@@ -1,45 +1,33 @@
 # StackMeFirst
 
-This is a browser Extension (currently only available in Microsoft Edge & Firefox) that - Highlights and sorts any answers posted by current user in Stack overflow to the top of the list of answers.
+"Stack Me First" is a browser Extension (currently only available in [Microsoft Edge][1] & [Firefox][2]) that highlights & lists
 
-All of the current user's answers will be highlighted with a green border and listed at the top of all answer's.
+- Answers posted by the current user in the currently visible page of the Stack Overflow.
+- Comments posted by the current user in the currently visible page of the Stack Overflow
 
-## Screenshots
+Optionally, you can also use the login button in the popup to highlight & list
 
-![Screenshot 1](./Assets/Screenshots/Screenshot%201.png)
-![Screenshot 2](./Assets/Screenshots/Screenshot%202.png)
-![Screenshot 3](./Assets/Screenshots/Screenshot%203.png)
+- Answers hidden due to pagination of multiple answers
+- Comments hidden under "show more comments"
+- Linked questions that have been Upvoted/Bookmarked/Posted by the logged in user.
+
+> Note: this does not store or share any data externally.
+
+## Instructions
+
+In order to see this plugin in action, open any StackOverflow question where you have posted at least one answer. Note that you need to be logged in to StackOverflow.com in your browser.
+
+> Disclaimer: this plugin doesn't store/share your user information in any means. the logged in user is identified using the StackOverflow navigation bar or **optionally** by using the "login" button from popup (discussed below).
+
+Once the question is opened in StackOverflow, you'll notice that the answer/s posted by you will be highlighted with a "green" border and they will be automatically brought to the top of the answers list.
+
+Check out the [screenshot](./Assets/Screenshots/Highlight_Sort%20answers.png) for a [question][3] where I have posted an answer.\
+Even though the StackOverflow sort is set to "Highest score" & it has another answer with a score of 5, my answer is listed at the top and highlighted with green border.
 
 # Contribution
 
 Checkout the contribution instructions in the [following file](./Contribution.md)
 
----
-
-# StackMeFirst-Svelte.js
-
-The code in this [./src](./src) uses [@samrum/vite-plugin-web-extension][1] npm package to build browser extension for Manifest V2 & V3 using Svelte + Vite.
-
-## Chrome:
-
-[Manifest version 2 is no longer being maintained][2]
-
-> As of January 17, 2022 Chrome Web Store has stopped accepting new Manifest V2 extensions. We strongly recommend that new extensions target Manifest V3.
-
-[Manifest V3 migration checklist][4]
-
-## Edge:
-
-[Overview and timelines for migrating to Manifest V3][5]
-
-## FireFox:
-
-[Manifest V3 migration guide][6]
-[Manifest v3 in Firefox: Recap & Next Steps][7]
-
-[1]: https://github.com/samrum/vite-plugin-web-extension
-[2]: https://developer.chrome.com/docs/extensions/mv2/
-[4]: https://developer.chrome.com/docs/extensions/mv3/mv3-migration-checklist/
-[5]: https://docs.microsoft.com/en-us/microsoft-edge/extensions-chromium/developer-guide/manifest-v3
-[6]: https://extensionworkshop.com/documentation/develop/manifest-v3-migration-guide/
-[7]: https://blog.mozilla.org/addons/2022/05/18/manifest-v3-in-firefox-recap-next-steps/
+[1]: https://microsoftedge.microsoft.com/addons/detail/stack-me-first/andilefigneejkadafmdfcmjdnabfbhi
+[2]: https://addons.mozilla.org/en-US/firefox/addon/stack-me-first/
+[3]: https://stackoverflow.com/q/20686440/6908282
