@@ -39,5 +39,32 @@ In order to contribute or run this plugin locally, you can follow the following 
 > - Please note that all the main source code is located in the [./src](./src/) folder
 > - This code makes use of the [@samrum/vite-plugin-web-extension][1] npm package to initialize and bundle the files. Check out the [GitHub repository][2] for more details.
 
+# Additional Info
+
+The code in this [./src](./src) uses [@samrum/vite-plugin-web-extension][4] npm package to build browser extension for Manifest V2 & V3 using Svelte + Vite.
+
+## Chrome:
+
+[Manifest version 2 is no longer being maintained][5]
+
+> As of January 17, 2022 Chrome Web Store has stopped accepting new Manifest V2 extensions. We strongly recommend that new extensions target Manifest V3.
+
+[Manifest V3 migration checklist][6]
+
+## Edge:
+
+[Overview and timelines for migrating to Manifest V3][7]
+
+## FireFox:
+
+- [Manifest V3 migration guide][8]
+- [Manifest v3 in Firefox: Recap & Next Steps][9]
+
 [1]: https://www.npmjs.com/package/@samrum/vite-plugin-web-extension
 [2]: https://github.com/samrum/vite-plugin-web-extension
+[4]: https://github.com/samrum/vite-plugin-web-extension
+[5]: https://developer.chrome.com/docs/extensions/mv2/
+[6]: https://developer.chrome.com/docs/extensions/mv3/mv3-migration-checklist/
+[7]: https://docs.microsoft.com/en-us/microsoft-edge/extensions-chromium/developer-guide/manifest-v3
+[8]: https://extensionworkshop.com/documentation/develop/manifest-v3-migration-guide/
+[9]: https://blog.mozilla.org/addons/2022/05/18/manifest-v3-in-firefox-recap-next-steps/
