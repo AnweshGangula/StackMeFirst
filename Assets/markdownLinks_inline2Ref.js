@@ -1,3 +1,4 @@
+// reference: https://stackoverflow.com/a/73790035/6908282
 // node Assets/markdownLinks_inline2Ref.js ReadMe.md RefLinks.md
 
 import * as fs from 'fs'
