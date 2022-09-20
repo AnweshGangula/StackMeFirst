@@ -64,7 +64,7 @@ export function LinkToLinkQ(eleId) {
 }
 
 export function GetBrowser() {
-    var test = function (regexp) { return regexp.test(window.navigator.userAgent) }
+    var test = function (regexp) { return regexp.test(navigator.userAgent) }
     switch (true) {
         case test(/edg/i): return "Microsoft Edge";
         case test(/trident/i): return "Microsoft Internet Explorer";
