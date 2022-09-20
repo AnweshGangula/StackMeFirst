@@ -30,7 +30,7 @@ This is just the beginning of what this plugins provides you. As you navigate ac
 
 Other than what you see automatically reflect on the answer (like green border answers/comments), the primary feature of the plugin is the popup screen which lists all the relevant links and information together. Below is a screenshot and its feature list - for a sample question based on my account and interactions:
 
-![Screenshot of Popup window of "Stack Me First" plugin][5]
+<img src="./Assets/Screenshots/Popup%20Instructions.png" alt="Screenshot of Popup window of 'Stack Me First' plugin" width="300"/>
 
 ### Default features (no OAuth)
 
