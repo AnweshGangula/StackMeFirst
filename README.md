@@ -40,8 +40,10 @@ The points highlighted in orange are default features available for you (conside
    - 2A,4C - indication `2 Answers` & `4 Comments`
 2. `n` answer/s posted by you - This is the list of answers posted by me for the current question and their respective links
    - clicking on the link will scroll the respective answer into view.
+   - [Answers reference image](./Assets/Screenshots/Highlight_Sort%20answers.png)
 3. `n` comment/s posted by you - This is the list of comments posted by me for the current question and their respective links
    - clicking on the link will scroll the respective answer into view.
+   - [Comments reference image](./Assets/Screenshots/Highlight%20comments.png)
 4. User Preferences - These are the user preferences which you can set to enable or disable respectively.
    - You can also set the same preferences from the options window as well by
      - Chrome/Edge - right-clicking on the plugin icon > Extension options
@@ -51,6 +53,7 @@ The points highlighted in orange are default features available for you (conside
 
    - respective answer is present in the other pages - when there are lots of answers to a question OR
    - respective comment is hidden under "show more comments"
+   - [Comments reference image](./Assets/Screenshots/Highlight%20comments.png)
 
    So clicking on these links will open a new page navigating you to the respective comment/answer
 
@@ -64,6 +67,7 @@ The points highlighted in orange are default features available for you (conside
    1. a. have upvoted the respective question _(no highlight)_ OR
    2. b. have bookmarked (_previously called favorite_) the respective question _(highlighted in yellow with a star)_ OR
    3. c. are either **the author** of the respective question _(highlighted in green)_ OR
+   - [Linked Questions reference image](./Assets/Screenshots/Highlight%20comments.png)
 
 # Contribution
 
