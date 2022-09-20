@@ -1,3 +1,6 @@
+//  you can use `npx remark README.md -o --use reference-links` instead of this file
+// npx remark README.md -o --use reference-links
+
 // reference: https://stackoverflow.com/a/73790035/6908282
 // node Assets/markdownLinks_inline2Ref.js ReadMe.md RefLinks.md
 
