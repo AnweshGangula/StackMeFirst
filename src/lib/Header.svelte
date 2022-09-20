@@ -9,6 +9,7 @@
 	let domData = headerDOM();
 	let loginError = false;
 	let profileData;
+	let loading = "";
 
 	async function headerDOM() {
 		const tokenData = await GetLocalTokenData();
@@ -20,6 +21,7 @@
 
 	async function login() {
 		// this.setState({ loading: true });
+		loading = "loading";
 
 		browser.runtime
 			.sendMessage({
@@ -43,6 +45,7 @@
 					browser.storage.sync.set({ apiData: apiData }).then(function () {
 						token = tokenMsg;
 						// UpdateStatus("Options Saved");
+						loading = "";
 					});
 				} else {
 					loginError = true;
@@ -91,7 +94,9 @@
 				<ProfilePic {profileData} />
 				<button id="btnLogout" title={profileData.userName} on:click|preventDefault={() => RemoveToken(result.token)}>Logout</button>
 			{:else}
-				<button id="btnLogin" on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights"> Login </button>
+				<button id="btnLogin" class={loading} on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights">
+					Login
+				</button>
 			{/if}
 		</div>
 	{/await}
@@ -118,5 +123,32 @@
 		color: white;
 		padding: 0 5px;
 		text-align: center;
+	}
+
+	#btnLogin.loading {
+		pointer-events: none;
+	}
+
+	#btnLogin.loading:after {
+		overflow: hidden;
+		display: inline-block;
+		vertical-align: bottom;
+		-webkit-animation: ellipsis steps(4, end) 900ms infinite;
+		animation: ellipsis steps(4, end) 900ms infinite;
+		content: "\2026";
+		/* ascii code for the ellipsis character */
+		width: 0px;
+	}
+
+	@keyframes ellipsis {
+		to {
+			width: 10px;
+		}
+	}
+
+	@-webkit-keyframes ellipsis {
+		to {
+			width: 10px;
+		}
 	}
 </style>

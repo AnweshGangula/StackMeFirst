@@ -55,7 +55,7 @@
 		{#if token}
 			<StackContent eleList={linkedQ} type="linkq" tab={glCurrTab} />
 		{:else}
-			<p class="featureOff">Login to Stack Overflow to get Linked Question Upvoted by you</p>
+			<p class="featureOff">Click the "Login" button above to provide access to linked questions</p>
 		{/if}
 	{/if}
 {/await}
