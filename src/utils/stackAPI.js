@@ -160,6 +160,7 @@ export default class Api {
         let myDetails = [];
         let hasMore = false;
         const mergedQuery = Object.assign({ page: 1, filter }, queriesObj);
+        let allowPagination = true;
         do {
             if (hasMore) {
                 mergedQuery.page += 1;
@@ -170,7 +171,10 @@ export default class Api {
             );
             myDetails = myDetails.concat(items);
             hasMore = has_more;
-        } while (hasMore);
+
+            //pagination not working if more than 100 links - https://meta.stackexchange.com/q/307314/381523
+            allowPagination = false;
+        } while (hasMore && allowPagination);
         return myDetails;
     }
 

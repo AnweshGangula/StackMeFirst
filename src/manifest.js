@@ -35,6 +35,10 @@ const sharedManifest = {
   permissions: ["tabs", "storage", "scripting", "identity"],
 };
 
+
+const v2Permissions = [...sharedManifest.permissions].filter((x) => !["scripting"].includes(x)) // reference: https://stackoverflow.com/a/68230395/6908282
+const hostPermissions = ["*://*.stackoverflow.com/*", "*://api.stackexchange.com/*"]
+
 const browserAction = {
   default_title: "Stack Me First",
   default_icon: "./icons/StackMeFirst_disabled.png",
@@ -42,7 +46,6 @@ const browserAction = {
 };
 
 // remove "scripting" from manifest v2 permissions
-const v2Permissions = [...sharedManifest.permissions].filter((x) => !["scripting"].includes(x)) // reference: https://stackoverflow.com/a/68230395/6908282
 const ManifestV2 = {
   ...sharedManifest,
   background: {
@@ -54,7 +57,7 @@ const ManifestV2 = {
     ...sharedManifest.options_ui,
     chrome_style: false,
   },
-  permissions: [...v2Permissions, "*://*.stackoverflow.com/*", "*://api.stackexchange.com/*"],
+  permissions: [...v2Permissions, ...hostPermissions],
   browser_specific_settings: {
     gecko: {
       id: "{d86c700e-ef2b-4ce4-a2b1-23156eaeb2b5}",
@@ -69,7 +72,7 @@ const ManifestV3 = {
   background: {
     service_worker: "src/entries/background/serviceWorker.js",
   },
-  host_permissions: ["*://*.stackoverflow.com/*"],
+  host_permissions: [...hostPermissions],
   oauth2: {
     // oauth2 not supported in manifest v2: https://stackoverflow.com/questions/51608064/error-processing-manifest-in-firefox#comment90182051_51608064
     client_id: "24029",
