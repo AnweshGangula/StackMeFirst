@@ -66,7 +66,7 @@
 		{#if token}
 			<StackContent eleList={linkedQ} type="linkq" tab={glCurrTab} />
 		{:else}
-			<p class="featureOff {loading}">{warning}</p>
+			<p id="linQLogin" class="featureOff {loading}">{warning}</p>
 		{/if}
 	{/if}
 {/await}

@@ -47,6 +47,11 @@
 						// UpdateStatus("Options Saved");
 						loading = "";
 					});
+					const linQOffDOM = document.getElementById("linQLogin");
+					if (linQOffDOM) {
+						linQOffDOM.textContent = "Please reload the tab to get Linked Questions";
+						linQOffDOM.classList.remove("loading");
+					}
 				} else {
 					loginError = true;
 					// console.log("Unable to login");
