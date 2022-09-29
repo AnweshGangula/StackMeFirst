@@ -45,7 +45,7 @@ browser.runtime.onMessage.addListener(
         const linkCountText = content.token ? ", " + content.linkCount + " Upvoted Links" : ""
         badgeText = `${content.answerCount}A,${content.commentCount}C${linkCount}`;
         pluginTitle = `${content.answerCount} Answers, ${content.commentCount} Comments${linkCountText}\n`;
-        color = "green";
+        color = (badgeText == "0A,0C" || badgeText == "0A,0C,0L") ? "firebrick" : "green";
 
         UpdateBadge(badgeText, browserTabId, pluginTitle, color);
         break;
