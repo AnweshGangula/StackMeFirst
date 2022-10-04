@@ -8,6 +8,7 @@
 		"build": "vite build",
 		"watch": "vite build --watch",
 		"dev": "vite",
+		"readmelinks": "npx remark README.md -o --use reference-links",
 		"serve:firefox": "web-ext run --start-url \"about:debugging#/runtime/this-firefox\"  --source-dir ./dist/",
 		"serve:chrome": "web-ext run -t chromium --start-url \"https://google.com\" --source-dir ./dist/"
 	},
