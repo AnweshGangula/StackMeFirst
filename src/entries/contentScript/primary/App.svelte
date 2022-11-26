@@ -1,31 +1,47 @@
 <script>
+  import DocContent from "./Components/DocContent.svelte"
+
   import logo from "~/assets/logo.svg";
 
   const logoImageUrl = new URL(logo, import.meta.url).href;
 </script>
 
-<div class="logo">
-  <img src={logoImageUrl} height="50" alt="" />
+<div class="dockRoot">
+  <div class="dockLogo">
+    <img src={logoImageUrl} height="20" alt="Stack Me First Logo" />
+  </div>
+  <DocContent />
 </div>
 
+
+
 <style>
-  .logo {
-    z-index: 99999;
+  .dockRoot{
     position: fixed;
-    bottom: 20px;
-    right: 10px;
-    width: 60px;
-    height: 60px;
+    z-index: 9999;
+    top: 0px;
+    right: 0px;
+    margin: 10px;
+    display: flex;
+  }
+  .dockLogo {
+    /* width: 30px; */
+    /* height: 30px; */
+    /* display: flex; */
     display: flex;
     justify-content: center;
+    /* width: 30px; */
+    height: 30px;
+    aspect-ratio: 1;
     align-items: center;
-    border: 4px solid #c72a21;
+    border: 3px solid rgb(251,251,251,20%);
     border-radius: 50%;
-    background-color: #fff;
+    background-color: #0000004d;
   }
 
-  img {
-    position: absolute;
-    top: 7px;
+  .dockLogo img{
+    padding: 5px;
+    height: 70%;
   }
+
 </style>
