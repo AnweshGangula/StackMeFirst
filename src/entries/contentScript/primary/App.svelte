@@ -21,8 +21,13 @@
     z-index: 9999;
     top: 0px;
     right: 0px;
-    margin: 10px;
+    /* margin: 10px; */
     display: flex;
+    max-width: 400px;
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
+    border-radius: 5px;
   }
   .dockLogo {
     /* width: 30px; */
@@ -34,9 +39,10 @@
     height: 30px;
     aspect-ratio: 1;
     align-items: center;
-    border: 3px solid rgb(251,251,251,20%);
+    border: 3px solid rgb(255,255,255,20%);
     border-radius: 50%;
     background-color: #0000004d;
+    margin: 5px;
   }
 
   .dockLogo img{
