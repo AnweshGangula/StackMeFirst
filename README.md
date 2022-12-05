@@ -86,6 +86,12 @@ I'm aware of few of the issue with the current version of the plugin, You can ch
 
 Checkout the contribution or local development instructions in the [following file][15]
 
+# SEO Keywords/sentences:
+
+- chrome extension or firefox extension to highlight & list my upvoted stack overflow answers
+- chrome extension or firefox extension to highlight & list my stack overflow linked questions
+- chrome extension or firefox extension to highlight & list my stack overflow comments
+
 [1]: https://chrome.google.com/webstore/detail/stack-me-first/pmjhehdfjfahnlgdblnhhfcimegodmnj
 [2]: https://microsoftedge.microsoft.com/addons/detail/stack-me-first/andilefigneejkadafmdfcmjdnabfbhi
 [3]: https://addons.mozilla.org/en-US/firefox/addon/stack-me-first/
