@@ -14,10 +14,10 @@
     dockHidden = savedPref.dockHidden
   })
 
-  async function ToggleDock(){
+  function ToggleDock(){
     dockHidden = !dockHidden;
 
-    await currPref.then((savedPref)=>{
+    currPref.then((savedPref)=>{
       // console.log(savedPref);
       savedPref.dockHidden = dockHidden;
 

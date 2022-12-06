@@ -117,10 +117,18 @@
 		margin: 5px;
 	}
 
+	h1{
+		margin-right: 1em;
+	}
+
 	.loginDiv {
 		margin-left: auto;
 		display: flex;
 		align-items: center;
+	}
+
+	.loginDiv button{
+		cursor: pointer;
 	}
 
 	#loginError {
