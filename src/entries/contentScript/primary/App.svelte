@@ -4,19 +4,34 @@
   import logo from "~/assets/logo.svg";
 
   const logoImageUrl = new URL(logo, import.meta.url).href;
+
+  let displayDock = true;
+
+  function ToggleDock(){
+    displayDock = !displayDock;
+    document.getElementById("dockRoot").classList.toggle("dockHidden");
+  }
+
 </script>
 
-<div class="dockRoot">
+<div id="dockRoot" class={displayDock ? "" : "dockHidden"} >
   <div class="dockLogo">
-    <img src={logoImageUrl} height="20" alt="Stack Me First Logo" />
+    <button type="button" on:click|preventDefault={() => ToggleDock()}>
+      <img src={logoImageUrl} height="20" alt="Stack Me First Logo" 
+      />
+    </button>
   </div>
-  <DocContent />
+
+  {#if displayDock}
+    <DocContent />
+  {/if}
+
 </div>
 
 
 
 <style>
-  .dockRoot{
+  #dockRoot{
     position: fixed;
     z-index: 9999;
     top: 0px;
@@ -28,6 +43,13 @@
     background-color: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(3px);
     border-radius: 5px;
+    /* transition: border-radius 250ms ease-in; */ /* TODO: work on transition later*/
+  }
+
+  #dockRoot.dockHidden{
+    padding: 0;
+    top: 3px;
+    border-radius: 100%;
   }
   .dockLogo {
     /* width: 30px; */
@@ -45,6 +67,12 @@
     margin: 5px;
   }
 
+  .dockLogo button {
+    cursor: pointer;
+    height: inherit;
+    background: none;
+    border: none;
+  }
   .dockLogo img{
     padding: 5px;
     height: 70%;
