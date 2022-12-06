@@ -1,5 +1,9 @@
+<script>
+    import Popup from "../../../popup/Popup.svelte"
+</script>
+
 <div class="dockContent">
-    <h1>Add Content here</h1>
+    <Popup />
 </div>
 
 <style>
