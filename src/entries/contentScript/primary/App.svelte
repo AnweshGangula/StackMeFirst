@@ -1,20 +1,53 @@
 <script>
+  import browser from "webextension-polyfill";
+
   import DocContent from "./Components/DocContent.svelte"
+  import { defaultPreferances } from "~/utils/constants";
 
   import logo from "~/assets/logo.svg";
 
   const logoImageUrl = new URL(logo, import.meta.url).href;
 
-  let displayDock = true;
+  let dockHidden = false;
+  const currPref = GetPreferences()
+  currPref.then((savedPref)=>{
+    dockHidden = savedPref.dockHidden
+  })
 
-  function ToggleDock(){
-    displayDock = !displayDock;
-    document.getElementById("dockRoot").classList.toggle("dockHidden");
+  async function ToggleDock(){
+    dockHidden = !dockHidden;
+
+    await currPref.then((savedPref)=>{
+      // console.log(savedPref);
+      savedPref.dockHidden = dockHidden;
+
+      browser.storage.sync.set({ stackMeData: savedPref }).then(function () {
+		});
+    })
   }
+
+  async function GetPreferences() {
+		var sotrageOpts = new Promise(function (resolve, reject) {
+			// TODO: Replace Promise with Async-Await
+			//  reference: https://stackoverflow.com/a/58491883/6908282
+			browser.storage.sync.get({ stackMeData: defaultPreferances }).then(function (result) {
+				// You can set default for values not in the storage by providing a dictionary:
+				// reference: https://stackoverflow.com/a/26898749/6908282
+				// if stackMeData is not found, use defaultPreferances for a first time user
+				if (result) {
+					resolve(result.stackMeData);
+				} else {
+					reject(new Error("throw"));
+				}
+			});
+		});
+		const savedPref = await sotrageOpts;
+		return savedPref;
+	}
 
 </script>
 
-<div id="dockRoot" class={displayDock ? "" : "dockHidden"} >
+<div id="dockRoot" class={dockHidden ? "dockHidden" : ""} >
   <div class="dockLogo">
     <button type="button" on:click|preventDefault={() => ToggleDock()}>
       <img src={logoImageUrl} height="20" alt="Stack Me First Logo" 
@@ -22,9 +55,12 @@
     </button>
   </div>
 
-  {#if displayDock}
-    <DocContent />
-  {/if}
+  {#await currPref then Options}
+    {#if !dockHidden}
+      <DocContent />
+    {/if}
+  {/await}
+
 
 </div>
 
