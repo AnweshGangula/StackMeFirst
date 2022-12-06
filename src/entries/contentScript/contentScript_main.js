@@ -9,6 +9,7 @@ window.scrollToTarget = scrollToTarget;
 
 export default async function highlightStack() {
     let stackAPI = new Api("");
+    let userPreferences ={};
     //TODO: if logged, then add token for stackAPI above. This will help with API limitations: https://api.stackexchange.com/docs/throttle#:~:text=If%20an%20application%20does%20have%20an%20access_token
     const currURL = window.location.href // .at(-1)
 
@@ -74,15 +75,15 @@ export default async function highlightStack() {
 
             const DOM_Opts = { currUser, isSorted }
 
-            browser.storage.sync.get({ 'stackMeData': defaultPreferances }).then(async function (result) {
-                let userConfig = result.stackMeData;
+            await browser.storage.sync.get({ 'stackMeData': defaultPreferances }).then(async function (result) {
+                userPreferences = result.stackMeData;
                 // You can set default for values not in the storage by providing a dictionary:
                 // reference: https://stackoverflow.com/a/26898749/6908282
 
 
-                myAnsList = highlightAnswer(ansJson, ansIsAPI, userConfig, DOM_Opts);
-                myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
-                linkData = await HighlightLinks(userConfig, qId, DOM_Opts)
+                myAnsList = highlightAnswer(ansJson, ansIsAPI, userPreferences, DOM_Opts);
+                myCmmtList = highlightComments(allComments, cmtIsAPI, userPreferences, DOM_Opts);
+                linkData = await HighlightLinks(userPreferences, qId, DOM_Opts)
                 browser.runtime.sendMessage({
                     //  reference: https://stackoverflow.com/a/20021813/6908282
                     from: "contentScript",
@@ -287,6 +288,7 @@ export default async function highlightStack() {
         referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
     }
 
+    return userPreferences;
 }
 
 export async function renderContent(
