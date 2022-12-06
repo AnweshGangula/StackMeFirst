@@ -1,7 +1,7 @@
 <script>
   import browser from "webextension-polyfill";
 
-  import DocContent from "./Components/DocContent.svelte"
+  import DockContent from "./Components/DockContent.svelte"
   import { defaultPreferances } from "~/utils/constants";
 
   import logo from "~/assets/logo.svg";
@@ -57,7 +57,7 @@
 
   {#await currPref then Options}
     {#if !dockHidden}
-      <DocContent />
+      <DockContent />
     {/if}
   {/await}
 
