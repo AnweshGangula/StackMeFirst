@@ -10,6 +10,8 @@
 	let loginError = false;
 	let profileData;
 	let loading = "";
+	let logoUrl = browser.runtime.getURL("/icons/StackMeFirst.png");
+	// console.log(logoUrl);
 
 	async function headerDOM() {
 		const tokenData = await GetLocalTokenData();
@@ -87,7 +89,7 @@
 </script>
 
 <header>
-	<img id="logo" src="/icons/StackMeFirst.png" alt="Stack Me First Logo" width="20" height="20" />
+	<img id="logo" src={logoUrl} alt="Stack Me First Logo" width="20" height="20" />
 	<h1>Stack Me First</h1>
 	{#if loginError}
 		<p id="loginError">Unable to Login. Please Try Again</p>
