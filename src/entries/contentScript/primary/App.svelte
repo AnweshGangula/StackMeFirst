@@ -76,9 +76,6 @@
     display: flex;
     max-width: 400px;
     padding: 5px;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(3px);
-    border-radius: 5px;
     /* transition: border-radius 250ms ease-in; */ /* TODO: work on transition later*/
   }
 
@@ -97,10 +94,19 @@
     height: 30px;
     aspect-ratio: 1;
     align-items: center;
-    border: 3px solid rgb(255,255,255,20%);
+    border: 3px solid rgb(255, 255, 255, 50%);
     border-radius: 50%;
-    background-color: #0000004d;
+    background-color: rgb(0, 0, 0, 70%);
+    backdrop-filter: blur(5px);
     margin: 5px;
+    position: relative;
+    top: -5px;
+    left: 20px;
+    z-index: 1;
+  }
+
+  .dockHidden .dockLogo{
+    position: unset;
   }
 
   .dockLogo button {
