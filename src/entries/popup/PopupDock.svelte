@@ -7,7 +7,7 @@
 	import { IsStackOverflow } from "~/utils/utils";
 	import { pageTypeEnum } from "~/utils/constants";
 	import StackContent from "./Components/StackContent.svelte";
-	// import Header from "~/lib/Header.svelte";
+	import Header from "~/lib/Header.svelte";
 	// import Preferences from "~/lib/Preferences.svelte";
 	import Loader from "./Components/Loader.svelte";
 	// import LinkedQues from "./Components/LinkedQues.svelte";
@@ -55,7 +55,7 @@
 	}
 </script>
 
-<!-- <Header /> -->
+<Header />
 <main>
     <Notification {warningType} {warningText} {glCurrTab} />
     <div id="myStack">
