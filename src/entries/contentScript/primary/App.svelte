@@ -11,10 +11,22 @@
   export let stackData;
   let dockHidden = false;
   let isGreenBorder = false;
-  if((stackData.popupContent.answerList && stackData.popupContent.answerList.length > 0)||
-  (stackData.popupContent.commentList && stackData.popupContent.commentList.length > 0)||
-  (stackData.popupContent.linkData?.linkedQids && stackData.popupContent.linkData?.linkedQids.length > 0)){
+  let badgeTextList = [];
+  let badgeText = "0A,0C"
+
+  if(stackData.popupContent.answerList && stackData.popupContent.answerList.length > 0){
+    badgeTextList.push(stackData.popupContent.answerList.length + "A")
+  }
+  if(stackData.popupContent.commentList && stackData.popupContent.commentList.length > 0){
+    badgeTextList.push(stackData.popupContent.commentList.length + "C")
+  }
+  if(stackData.popupContent.linkData?.hlLinkQ && stackData.popupContent.linkData?.linkedQids && stackData.popupContent.linkData?.linkedQids.length > 0){
+    badgeTextList.push(stackData.popupContent.linkData.linkedQids.length + "L")
+  }
+
+  if(badgeTextList.length > 0){
     isGreenBorder = true;
+    badgeText = badgeTextList.join(",");
   }
 
   const currPref = GetPreferences()
@@ -58,8 +70,10 @@
 <div id="dockRoot" class={dockHidden ? "dockHidden" : ""} >
   <div id="dockLogo" class:greenBorder={isGreenBorder}>
     <button type="button" on:click|preventDefault={() => ToggleDock()}>
-      <img src={logoImageUrl} height="20" alt="Stack Me First Logo" 
-      />
+      <span id="badgeText">
+        <small class:greenBorder={isGreenBorder}>{badgeText}</small>
+      </span>
+      <img src={logoImageUrl} height="20" alt="Stack Me First Logo" />
     </button>
   </div>
 
@@ -113,10 +127,6 @@
     z-index: 1;
   }
 
-  #dockLogo.greenBorder{
-    border-color: forestgreen;
-  }
-
   .dockHidden #dockLogo{
     position: unset;
   }
@@ -130,6 +140,30 @@
   #dockLogo img{
     padding: 5px;
     height: 70%;
+  }
+
+  #badgeText{
+    color: white;
+    position: absolute;
+    left: 5px;
+    top: -5px;
+    display: flex;
+    justify-content: flex-end;
+    width: 2px;
+  }
+  #badgeText small{
+    background: firebrick;
+    padding: 2px 5px;
+    border: 1px solid dimgray;
+    border-radius: 100vw;
+  }
+
+  #dockLogo.greenBorder{
+    border-color: forestgreen;
+  }
+
+  #badgeText .greenBorder{
+    background-color: forestgreen;
   }
 
 </style>
