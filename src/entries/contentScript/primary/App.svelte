@@ -9,7 +9,7 @@
   const logoImageUrl = new URL(logo, import.meta.url).href;
 
   export let stackData;
-  let dockHidden = false;
+  let dockSidebar = false;
   let isGreenBorder = false;
   let badgeTextList = GetBadgeText(stackData.popupContent);
   let badgeText = "0A,0C"
@@ -21,15 +21,15 @@
 
   const currPref = GetPreferences();
   currPref.then((savedPref)=>{
-    dockHidden = savedPref.dockHidden
+    dockSidebar = savedPref.dockSidebar
   })
 
   function ToggleDock(){
-    dockHidden = !dockHidden;
+    dockSidebar = !dockSidebar;
 
     currPref.then((savedPref)=>{
       // console.log(savedPref);
-      savedPref.dockHidden = dockHidden;
+      savedPref.dockSidebar = dockSidebar;
 
       browser.storage.sync.set({ stackMeData: savedPref }).then(function () {
 		});
@@ -73,9 +73,9 @@
 
 </script>
 
-<div id="dockRoot" class={dockHidden ? "dockHidden" : ""} >
+<div id="dockRoot" class={dockSidebar ? "dockSidebar" : ""} >
   {#await currPref then Options}
-    {#if !dockHidden}
+    {#if !dockSidebar}
       <DockContent {stackData}/>
     {/if}
   {/await}
@@ -120,7 +120,7 @@
     z-index: 1;
   }
 
-  /* .dockHidden #dockLogo{
+  /* .dockSidebar #dockLogo{
     position: unset;
   } */
 

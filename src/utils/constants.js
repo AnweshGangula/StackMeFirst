@@ -27,7 +27,7 @@ export const defaultPreferances = {
     hlCmnts: false,
     hlLinkQs: false,
     displaySidebar: true,
-    dockHidden: false,
+    dockSidebar: false,
 };
 
 export const defaultApiData = {

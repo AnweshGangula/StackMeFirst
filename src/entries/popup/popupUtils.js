@@ -40,7 +40,7 @@ export function UpdateUI(Options, pageType) {
     document.getElementById("hlComments").checked = Options.hlCmnts;
     document.getElementById("hlLinkQs").checked = Options.hlLinkQs;
     document.getElementById("displaySidebar").checked = Options.displaySidebar;
-    document.getElementById("dockHidden").checked = Options.dockHidden;
+    document.getElementById("dockSidebar").checked = Options.dockSidebar;
 
     if (pageType == pageTypeEnum.popup) {
         const ansList = document.getElementById("answerList");
