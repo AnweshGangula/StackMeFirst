@@ -8,6 +8,7 @@
 
   const logoImageUrl = new URL(logo, import.meta.url).href;
 
+  export let stackData;
   let dockHidden = false;
   const currPref = GetPreferences()
   currPref.then((savedPref)=>{
@@ -57,7 +58,7 @@
 
   {#await currPref then Options}
     {#if !dockHidden}
-      <DockContent />
+      <DockContent {stackData}/>
     {/if}
   {/await}
 

@@ -1,9 +1,12 @@
 <script>
     import Popup from "../../../popup/Popup.svelte"
+
+    export let stackData;
+    console.log({stackData})
 </script>
 
 <div class="dockContent">
-    <Popup />
+    <Popup {stackData} sidebar = {true}/>
 </div>
 
 <style>

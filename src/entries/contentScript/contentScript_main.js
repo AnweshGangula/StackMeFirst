@@ -9,7 +9,7 @@ window.scrollToTarget = scrollToTarget;
 
 export default async function highlightStack() {
     let stackAPI = new Api("");
-    let userPreferences ={};
+    let output ={};
     //TODO: if logged, then add token for stackAPI above. This will help with API limitations: https://api.stackexchange.com/docs/throttle#:~:text=If%20an%20application%20does%20have%20an%20access_token
     const currURL = window.location.href // .at(-1)
 
@@ -75,15 +75,29 @@ export default async function highlightStack() {
 
             const DOM_Opts = { currUser, isSorted }
 
+            const userURL = currUser == null ? undefined : currUser.href;
+            const quesAuth = quesAuthor == null ? undefined : quesAuthor.href;
+            var popupContent = {
+                metaData: {
+                    currUser: userURL,
+                    quesAuthor: quesAuth,
+                },
+            };
+
             await browser.storage.sync.get({ 'stackMeData': defaultPreferances }).then(async function (result) {
-                userPreferences = result.stackMeData;
+                const userConfig = result.stackMeData;
                 // You can set default for values not in the storage by providing a dictionary:
                 // reference: https://stackoverflow.com/a/26898749/6908282
 
 
-                myAnsList = highlightAnswer(ansJson, ansIsAPI, userPreferences, DOM_Opts);
-                myCmmtList = highlightComments(allComments, cmtIsAPI, userPreferences, DOM_Opts);
-                linkData = await HighlightLinks(userPreferences, qId, DOM_Opts)
+                myAnsList = highlightAnswer(ansJson, ansIsAPI, userConfig, DOM_Opts);
+                myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
+                linkData = await HighlightLinks(userConfig, qId, DOM_Opts)
+
+                popupContent.answerList = myAnsList;
+                popupContent.commentList = myCmmtList;
+                popupContent.linkData = linkData;
+
                 browser.runtime.sendMessage({
                     //  reference: https://stackoverflow.com/a/20021813/6908282
                     from: "contentScript",
@@ -97,6 +111,11 @@ export default async function highlightStack() {
                 }).then(function () {
                     // console.log("sending message");
                 });
+
+                output = {
+                    userConfig,
+                    popupContent,
+                }
 
             })
 
@@ -118,26 +137,16 @@ export default async function highlightStack() {
 
                 return idforCmts
             }
+            browser.runtime.onMessage.addListener((msg, sender, response) => {
+                // Reference: https://stackoverflow.com/a/20023723/6908282
+                // First, validate the message's structure.
+                if ((msg.from === 'popup') && (msg.subject === 'popupDOM')) {
+                    // send data to list answers in popup
+                    response(popupContent); // this sends popupContent dict to SetPopupContent function in popup.js
+                }
+            });
         }
 
-        browser.runtime.onMessage.addListener((msg, sender, response) => {
-            // Reference: https://stackoverflow.com/a/20023723/6908282
-            // First, validate the message's structure.
-            if ((msg.from === 'popup') && (msg.subject === 'popupDOM')) {
-                // send data to list answers in popup
-                const userURL = currUser == null ? undefined : currUser.href;
-                const quesAuth = quesAuthor == null ? undefined : quesAuthor.href;
-                var popupContent = {
-                    metaData: {
-                        currUser: userURL,
-                        quesAuthor: quesAuth,
-                    },
-                    answerList: myAnsList,
-                    commentList: myCmmtList,
-                };
-                response(popupContent); // this sends popupContent dict to SetPopupContent function in popup.js
-            }
-        });
     }
 
     function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts) {
@@ -288,7 +297,7 @@ export default async function highlightStack() {
         referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
     }
 
-    return userPreferences;
+    return output;
 }
 
 export async function renderContent(
