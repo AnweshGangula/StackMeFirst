@@ -11,6 +11,9 @@
 	import Loader from "./Components/Loader.svelte";
 	import LinkedQues from "./Components/LinkedQues.svelte";
 
+	export let stackData;
+	export let sidebar = false;
+
 	let warningText;
 	let warningType = new Set();
 	let glCurrTab;
@@ -20,37 +23,59 @@
 	const dispDOM = displayHTML().then(() => restore_options("popup"));
 
 	async function displayHTML() {
-		await browser.tabs.query({ active: true, lastFocusedWindow: true }).then(async function (tabs) {
-			// get current Tab - https://stackoverflow.com/a/29151677/6908282
-			let activeTab = tabs[0];
-			glCurrTab = tabs[0];
+		console.log({ sidebar });
+		if (sidebar) {
+			console.log("ABC");
+			const abc = new Promise((resolve, reject) => {
+				 extractMyStack(stackData.popupContent);
+			});
+			// .then((output) => {
+			// 	console.log("Done");
+			// 	console.log({ output });
+			// });
+		} else {
+			console.log("check");
+			await browser.tabs.query({ active: true, lastFocusedWindow: true }).then(async function (tabs) {
+				// get current Tab - https://stackoverflow.com/a/29151677/6908282
+				let activeTab = tabs[0];
+				glCurrTab = tabs[0];
 
-			if (IsStackOverflow(activeTab.url)) {
-				await browser.tabs.sendMessage(tabs[0].id, { from: "popup", subject: "popupDOM" }).then(
-					// ...also specifying a callback to be called
-					//    from the receiving end (content script).
-					function (info) {
-						const warn = CheckWarnings(tabs[0], info);
-						warningText = warn.warningText;
-						warningType = warn.warningType;
+				if (IsStackOverflow(activeTab.url)) {
+					await browser.tabs.sendMessage(tabs[0].id, { from: "popup", subject: "popupDOM" }).then((info) => {
+						extractMyStack(info, tabs);
+					});
+					// if (website != "stackoverflow.com" || website != "extensions") {
+					// // commenting this because the options page is not working as expected in edge://extensions/ page
+					//     console.log(website);
+					//     document.getElementById("config").style.display = "none";
+					// }
+				} else {
+					warningText = "! Please open a Stack Overflow question to use this addin.";
+					warningType.add("warn");
+				}
+			});
+		}
+	}
 
-						if (warningType.has("warn")) {
-							return;
-						}
-						answerList = info.answerList;
-						commentList = info.commentList;
-					}
-				);
-				// if (website != "stackoverflow.com" || website != "extensions") {
-				// // commenting this because the options page is not working as expected in edge://extensions/ page
-				//     console.log(website);
-				//     document.getElementById("config").style.display = "none";
-				// }
-			} else {
-				warningText = "! Please open a Stack Overflow question to use this addin.";
-				warningType.add("warn");
-			}
-		});
+	function extractMyStack(info, tabs = []) {
+		const currTab = tabs[0] ?? "Dock";
+		const warn = CheckWarnings(currTab, info);
+		console.log({currTab})
+		warningText = warn.warningText;
+		warningType = warn.warningType;
+
+		if (warningType.has("warn")) {
+			return;
+		}
+		answerList = info.answerList;
+		commentList = info.commentList;
+
+		console.log({answerList})
+		return "extraction done";
+
+		// return new Promise(function (resolve) {
+		// 	setTimeout(resolve);
+		// });
 	}
 </script>
 
@@ -67,6 +92,8 @@
 			<hr />
 		</div>
 		<Preferences pageType="popup" />
+	{:catch error}
+    	<p style="color: red">{error.message}</p>
 	{/await}
 </main>
 

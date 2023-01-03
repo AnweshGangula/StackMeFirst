@@ -1,12 +1,12 @@
 <script>
-    import Popup from "../../../popup/Popup.svelte"
+    import PopupDock from "../../../popup/PopupDock.svelte"
 
     export let stackData;
     console.log({stackData})
 </script>
 
 <div class="dockContent">
-    <Popup {stackData} sidebar = {true}/>
+    <PopupDock {stackData} sidebar = {true}/>
 </div>
 
 <style>

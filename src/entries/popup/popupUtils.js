@@ -83,7 +83,7 @@ export function UpdateUI(Options, pageType) {
 export function CheckWarnings(currTab, info) {
     let warningText = "";
     let warningType = new Set();
-    const isQuestion = IsQuestion(currTab.url);
+    const isQuestion = currTab == "Dock" ? true : IsQuestion(currTab.url) ; // always true for contentscript
 
     //  reference: https://stackoverflow.com/a/20023723/6908282
     const metaData = info.metaData;
