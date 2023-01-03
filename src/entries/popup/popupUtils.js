@@ -39,7 +39,7 @@ export function UpdateUI(Options, pageType) {
     document.getElementById("srtAns").checked = Options.srtAns;
     document.getElementById("hlComments").checked = Options.hlCmnts;
     document.getElementById("hlLinkQs").checked = Options.hlLinkQs;
-    document.getElementById("displayDock").checked = Options.displayDock;
+    document.getElementById("displaySidebar").checked = Options.displaySidebar;
 
     if (pageType == pageTypeEnum.popup) {
         const ansList = document.getElementById("answerList");

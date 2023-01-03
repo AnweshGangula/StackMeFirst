@@ -26,7 +26,7 @@ export const defaultPreferances = {
     srtAns: true,
     hlCmnts: false,
     hlLinkQs: false,
-    displayDock: true,
+    displaySidebar: true,
 };
 
 export const defaultApiData = {

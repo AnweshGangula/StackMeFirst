@@ -13,13 +13,13 @@
 		const srtAns = document.getElementById("srtAns").checked;
 		const hlComments = document.getElementById("hlComments").checked;
 		const hlLinkQs = document.getElementById("hlLinkQs").checked;
-		const displayDock = document.getElementById("displayDock").checked;
+		const displaySidebar = document.getElementById("displaySidebar").checked;
 		let stackMeData = {
 			hlAns: hlAnswers,
 			srtAns: srtAns,
 			hlCmnts: hlComments,
 			hlLinkQs: hlLinkQs,
-			displayDock: displayDock,
+			displaySidebar: displaySidebar,
 		};
 		browser.storage.sync.set({ stackMeData: stackMeData }).then(function () {
 			UpdateStatus("Options Saved");
@@ -78,10 +78,9 @@
 			</div>
 			<hr />
 			<div>
-				<input type="checkbox" id="displayDock" name="displayDock" value="Display Dock" />
-				<label for="displayDock">Display the sidebar</label>
-				<i id="dockTooltip" class="infoTooltip" title="Displays a dockable sidebar within the Stack-Overflow page">i</i>
-				<br />
+				<input type="checkbox" id="displaySidebar" name="displaySidebar" value="Display Dock" />
+				<label for="displaySidebar">Display the sidebar</label>
+				<i id="sidebarTooltip" class="infoTooltip" title="Displays a dockable sidebar within the Stack-Overflow page">i</i>
 			</div>
 		</fieldset>
 	</form>
