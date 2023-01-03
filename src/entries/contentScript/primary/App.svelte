@@ -10,6 +10,13 @@
 
   export let stackData;
   let dockHidden = false;
+  let isGreenBorder = false;
+  if((stackData.popupContent.answerList && stackData.popupContent.answerList.length > 0)||
+  (stackData.popupContent.commentList && stackData.popupContent.commentList.length > 0)||
+  (stackData.popupContent.linkData?.linkedQids && stackData.popupContent.linkData?.linkedQids.length > 0)){
+    isGreenBorder = true;
+  }
+
   const currPref = GetPreferences()
   currPref.then((savedPref)=>{
     dockHidden = savedPref.dockHidden
@@ -49,7 +56,7 @@
 </script>
 
 <div id="dockRoot" class={dockHidden ? "dockHidden" : ""} >
-  <div class="dockLogo">
+  <div id="dockLogo" class:greenBorder={isGreenBorder}>
     <button type="button" on:click|preventDefault={() => ToggleDock()}>
       <img src={logoImageUrl} height="20" alt="Stack Me First Logo" 
       />
@@ -85,7 +92,7 @@
     top: 3px;
     border-radius: 100%;
   }
-  .dockLogo {
+  #dockLogo {
     /* width: 30px; */
     /* height: 30px; */
     /* display: flex; */
@@ -95,7 +102,7 @@
     height: 30px;
     aspect-ratio: 1;
     align-items: center;
-    border: 3px solid rgb(255, 255, 255, 50%);
+    border: 3px solid firebrick; /* rgb(255, 255, 255, 50%); */
     border-radius: 50%;
     background-color: rgb(0, 0, 0, 70%);
     backdrop-filter: blur(5px);
@@ -106,17 +113,21 @@
     z-index: 1;
   }
 
-  .dockHidden .dockLogo{
+  #dockLogo.greenBorder{
+    border-color: forestgreen;
+  }
+
+  .dockHidden #dockLogo{
     position: unset;
   }
 
-  .dockLogo button {
+  #dockLogo button {
     cursor: pointer;
     height: inherit;
     background: none;
     border: none;
   }
-  .dockLogo img{
+  #dockLogo img{
     padding: 5px;
     height: 70%;
   }
