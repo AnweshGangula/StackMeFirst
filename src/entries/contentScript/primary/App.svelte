@@ -11,25 +11,15 @@
   export let stackData;
   let dockHidden = false;
   let isGreenBorder = false;
-  let badgeTextList = [];
+  let badgeTextList = GetBadgeText(stackData.popupContent);
   let badgeText = "0A,0C"
-
-  if(stackData.popupContent.answerList && stackData.popupContent.answerList.length > 0){
-    badgeTextList.push(stackData.popupContent.answerList.length + "A")
-  }
-  if(stackData.popupContent.commentList && stackData.popupContent.commentList.length > 0){
-    badgeTextList.push(stackData.popupContent.commentList.length + "C")
-  }
-  if(stackData.popupContent.linkData?.hlLinkQ && stackData.popupContent.linkData?.linkedQids && stackData.popupContent.linkData?.linkedQids.length > 0){
-    badgeTextList.push(stackData.popupContent.linkData.linkedQids.length + "L")
-  }
 
   if(badgeTextList.length > 0){
     isGreenBorder = true;
     badgeText = badgeTextList.join(",");
   }
 
-  const currPref = GetPreferences()
+  const currPref = GetPreferences();
   currPref.then((savedPref)=>{
     dockHidden = savedPref.dockHidden
   })
@@ -65,9 +55,30 @@
 		return savedPref;
 	}
 
+  function GetBadgeText(popupContent){
+    let badgeTextList = [];
+
+    if(popupContent.answerList && popupContent.answerList.length > 0){
+      badgeTextList.push(popupContent.answerList.length + "A")
+    }
+    if(popupContent.commentList && popupContent.commentList.length > 0){
+      badgeTextList.push(popupContent.commentList.length + "C")
+    }
+    if(popupContent.linkData?.hlLinkQ && popupContent.linkData?.linkedQids && popupContent.linkData?.linkedQids.length > 0){
+      badgeTextList.push(popupContent.linkData.linkedQids.length + "L")
+    }
+
+    return badgeTextList;
+  }
+
 </script>
 
 <div id="dockRoot" class={dockHidden ? "dockHidden" : ""} >
+  {#await currPref then Options}
+    {#if !dockHidden}
+      <DockContent {stackData}/>
+    {/if}
+  {/await}
   <div id="dockLogo" class:greenBorder={isGreenBorder}>
     <button type="button" on:click|preventDefault={() => ToggleDock()}>
       <span id="badgeText">
@@ -76,17 +87,7 @@
       <img src={logoImageUrl} height="20" alt="Stack Me First Logo" />
     </button>
   </div>
-
-  {#await currPref then Options}
-    {#if !dockHidden}
-      <DockContent {stackData}/>
-    {/if}
-  {/await}
-
-
 </div>
-
-
 
 <style>
   #dockRoot{
@@ -100,36 +101,28 @@
     padding: 5px;
     /* transition: border-radius 250ms ease-in; */ /* TODO: work on transition later*/
   }
-
-  #dockRoot.dockHidden{
-    padding: 0;
-    top: 3px;
-    border-radius: 100%;
-  }
   #dockLogo {
     /* width: 30px; */
-    /* height: 30px; */
-    /* display: flex; */
+    height: 30px;
     display: flex;
     justify-content: center;
-    /* width: 30px; */
-    height: 30px;
     aspect-ratio: 1;
     align-items: center;
     border: 3px solid firebrick; /* rgb(255, 255, 255, 50%); */
     border-radius: 50%;
     background-color: rgb(0, 0, 0, 70%);
     backdrop-filter: blur(5px);
-    margin: 5px;
+    margin: 2px;
+    margin-left: -10px;
     position: relative;
-    top: -5px;
-    left: 20px;
+    /* top: -5px;
+    left: 20px; */
     z-index: 1;
   }
 
-  .dockHidden #dockLogo{
+  /* .dockHidden #dockLogo{
     position: unset;
-  }
+  } */
 
   #dockLogo button {
     cursor: pointer;

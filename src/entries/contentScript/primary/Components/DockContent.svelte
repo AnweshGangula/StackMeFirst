@@ -14,6 +14,7 @@
     /* height: 100vh; */
     /* max-width: 400px; */
     padding: 10px;
+    margin-top: 5px;
     /* background-color: rgba(0, 0, 0, 0.6); */
     /* backdrop-filter: blur(3px); */
     background-color: rgba(255, 255, 255, 0.8);
