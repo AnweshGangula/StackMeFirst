@@ -14,12 +14,14 @@
 		const hlComments = document.getElementById("hlComments").checked;
 		const hlLinkQs = document.getElementById("hlLinkQs").checked;
 		const displaySidebar = document.getElementById("displaySidebar").checked;
+		const dockHidden = document.getElementById("dockHidden").checked;
 		let stackMeData = {
 			hlAns: hlAnswers,
 			srtAns: srtAns,
 			hlCmnts: hlComments,
 			hlLinkQs: hlLinkQs,
 			displaySidebar: displaySidebar,
+			dockHidden: dockHidden,
 		};
 		browser.storage.sync.set({ stackMeData: stackMeData }).then(function () {
 			UpdateStatus("Options Saved");
@@ -81,6 +83,13 @@
 				<input type="checkbox" id="displaySidebar" name="displaySidebar" value="Display Dock" />
 				<label for="displaySidebar">Display the sidebar</label>
 				<i id="sidebarTooltip" class="infoTooltip" title="Displays a dockable sidebar within the Stack-Overflow page">i</i>
+			</div>
+			<div style="display: none;">
+				<!-- this is needed to saved the dockHidden property during save_options function - since it used DOM to save each option -->
+				<input type="checkbox" id="dockHidden" name="dockHidden" value="Dock Sidebar" />
+				<label for="dockHidden">Dock sidebar on page load</label>
+				<i id="dockTooltip" class="infoTooltip" title="Hides the sidebar on page load. Only the logo is displayed">i</i>
+				<br />
 			</div>
 		</fieldset>
 	</form>
