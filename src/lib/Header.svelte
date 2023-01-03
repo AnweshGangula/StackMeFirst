@@ -2,6 +2,7 @@
 	import browser from "webextension-polyfill";
 	import Api from "~/utils/stackAPI";
 	import { GetLocalTokenData } from "~/utils/utils";
+	import { pageTypeEnum } from "~/utils/constants";
 
 	import ProfilePic from "./ProfilePic.svelte";
 
@@ -27,7 +28,7 @@
 
 		browser.runtime
 			.sendMessage({
-				from: "popup",
+				from: pageTypeEnum.popup,
 				subject: "GET_TOKEN",
 			})
 			.then(async ({ token: tokenMsg, error }) => {
@@ -73,7 +74,7 @@
 	async function RemoveToken(tokenVar) {
 		browser.runtime
 			.sendMessage({
-				from: "popup",
+				from: pageTypeEnum.popup,
 				subject: "REMOVE_TOKEN",
 				content: { token: tokenVar },
 			})

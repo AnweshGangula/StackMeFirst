@@ -9,6 +9,12 @@ export const StackAppDetails = {
     }
 }
 
+export const pageTypeEnum = {
+    popup: "popup",
+    dock: "dock",
+    options: "options",
+};
+
 export const ignoreUrlList = [
     "/ask",
     "/tagged",

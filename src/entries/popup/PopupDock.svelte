@@ -5,6 +5,7 @@
 	import Notification from "./Components/Notification.svelte";
 	import { restore_options, CheckWarnings } from "./popupUtils";
 	import { IsStackOverflow } from "~/utils/utils";
+	import { pageTypeEnum } from "~/utils/constants";
 	import StackContent from "./Components/StackContent.svelte";
 	// import Header from "~/lib/Header.svelte";
 	// import Preferences from "~/lib/Preferences.svelte";
@@ -20,7 +21,7 @@
 
 	// Once the DOM is ready...
 	const dispDOM = displayHTML()
-    restore_options("popup");
+    restore_options(pageTypeEnum.popup);
 
 	async function displayHTML() {
         console.log("ABC");
@@ -33,7 +34,7 @@
 	}
 
 	function extractMyStack(info, tabs = []) {
-		const currTab = tabs[0] ?? "Dock";
+		const currTab = tabs[0] ?? pageTypeEnum.dock;
 		const warn = CheckWarnings(currTab, info);
 		console.log({currTab})
 		warningText = warn.warningText;
@@ -63,7 +64,7 @@
         <!-- <LinkedQues /> -->
         <hr />
     </div>
-    <!-- <Preferences pageType="popup" /> -->
+    <!-- <Preferences pageType={pageType.popup} /> -->
 </main>
 
 <style>

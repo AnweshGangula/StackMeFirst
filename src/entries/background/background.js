@@ -1,5 +1,5 @@
 import browser from "webextension-polyfill";
-import { defaultApiData, StackAppDetails } from "~/utils/constants";
+import { defaultApiData, StackAppDetails, pageTypeEnum } from "~/utils/constants";
 import { GetBrowser } from "~/utils/utils";
 
 const currBrowser = GetBrowser();
@@ -20,7 +20,7 @@ browser.runtime.onMessage.addListener(
     // console.log("message received");
     let content = request.content;
     let subject = request.subject;
-    let browserTabId = request.from == "popup" ? null : sender.tab.id;
+    let browserTabId = request.from == pageTypeEnum.popup ? null : sender.tab.id;
     let badgeText, pluginTitle, color;
 
     switch (subject) {

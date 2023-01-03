@@ -2,7 +2,7 @@ import browser from "webextension-polyfill";
 
 import scrollToTarget from "../executeScript/executeScript";
 import { IsQuestion } from "~/utils/utils";
-import { defaultPreferances } from "~/utils/constants";
+import { defaultPreferances, pageTypeEnum } from "~/utils/constants";
 
 const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION);
 export default function ExecuteScroll(tabId, eleId, type, offsetHeight) {
@@ -41,7 +41,7 @@ export function UpdateUI(Options, pageType) {
     document.getElementById("hlLinkQs").checked = Options.hlLinkQs;
     document.getElementById("displayDock").checked = Options.displayDock;
 
-    if (pageType == "popup") {
+    if (pageType == pageTypeEnum.popup) {
         const ansList = document.getElementById("answerList");
         const ansOff = document.getElementById("answerOff");
         const cmtList = document.getElementById("commentList");
@@ -83,7 +83,7 @@ export function UpdateUI(Options, pageType) {
 export function CheckWarnings(currTab, info) {
     let warningText = "";
     let warningType = new Set();
-    const isQuestion = currTab == "Dock" ? true : IsQuestion(currTab.url) ; // always true for contentscript
+    const isQuestion = currTab == pageTypeEnum.dock ? true : IsQuestion(currTab.url) ; // always true for contentscript
 
     //  reference: https://stackoverflow.com/a/20023723/6908282
     const metaData = info.metaData;

@@ -2,7 +2,7 @@
 	import browser from "webextension-polyfill";
 	import StackContent from "./StackContent.svelte";
 
-	import { defaultPreferances } from "~/utils/constants";
+	import { defaultPreferances, pageTypeEnum } from "~/utils/constants";
 	import { IsQuestion } from "~/utils/utils";
 
 	const currPref = GetPreferences();
@@ -38,7 +38,7 @@
 			isQ = IsQuestion(tabs[0].url);
 			if (isQ) {
 				browser.tabs
-					.sendMessage(tabs[0].id, { from: "popup", subject: "popupLinkQs" })
+					.sendMessage(tabs[0].id, { from: pageTypeEnum.popup, subject: "popupLinkQs" })
 					.then((info) => {
 						token = info.token;
 						glCurrTab = tabs[0];

@@ -5,6 +5,7 @@
 	import Notification from "./Components/Notification.svelte";
 	import { restore_options, CheckWarnings } from "./popupUtils";
 	import { IsStackOverflow } from "~/utils/utils";
+	import { pageTypeEnum } from "~/utils/constants";
 	import StackContent from "./Components/StackContent.svelte";
 	import Header from "~/lib/Header.svelte";
 	import Preferences from "~/lib/Preferences.svelte";
@@ -20,7 +21,7 @@
 	let answerList, commentList;
 
 	// Once the DOM is ready...
-	const dispDOM = displayHTML().then(() => restore_options("popup"));
+	const dispDOM = displayHTML().then(() => restore_options(pageTypeEnum.popup));
 
 	async function displayHTML() {
 		console.log({ sidebar });
@@ -41,7 +42,7 @@
 				glCurrTab = tabs[0];
 
 				if (IsStackOverflow(activeTab.url)) {
-					await browser.tabs.sendMessage(tabs[0].id, { from: "popup", subject: "popupDOM" }).then((info) => {
+					await browser.tabs.sendMessage(tabs[0].id, { from: pageTypeEnum.popup, subject: "popupDOM" }).then((info) => {
 						extractMyStack(info, tabs);
 					});
 					// if (website != "stackoverflow.com" || website != "extensions") {
@@ -58,7 +59,7 @@
 	}
 
 	function extractMyStack(info, tabs = []) {
-		const currTab = tabs[0] ?? "Dock";
+		const currTab = tabs[0] ?? pageTypeEnum.dock;
 		const warn = CheckWarnings(currTab, info);
 		console.log({currTab})
 		warningText = warn.warningText;
@@ -91,7 +92,7 @@
 			<LinkedQues />
 			<hr />
 		</div>
-		<Preferences pageType="popup" />
+		<Preferences pageType={pageTypeEnum.popup} />
 	{:catch error}
     	<p style="color: red">{error.message}</p>
 	{/await}

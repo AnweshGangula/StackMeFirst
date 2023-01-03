@@ -1,7 +1,7 @@
 <script>
 	import browser from "webextension-polyfill";
 	import { restore_options, UpdateUI } from "~/entries/popup/popupUtils";
-	import { defaultPreferances } from "~/utils/constants";
+	import { defaultPreferances, pageTypeEnum } from "~/utils/constants";
 
 	export let pageType = "";
 
@@ -40,7 +40,7 @@
 	function UpdateStatus(statusText) {
 		// Update status to let user know options were saved.
 		var status = document.getElementById("status");
-		const statusSuffix = pageType != "options" ? " - Please reload the tab for accurate behaviour" : "";
+		const statusSuffix = pageType != pageTypeEnum.options ? " - Please reload the tab for accurate behaviour" : "";
 		status.textContent = statusText + statusSuffix;
 		status.style.visibility = "visible";
 		setTimeout(function () {
@@ -50,7 +50,7 @@
 </script>
 
 <div id="config">
-	<form id="options">
+	<form id={pageTypeEnum.options}>
 		<fieldset>
 			<legend>User Preferences</legend>
 
