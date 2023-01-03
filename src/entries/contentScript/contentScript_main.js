@@ -25,6 +25,13 @@ export default async function highlightStack() {
         let question, quesAuthor;
         // const currUser = document.getElementsByClassName("s-user-card")[0]; // this is not correct if user I not logged in at this URL: https://stackoverflow.com/questions
         let myAnsList, myCmmtList, linkData;
+        const userURL = currUser == null ? undefined : currUser.href;
+
+        var popupContent = {
+            metaData: {
+                currUser: userURL,
+            },
+        };
 
         if (currUser == undefined) {
             browser.runtime.sendMessage({
@@ -76,14 +83,8 @@ export default async function highlightStack() {
 
             const DOM_Opts = { currUser, isSorted }
 
-            const userURL = currUser == null ? undefined : currUser.href;
             const quesAuth = quesAuthor == null ? undefined : quesAuthor.href;
-            var popupContent = {
-                metaData: {
-                    currUser: userURL,
-                    quesAuthor: quesAuth,
-                },
-            };
+            popupContent.metaData.quesAuthor = quesAuth;
 
             await browser.storage.sync.get({ 'stackMeData': defaultPreferances }).then(async function (result) {
                 const userConfig = result.stackMeData;
@@ -118,16 +119,15 @@ export default async function highlightStack() {
                     popupContent,
                 }
             })
-            browser.runtime.onMessage.addListener((msg, sender, response) => {
-                // Reference: https://stackoverflow.com/a/20023723/6908282
-                // First, validate the message's structure.
-                if ((msg.from === 'popup') && (msg.subject === 'popupDOM')) {
-                    // send data to list answers in popup
-                    response(popupContent); // this sends popupContent dict to SetPopupContent function in popup.js
-                }
-            });
         }
-
+        browser.runtime.onMessage.addListener((msg, sender, response) => {
+            // Reference: https://stackoverflow.com/a/20023723/6908282
+            // First, validate the message's structure.
+            if ((msg.from === 'popup') && (msg.subject === 'popupDOM')) {
+                // send data to list answers in popup
+                response(popupContent); // this sends popupContent dict to SetPopupContent function in popup.js
+            }
+        });
     }
     return output;
 }

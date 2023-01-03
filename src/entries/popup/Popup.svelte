@@ -13,7 +13,6 @@
 	import LinkedQues from "./Components/LinkedQues.svelte";
 
 	export let stackData;
-	export let sidebar = false;
 
 	let warningText;
 	let warningType = new Set();
@@ -24,38 +23,27 @@
 	const dispDOM = displayHTML().then(() => restore_options(pageTypeEnum.popup));
 
 	async function displayHTML() {
-		console.log({ sidebar });
-		if (sidebar) {
-			console.log("ABC");
-			const abc = new Promise((resolve, reject) => {
-				 extractMyStack(stackData.popupContent);
-			});
-			// .then((output) => {
-			// 	console.log("Done");
-			// 	console.log({ output });
-			// });
-		} else {
-			console.log("check");
-			await browser.tabs.query({ active: true, lastFocusedWindow: true }).then(async function (tabs) {
-				// get current Tab - https://stackoverflow.com/a/29151677/6908282
-				let activeTab = tabs[0];
-				glCurrTab = tabs[0];
+		console.log("check");
+		await browser.tabs.query({ active: true, lastFocusedWindow: true }).then(async function (tabs) {
+			// get current Tab - https://stackoverflow.com/a/29151677/6908282
+			let activeTab = tabs[0];
+			glCurrTab = tabs[0];
 
-				if (IsStackOverflow(activeTab.url)) {
-					await browser.tabs.sendMessage(tabs[0].id, { from: pageTypeEnum.popup, subject: "popupDOM" }).then((info) => {
-						extractMyStack(info, tabs);
-					});
-					// if (website != "stackoverflow.com" || website != "extensions") {
-					// // commenting this because the options page is not working as expected in edge://extensions/ page
-					//     console.log(website);
-					//     document.getElementById("config").style.display = "none";
-					// }
-				} else {
-					warningText = "! Please open a Stack Overflow question to use this addin.";
-					warningType.add("warn");
-				}
-			});
-		}
+			if (IsStackOverflow(activeTab.url)) {
+				await browser.tabs.sendMessage(tabs[0].id, { from: pageTypeEnum.popup, subject: "popupDOM" }).then((info) => {
+					console.log(info);
+					extractMyStack(info, tabs);
+				});
+				// if (website != "stackoverflow.com" || website != "extensions") {
+				// // commenting this because the options page is not working as expected in edge://extensions/ page
+				//     console.log(website);
+				//     document.getElementById("config").style.display = "none";
+				// }
+			} else {
+				warningText = "! Please open a Stack Overflow question to use this addin.";
+				warningType.add("warn");
+			}
+		});
 	}
 
 	function extractMyStack(info, tabs = []) {
