@@ -130,9 +130,13 @@
 		font-style: italic;
 	}
 
-	li.redirect a::before {
+	li.redirect{
+		position: relative;
+	}
+	li.redirect::before {
 		/* Reference: https://stackoverflow.com/a/52058198/6908282 */
 		content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
-		margin: 0 2px;
-	}
+		position: absolute;
+		left: -2.5em;
+}
 </style>
