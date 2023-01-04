@@ -79,7 +79,7 @@
 {#await currPref then Options}
 	{#if isQ && Options.hlLinkQs}
 		{#if token}
-			<StackContent eleList={linkedQ} type="linkq" tab={glCurrTab} />
+			<StackContent pageType={pageType} eleList={linkedQ} type="linkq" tab={glCurrTab} />
 		{:else}
 			<p id="linQLogin" class="featureOff {loading}">{warning}</p>
 		{/if}

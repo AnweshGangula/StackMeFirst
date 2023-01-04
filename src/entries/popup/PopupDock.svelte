@@ -56,8 +56,8 @@
 <main>
     <Notification {warningType} {warningText} {glCurrTab} />
     <div id="myStack">
-        <StackContent eleList={answerList} type="answer" tab={glCurrTab} />
-        <StackContent eleList={commentList} type="comment" tab={glCurrTab} />
+        <StackContent pageType={pageTypeEnum.sidebar} eleList={answerList} type="answer" tab={glCurrTab} />
+        <StackContent pageType={pageTypeEnum.sidebar} eleList={commentList} type="comment" tab={glCurrTab} />
         <LinkedQues pageType={pageTypeEnum.sidebar} linkQData={linkData} />
         <hr />
     </div>

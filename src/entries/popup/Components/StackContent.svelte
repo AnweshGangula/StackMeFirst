@@ -2,8 +2,9 @@
 	import browser from "webextension-polyfill";
 	import ExecuteScroll from "../popupUtils.js";
 	import { LinkToComment, LinkToAnswer, LinkToLinkQ } from "~/utils/utils.js";
-	import { suffix } from "~/utils/constants";
+	import { pageTypeEnum, suffix } from "~/utils/constants";
 
+	export let pageType;
 	export let eleList = [];
 	export let type;
 	export let tab = { id: 0, url: "https://stackoverflow.com/" };
@@ -21,9 +22,13 @@
 		const eleId = data.eleId;
 
 		if (dest.has(classList.redirect)) {
-			browser.tabs.create({ url: data.url });
+			if(pageType == pageTypeEnum.sidebar){
+				window.open(data.url)
+			}else{
+				browser.tabs.create({ url: data.url });
+			}
 		} else {
-			ExecuteScroll(tab.id, eleId, type, OffsetHeight);
+			ExecuteScroll(tab.id, eleId, type, OffsetHeight, pageType);
 		}
 	}
 

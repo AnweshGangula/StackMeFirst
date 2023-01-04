@@ -5,8 +5,10 @@ import { IsQuestion } from "~/utils/utils";
 import { defaultPreferances, pageTypeEnum } from "~/utils/constants";
 
 const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION);
-export default function ExecuteScroll(tabId, eleId, type, offsetHeight) {
-    if (manifestVer == 3) {
+export default function ExecuteScroll(tabId, eleId, type, offsetHeight, pageType = null) {
+    if (pageType == pageTypeEnum.sidebar) {
+        scrollToTarget(eleId, type, offsetHeight + 10);
+    }else if (manifestVer == 3) {
         //  reference: https://stackoverflow.com/a/70932186/6908282
         browser.scripting.executeScript({
             target: { tabId: tabId, allFrames: false },
