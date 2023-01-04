@@ -52,7 +52,7 @@
 </script>
 
 <main>
-    <Notification {warningType} {warningText} {glCurrTab} />
+    <Notification pageType={pageTypeEnum.sidebar} {warningType} {warningText} {glCurrTab} />
     <div id="myStack">
         <StackContent pageType={pageTypeEnum.sidebar} eleList={answerList} type="answer" tab={glCurrTab} />
         <StackContent pageType={pageTypeEnum.sidebar} eleList={commentList} type="comment" tab={glCurrTab} />

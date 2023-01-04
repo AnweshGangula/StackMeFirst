@@ -1,6 +1,7 @@
 <script>
 	import ExecuteScroll from "../popupUtils";
 
+	export let pageType;
 	export let warningType = new Set(),
 		warningText,
 		glCurrTab;
@@ -15,7 +16,7 @@
 					href={glCurrTab.url}
 					target="_blank"
 					rel="noopener noreferrer"
-					on:click|preventDefault={() => ExecuteScroll(glCurrTab.id, null, "question", 0)}
+					on:click|preventDefault={() => ExecuteScroll(glCurrTab.id, null, "question", 0, pageType)}
 				>
 					this question
 				</a>
