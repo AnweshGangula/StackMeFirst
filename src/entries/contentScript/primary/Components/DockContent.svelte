@@ -5,7 +5,7 @@
 </script>
 
 <div class="dockContent">
-    <PopupDock {stackData} sidebar = {true}/>
+    <PopupDock {stackData}/>
 </div>
 
 <style>

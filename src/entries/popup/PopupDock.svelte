@@ -10,20 +10,20 @@
 	import Header from "~/lib/Header.svelte";
 	// import Preferences from "~/lib/Preferences.svelte";
 	import Loader from "./Components/Loader.svelte";
-	// import LinkedQues from "./Components/LinkedQues.svelte";
+	import LinkedQues from "./Components/LinkedQues.svelte";
 
 	export let stackData;
 
 	let warningText;
 	let warningType = new Set();
 	let glCurrTab = { id: 0, url: window.location.href };
-	let answerList, commentList;
+	let answerList, commentList, linkData;
 
 	// Once the DOM is ready...
-	const dispDOM = displayHTML()
+	displayHTML()
     restore_options(pageTypeEnum.popup);
 
-	async function displayHTML() {
+	function displayHTML() {
         extractMyStack(stackData.popupContent);
         // .then((output) => {
         // 	console.log("Done");
@@ -37,11 +37,12 @@
 		warningText = warn.warningText;
 		warningType = warn.warningType;
 
-		if (warningType.has("warn")) {
-			return;
-		}
+		// if (warningType.has("warn")) {
+		// 	return;
+		// }
 		answerList = info.answerList;
 		commentList = info.commentList;
+		linkData = info.linkData;
 
 		return "extraction done";
 
@@ -57,7 +58,7 @@
     <div id="myStack">
         <StackContent eleList={answerList} type="answer" tab={glCurrTab} />
         <StackContent eleList={commentList} type="comment" tab={glCurrTab} />
-        <!-- <LinkedQues /> -->
+        <LinkedQues pageType={pageTypeEnum.sidebar} linkQData={linkData} />
         <hr />
     </div>
     <!-- <Preferences pageType={pageType.popup} /> -->

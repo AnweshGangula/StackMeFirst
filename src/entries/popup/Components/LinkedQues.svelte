@@ -5,6 +5,9 @@
 	import { defaultPreferances, pageTypeEnum } from "~/utils/constants";
 	import { IsQuestion } from "~/utils/utils";
 
+	export let pageType;
+	export let linkQData;
+
 	const currPref = GetPreferences();
 	let glCurrTab;
 	let token;
@@ -12,7 +15,14 @@
 	let isQ;
 	let warning = "Loading";
 	let loading = warning == "Loading" ? "loading" : "";
-	GetUpvotedLinks();
+
+	if(pageType == pageTypeEnum.sidebar){
+		isQ=true;
+		parseLinkQData(linkQData);
+	}else{
+		GetUpvotedLinks();
+	}
+
 
 	async function GetPreferences() {
 		var sotrageOpts = new Promise(function (resolve, reject) {
@@ -40,18 +50,8 @@
 				browser.tabs
 					.sendMessage(tabs[0].id, { from: pageTypeEnum.popup, subject: "popupLinkQs" })
 					.then((info) => {
-						token = info.token;
+						parseLinkQData(info);
 						glCurrTab = tabs[0];
-						const allLinkedQs = info.linkedQids;
-
-						allLinkedQs.forEach((ques) => {
-							let suffix = ques.isHidden + ques.isFavorite + ques.isAuthor;
-							linkedQ.push(ques.linkJson.question_id.toString() + suffix);
-						});
-
-						if (!token) {
-							warning = 'Click the "Login" button above to provide access to linked questions';
-						}
 					})
 					.catch((error) => {
 						warning = "Error in fetching LinkQ data from contentScript:\n" + error.message;
@@ -59,6 +59,21 @@
 			}
 		});
 	}
+
+	function parseLinkQData(info){
+		token = info.token;
+		const allLinkedQs = info.linkedQids;
+
+		allLinkedQs.forEach((ques) => {
+			let suffix = ques.isHidden + ques.isFavorite + ques.isAuthor;
+			linkedQ.push(ques.linkJson.question_id.toString() + suffix);
+		});
+
+		if (!token) {
+			warning = 'Click the "Login" button above to provide access to linked questions';
+		}
+	}
+
 </script>
 
 {#await currPref then Options}
