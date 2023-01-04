@@ -94,30 +94,30 @@ export default async function highlightStack() {
 
                 myAnsList = highlightAnswer(ansJson, ansIsAPI, userConfig, DOM_Opts, currURL);
                 myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
-                linkData = await HighlightLinks(userConfig, qId, DOM_Opts)
-
-                popupContent.answerList = myAnsList;
-                popupContent.commentList = myCmmtList;
-                popupContent.linkData = linkData;
-
-                browser.runtime.sendMessage({
-                    //  reference: https://stackoverflow.com/a/20021813/6908282
-                    from: "contentScript",
-                    subject: "loggedIn",
-                    content: {
-                        answerCount: myAnsList ? myAnsList.length : "?",
-                        commentCount: myCmmtList ? myCmmtList.length : "?",
-                        linkCount: linkData.hlLinkQ ? linkData.linkedQids.length : "?",
-                        token: linkData.token,
+                await HighlightLinks(userConfig, qId, DOM_Opts).then((linkData) => {
+                    popupContent.answerList = myAnsList;
+                    popupContent.commentList = myCmmtList;
+                    popupContent.linkData = linkData;
+    
+                    browser.runtime.sendMessage({
+                        //  reference: https://stackoverflow.com/a/20021813/6908282
+                        from: "contentScript",
+                        subject: "loggedIn",
+                        content: {
+                            answerCount: myAnsList ? myAnsList.length : "?",
+                            commentCount: myCmmtList ? myCmmtList.length : "?",
+                            linkCount: linkData.hlLinkQ ? linkData.linkedQids.length : "?",
+                            token: linkData.token,
+                        }
+                    }).then(function () {
+                        // console.log("sending message");
+                    });
+    
+                    output = {
+                        userConfig,
+                        popupContent,
                     }
-                }).then(function () {
-                    // console.log("sending message");
-                });
-
-                output = {
-                    userConfig,
-                    popupContent,
-                }
+                })
             })
         }
         browser.runtime.onMessage.addListener((msg, sender, response) => {
