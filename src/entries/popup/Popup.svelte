@@ -23,7 +23,6 @@
 	const dispDOM = displayHTML().then(() => restore_options(pageTypeEnum.popup));
 
 	async function displayHTML() {
-		console.log("check");
 		await browser.tabs.query({ active: true, lastFocusedWindow: true }).then(async function (tabs) {
 			// get current Tab - https://stackoverflow.com/a/29151677/6908282
 			let activeTab = tabs[0];
@@ -31,7 +30,7 @@
 
 			if (IsStackOverflow(activeTab.url)) {
 				await browser.tabs.sendMessage(tabs[0].id, { from: pageTypeEnum.popup, subject: "popupDOM" }).then((info) => {
-					console.log(info);
+					// console.log(info);
 					extractMyStack(info, tabs);
 				});
 				// if (website != "stackoverflow.com" || website != "extensions") {
