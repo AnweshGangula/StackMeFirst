@@ -2,6 +2,8 @@
 	import browser from "webextension-polyfill";
 
 	import PopupDock from "../../../popup/PopupDock.svelte";
+    import Header from "~/lib/Header.svelte";
+
 	import logo from "~/assets/logo.svg";
 
 	import { defaultPreferances } from "~/utils/constants";
@@ -74,9 +76,14 @@
 <div id="dockRoot" class={dockSidebar ? "dockSidebar" : ""}>
 	{#await currPref then Options}
 		{#if !dockSidebar}
-            <div class="dockContent">
+        <div class="dockContent">
+            <Header />
+			{#if badgeTextList.length > 0}
                 <PopupDock {stackData} />
-            </div>
+            {:else}
+                <p id="noStack" class="featureOff">! This question doesn't have any answers/comments submitted by you.</p>
+            {/if}
+        </div>
 		{/if}
 	{/await}
 	<div id="dockLogo" class:greenBorder={isGreenBorder}>
@@ -116,10 +123,16 @@
 	}
 
 	.featureOff {
-		background-color: firebrick;
+        margin: 10px 0;
+        padding: 5px;
+        background-color: #ffe4e1;
+        color: #b22222;
+        border: 1px solid firebrick;
+
+		/* background-color: firebrick;
 		color: white;
 		padding: 0 5px;
-		text-align: center;
+		text-align: center; */
 	}
 
 	#dockLogo {
