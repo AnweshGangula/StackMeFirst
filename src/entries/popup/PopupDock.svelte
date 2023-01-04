@@ -20,7 +20,7 @@
 
 	// Once the DOM is ready...
 	displayHTML()
-    restore_options(pageTypeEnum.popup);
+    // restore_options(pageTypeEnum.popup); // dont need this since dock doesn't have preferences
 
 	function displayHTML() {
         extractMyStack(stackData.popupContent);
