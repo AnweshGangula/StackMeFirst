@@ -2,7 +2,6 @@
     import PopupDock from "../../../popup/PopupDock.svelte"
 
     export let stackData;
-    console.log({stackData})
 </script>
 
 <div class="dockContent">

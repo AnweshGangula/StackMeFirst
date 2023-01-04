@@ -24,8 +24,6 @@
     restore_options(pageTypeEnum.popup);
 
 	async function displayHTML() {
-        console.log("ABC");
-
         extractMyStack(stackData.popupContent);
         // .then((output) => {
         // 	console.log("Done");
@@ -36,7 +34,6 @@
 	function extractMyStack(info, tabs = []) {
 		const currTab = tabs[0] ?? pageTypeEnum.dock;
 		const warn = CheckWarnings(currTab, info);
-		console.log({currTab})
 		warningText = warn.warningText;
 		warningType = warn.warningType;
 
@@ -46,7 +43,6 @@
 		answerList = info.answerList;
 		commentList = info.commentList;
 
-		console.log({answerList})
 		return "extraction done";
 
 		// return new Promise(function (resolve) {

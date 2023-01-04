@@ -35,6 +35,8 @@ export function restore_options(pageType) {
     });
 }
 export function UpdateUI(Options, pageType) {
+    if (pageType == pageTypeEnum.dock) return;
+
     document.getElementById("hlAnswers").checked = Options.hlAns;
     document.getElementById("srtAns").checked = Options.srtAns;
     document.getElementById("hlComments").checked = Options.hlCmnts;
