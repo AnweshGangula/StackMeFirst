@@ -47,7 +47,7 @@
 	}
 
 	function extractMyStack(info, tabs = []) {
-		const currTab = tabs[0] ?? pageTypeEnum.dock;
+		const currTab = tabs[0] ?? pageTypeEnum.sidebar;
 		const warn = CheckWarnings(currTab, info);
 		warningText = warn.warningText;
 		warningType = warn.warningType;

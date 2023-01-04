@@ -11,7 +11,7 @@ export const StackAppDetails = {
 
 export const pageTypeEnum = {
     popup: "popup",
-    dock: "dock",
+    sidebar: "sidebar",
     options: "options",
 };
 
