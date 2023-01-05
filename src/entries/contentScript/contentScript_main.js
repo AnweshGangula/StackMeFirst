@@ -86,39 +86,40 @@ export default async function highlightStack() {
             const quesAuth = quesAuthor == null ? undefined : quesAuthor.href;
             popupContent.metaData.quesAuthor = quesAuth;
 
-            await browser.storage.sync.get({ 'stackMeData': defaultPreferances }).then(async function (result) {
-                const userConfig = result.stackMeData;
-                // You can set default for values not in the storage by providing a dictionary:
-                // reference: https://stackoverflow.com/a/26898749/6908282
+            const result = await browser.storage.sync.get({ 'stackMeData': defaultPreferances });
+
+            const userConfig = result.stackMeData;
+            // You can set default for values not in the storage by providing a dictionary:
+            // reference: https://stackoverflow.com/a/26898749/6908282
 
 
-                myAnsList = highlightAnswer(ansJson, ansIsAPI, userConfig, DOM_Opts, currURL);
-                myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
-                await HighlightLinks(userConfig, qId, DOM_Opts).then((linkData) => {
-                    popupContent.answerList = myAnsList;
-                    popupContent.commentList = myCmmtList;
-                    popupContent.linkData = linkData;
-    
-                    browser.runtime.sendMessage({
-                        //  reference: https://stackoverflow.com/a/20021813/6908282
-                        from: "contentScript",
-                        subject: "loggedIn",
-                        content: {
-                            answerCount: myAnsList ? myAnsList.length : "?",
-                            commentCount: myCmmtList ? myCmmtList.length : "?",
-                            linkCount: linkData.hlLinkQ ? linkData.linkedQids.length : "?",
-                            token: linkData.token,
-                        }
-                    }).then(function () {
-                        // console.log("sending message");
-                    });
-    
-                    output = {
-                        userConfig,
-                        popupContent,
-                    }
-                })
-            })
+            myAnsList = highlightAnswer(ansJson, ansIsAPI, userConfig, DOM_Opts, currURL);
+            myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
+
+            const linkData = await HighlightLinks(userConfig, qId, DOM_Opts);
+
+            popupContent.answerList = myAnsList;
+            popupContent.commentList = myCmmtList;
+            popupContent.linkData = linkData;
+
+            browser.runtime.sendMessage({
+                //  reference: https://stackoverflow.com/a/20021813/6908282
+                from: "contentScript",
+                subject: "loggedIn",
+                content: {
+                    answerCount: myAnsList ? myAnsList.length : "?",
+                    commentCount: myCmmtList ? myCmmtList.length : "?",
+                    linkCount: linkData.hlLinkQ ? linkData.linkedQids.length : "?",
+                    token: linkData.token,
+                }
+            }).then(function () {
+                // console.log("sending message");
+            });
+
+            output = {
+                userConfig,
+                popupContent,
+            }
         }
         browser.runtime.onMessage.addListener((msg, sender, response) => {
             // Reference: https://stackoverflow.com/a/20023723/6908282

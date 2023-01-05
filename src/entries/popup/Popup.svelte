@@ -23,26 +23,25 @@
 	const dispDOM = displayHTML().then(() => restore_options(pageTypeEnum.popup));
 
 	async function displayHTML() {
-		await browser.tabs.query({ active: true, lastFocusedWindow: true }).then(async function (tabs) {
-			// get current Tab - https://stackoverflow.com/a/29151677/6908282
-			let activeTab = tabs[0];
-			glCurrTab = tabs[0];
+		const tabs = await browser.tabs.query({ active: true, lastFocusedWindow: true })
+		
+		// get current Tab - https://stackoverflow.com/a/29151677/6908282
+		let activeTab = tabs[0];
+		glCurrTab = tabs[0];
 
-			if (IsStackOverflow(activeTab.url)) {
-				await browser.tabs.sendMessage(tabs[0].id, { from: pageTypeEnum.popup, subject: "popupDOM" }).then((info) => {
-					// console.log(info);
-					extractMyStack(info, tabs);
-				});
-				// if (website != "stackoverflow.com" || website != "extensions") {
-				// // commenting this because the options page is not working as expected in edge://extensions/ page
-				//     console.log(website);
-				//     document.getElementById("config").style.display = "none";
-				// }
-			} else {
-				warningText = "! Please open a Stack Overflow question to use this addin.";
-				warningType.add("warn");
-			}
-		});
+		if (IsStackOverflow(activeTab.url)) {
+			const info = await browser.tabs.sendMessage(tabs[0].id, { from: pageTypeEnum.popup, subject: "popupDOM" })
+			// console.log(info);
+			extractMyStack(info, tabs);
+			// if (website != "stackoverflow.com" || website != "extensions") {
+			// // commenting this because the options page is not working as expected in edge://extensions/ page
+			//     console.log(website);
+			//     document.getElementById("config").style.display = "none";
+			// }
+		} else {
+			warningText = "! Please open a Stack Overflow question to use this addin.";
+			warningType.add("warn");
+		}
 	}
 
 	function extractMyStack(info, tabs = []) {
