@@ -122,6 +122,7 @@
 
 	h1{
 		margin-right: 1em;
+		white-space: nowrap;
 	}
 
 	.loginDiv {

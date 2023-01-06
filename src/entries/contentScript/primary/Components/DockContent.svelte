@@ -13,6 +13,7 @@
 
 	let dockSidebar = false;
 	let isGreenBorder = false;
+	let slideSidebar;
 	let badgeTextList = GetBadgeText(stackData.popupContent);
 	let badgeText = "0A,0C";
 
@@ -24,17 +25,36 @@
 	const currPref = GetPreferences();
 	currPref.then((savedPref) => {
 		dockSidebar = savedPref.dockSidebar;
+	}).then(()=>{
+		slideSidebar = !dockSidebar;
 	});
 
 	function ToggleDock() {
-		dockSidebar = !dockSidebar;
 
-		currPref.then((savedPref) => {
-			// console.log(savedPref);
-			savedPref.dockSidebar = dockSidebar;
+		if(slideSidebar){
+			slideSidebar = !slideSidebar;
+			setTimeout(function(){		
+				dockSidebar = !dockSidebar;
+				GetPreferences().then((savedPref) => {
+					// console.log(savedPref);
+					savedPref.dockSidebar = dockSidebar;
+		
+					browser.storage.sync.set({ stackMeData: savedPref }).then(function () {});
+				});
+			}, 1000);
+		}else{
+			dockSidebar = !dockSidebar;
+			GetPreferences().then((savedPref) => {
+				// console.log(savedPref);
+				savedPref.dockSidebar = dockSidebar;
+				
+				browser.storage.sync.set({ stackMeData: savedPref }).then(function () {});
+				slideSidebar = !slideSidebar;
+			});
+		}
 
-			browser.storage.sync.set({ stackMeData: savedPref }).then(function () {});
-		});
+
+
 	}
 
 	async function GetPreferences() {
@@ -73,10 +93,10 @@
 	}
 </script>
 
-<div id="dockRoot" class={dockSidebar ? "dockSidebar" : ""}>
+<div id="dockRoot" class={dockSidebar ? "dockSidebar" : ""} class:slideSidebar={slideSidebar}>
 	{#await currPref then Options}
 		{#if !dockSidebar}
-        <div class="dockContent glassmorphic">
+        <div id="dockContent" class="glassmorphic">
             <Header />
 			{#if badgeTextList.length > 0}
                 <PopupDock {stackData} />
@@ -109,9 +129,11 @@
 		/* transition: border-radius 250ms ease-in; */ /* TODO: work on transition later*/
 	}
 
-    .dockContent {
+    #dockContent {
 		/* height: 100vh; */
 		/* max-width: 400px; */
+		position: fixed;
+    	left: calc(100vw - 0px);
 		padding: 10px;
 		margin-top: 5px;
 		/* background-color: rgba(0, 0, 0, 0.6); */
@@ -120,9 +142,14 @@
 		color: black;
 		backdrop-filter: blur(3px);
 		border-radius: 5px;
+		transition: transform 1s cubic-bezier(.82,-0.4,.19,1.4);
 	}
 
-	.glassmorphic{
+	#dockRoot.slideSidebar > #dockContent{
+		transform: translateX(-112%);
+	}
+
+	#dockContent.glassmorphic{
 		color: var(--theme-body-font-color);
 		background: rgb(255 255 255 / 25%);
 		border-radius: 15px;
