@@ -76,7 +76,7 @@
 <div id="dockRoot" class={dockSidebar ? "dockSidebar" : ""}>
 	{#await currPref then Options}
 		{#if !dockSidebar}
-        <div class="dockContent">
+        <div class="dockContent glassmorphic">
             <Header />
 			{#if badgeTextList.length > 0}
                 <PopupDock {stackData} />
@@ -120,6 +120,16 @@
 		color: black;
 		backdrop-filter: blur(3px);
 		border-radius: 5px;
+	}
+
+	.glassmorphic{
+		color: var(--theme-body-font-color);
+		background: rgb(255 255 255 / 25%);
+		border-radius: 15px;
+		box-shadow: 5px 4px 1px rgb(145 139 139 / 18%);
+		backdrop-filter: blur(9px);
+		-webkit-backdrop-filter: blur(9px);
+		outline: 1px solid rgb(255 255 255 / 40%);
 	}
 
 	.featureOff {

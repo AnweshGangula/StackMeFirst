@@ -97,8 +97,8 @@
 		margin: 3px 0;
 	}
 	.itemCount {
-		background-color: gold;
-		padding: 0 2px;
+		background-color: var(--yellow-400, gold);
+		padding: 0 5px;
 	}
 	.featureOff {
 		background-color: firebrick;
