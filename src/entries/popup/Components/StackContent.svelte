@@ -69,7 +69,7 @@
 
 <details id="{type}List" open>
 	<summary>
-		<b class="itemCount"><span id="{type}Count">{count}</span> {type}/s</b>
+		<b class={`itemCount ${count>0 ? "" : "zeroCount"}`}><span id="{type}Count">{count}</span> {type}/s</b>
 		- {itemVerb} by you:
 	</summary>
 	{#if count > 0}
@@ -97,8 +97,14 @@
 		margin: 3px 0;
 	}
 	.itemCount {
-		background-color: var(--yellow-400, gold);
-		padding: 0 5px;
+		background-color: gold;
+		/* background-color: var(--yellow-400, gold); */
+		padding: 2px 5px;
+	}
+
+	.zeroCount{
+		background-color: gray;
+    	color: lightgray;
 	}
 	.featureOff {
 		background-color: firebrick;
@@ -129,7 +135,7 @@
 	li.redirect a {
 		background-color: lightgray;
 		/* margin: 2px; */
-		padding: 1px;
+		padding: 0 3px;
 		border-radius: 3px;
 		/* color: white; */
 		font-style: italic;
