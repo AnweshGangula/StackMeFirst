@@ -97,12 +97,14 @@
 	{#await currPref then Options}
 		{#if !dockSidebar}
         <div id="dockContent" class="glassmorphic">
+			<div id="dockContentChild">
             <Header />
 			{#if badgeTextList.length > 0}
                 <PopupDock {stackData} />
             {:else}
                 <p id="noStack" class="featureOff">! This question doesn't have any answers/comments submitted by you.</p>
             {/if}
+			</div>
         </div>
 		{/if}
 	{/await}
@@ -134,13 +136,13 @@
 		/* max-width: 400px; */
 		position: fixed;
     	left: calc(100vw - 0px);
-		padding: 10px;
+		/* padding: 10px; */
 		margin-top: 5px;
 		/* background-color: rgba(0, 0, 0, 0.6); */
 		/* backdrop-filter: blur(3px); */
 		background-color: rgba(255, 255, 255, 0.8);
 		color: black;
-		backdrop-filter: blur(3px);
+		/* backdrop-filter: blur(3px); */
 		border-radius: 5px;
 		transition: transform 1s cubic-bezier(.82,-0.4,.19,1.4);
 	}
@@ -150,14 +152,45 @@
 	}
 
 	#dockContent.glassmorphic{
-		color: var(--theme-body-font-color);
+		/* color: var(--theme-body-font-color); */
 		background: rgb(255 255 255 / 25%);
-		border-radius: 15px;
-		box-shadow: 5px 4px 1px rgb(145 139 139 / 18%);
-		backdrop-filter: blur(9px);
-		-webkit-backdrop-filter: blur(9px);
+		background: linear-gradient(45deg, #00ff908a, rgb(0 184 255 / 50%));
+		background-image: linear-gradient( 135deg, rgb(46 255 228 / 50%) 10%, rgb(240 103 180 / 50%) 100%);
+		border-radius: 10px;
+		/* box-shadow: 5px 4px 1px rgb(94 233 202 / 20%); */
+		/* backdrop-filter: blur(9px); */
+		/* -webkit-backdrop-filter: blur(9px); */
 		outline: 1px solid rgb(255 255 255 / 40%);
 	}
+
+	#dockContentChild{
+		position: relative;
+		background: #ffffff4a;
+		backdrop-filter: blur(3px);
+		padding: 10px;
+		border-radius: 10px;
+		margin: auto;
+		/* border: 1px solid lightgray; */
+	}
+
+	#dockContentChild::before {
+		content: "";
+		z-index: -1;
+		position: absolute;
+		inset: -2px;
+		/* top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0; */
+		border-radius: 10px; 
+		border: 3px solid transparent;
+		background: linear-gradient(45deg,purple,orange) border-box;
+		-webkit-mask:
+			linear-gradient(#fff 0 0) padding-box, 
+			linear-gradient(#fff 0 0);
+		-webkit-mask-composite: destination-out;
+		mask-composite: exclude;
+}
 
 	.featureOff {
         margin: 10px 0;
