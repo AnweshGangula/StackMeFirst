@@ -135,7 +135,7 @@
 		/* height: 100vh; */
 		/* max-width: 400px; */
 		position: fixed;
-    	left: calc(100vw - 0px);
+    	left: calc(100vw + 100px);
 		/* padding: 10px; */
 		margin-top: 5px;
 		/* background-color: rgba(0, 0, 0, 0.6); */
@@ -145,10 +145,11 @@
 		/* backdrop-filter: blur(3px); */
 		border-radius: 5px;
 		transition: transform 1s cubic-bezier(.82,-0.4,.19,1.4);
+		transform: scaleX(1.5); /* this adds more realistic sliding animation - like a cartoon speedcar stop */
 	}
 
 	#dockRoot.slideSidebar > #dockContent{
-		transform: translateX(-112%);
+		transform: translateX(-142%);
 	}
 
 	#dockContent.glassmorphic{
