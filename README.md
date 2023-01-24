@@ -77,11 +77,14 @@ I'm aware of few of the issue with the current version of the plugin, You can ch
 
 - [Questions with more than 100 LINKED QUESTIONS don't work as expected][10]
   - Reference: [Pagination doesn't work for certain API routes/functions][11]
+  - Reference: [API returns the same content in paginated response][16]
 - [Questions with more than 100 ANSWERS don't work as expected][12]
+- [Favorites not being highlighted][13]
+- [Linked questions not being highlighted for few questions][14]
 
 # Contribution
 
-Checkout the contribution or local development instructions in the [following file][13]
+Checkout the contribution or local development instructions in the [following file][15]
 
 # SEO Keywords/sentences:
 
@@ -101,4 +104,7 @@ Checkout the contribution or local development instructions in the [following fi
 [10]: https://github.com/AnweshGangula/StackMeFirst/issues/43
 [11]: https://meta.stackexchange.com/questions/307314/pagination-doesnt-work-for-certain-api-routes-functions
 [12]: https://github.com/AnweshGangula/StackMeFirst/issues/45
-[13]: ./Contribution.md
+[13]: https://meta.stackexchange.com/q/385726/381523
+[14]: https://meta.stackexchange.com/q/383720/381523
+[15]: ./Contribution.md
+[16]: https://meta.stackexchange.com/q/382363/381523
