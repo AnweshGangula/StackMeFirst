@@ -68,8 +68,8 @@ export function LinkToAnswer(baseUrl, eleId) {
     return linkToAnswer;
 }
 
-export function LinkToLinkQ(eleId) {
-    const href = `https://stackoverflow.com/q/${eleId}?lq=1`
+export function LinkToLinkQ(baseUrl, eleId) {
+    const href = BaseUrl(baseUrl) + "/q/" + eleId + "?lq=1"
 
     return href;
 }

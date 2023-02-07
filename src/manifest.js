@@ -1,11 +1,14 @@
 import pkg from "../package.json";
+import { stackCommunities } from "~/utils/constants";
+
+const websiteList = stackCommunities.map(a => "*://*." + a + "/*")
 
 const sharedManifest = {
   content_scripts: [
     {
       js: ["src/entries/contentScript/primary/main.js"],
       css: ["src/entries/contentScript/primary/content.css"],
-      matches: ["*://*.stackoverflow.com/*", "*://*.stackexchange.com/*"],
+      matches: websiteList,
     },
   ],
   web_accessible_resources: [
@@ -13,7 +16,7 @@ const sharedManifest = {
     //  reference: https://github.com/samrum/vite-plugin-web-extension/blob/86035ab7a48d52629c3c681f1ac6d9d77e091795/test/fixture/index/javascript/manifestV3/webAccessibleScript.ts#L16
     {
       resources: [`src/entries/contentScript/primary/content.css`, 'icons/StackMeFirst.png'],
-      matches: ["*://*.stackoverflow.com/*", "*://*.stackexchange.com/*"],
+      matches: websiteList,
     },
   ],
   icons: {
@@ -39,8 +42,7 @@ const sharedManifest = {
 const v2Permissions = [...sharedManifest.permissions].filter((x) => !["scripting"].includes(x)) // reference: https://stackoverflow.com/a/68230395/6908282
 const hostPermissions = [
   "*://api.stackexchange.com/*",
-  "*://*.stackoverflow.com/*",
-  "*://*.stackexchange.com/*",
+  ...websiteList
 ]
 
 const browserAction = {
