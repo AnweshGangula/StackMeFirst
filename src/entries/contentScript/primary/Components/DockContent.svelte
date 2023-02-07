@@ -135,7 +135,7 @@
 		/* height: 100vh; */
 		/* max-width: 400px; */
 		position: fixed;
-    	left: calc(100vw + 100px);
+    	right: -30%;
 		/* padding: 10px; */
 		margin-top: 5px;
 		/* background-color: rgba(0, 0, 0, 0.6); */
@@ -144,12 +144,14 @@
 		color: black;
 		/* backdrop-filter: blur(3px); */
 		border-radius: 5px;
-		transition: transform 1s cubic-bezier(.82,-0.4,.19,1.4);
+		transition: transform 1s cubic-bezier(.82,-0.4,.19,1.4), right 1s cubic-bezier(.82,-0.4,.19,1.4);
 		transform: scaleX(1.5); /* this adds more realistic sliding animation - like a cartoon speedcar stop */
 	}
 
 	#dockRoot.slideSidebar > #dockContent{
-		transform: translateX(-142%);
+		/* transform: translateX(-142%); */
+		transform: scaleX(1);
+		right: 30px;
 	}
 
 	#dockContent.glassmorphic{
@@ -207,11 +209,11 @@
 	}
 
 	#dockLogo {
-		/* width: 30px; */
+		width: 30px;
 		height: 30px;
 		display: flex;
 		justify-content: center;
-		aspect-ratio: 1;
+		/* aspect-ratio: 1; */
 		align-items: center;
 		border: 3px solid firebrick; /* rgb(255, 255, 255, 50%); */
 		border-radius: 50%;

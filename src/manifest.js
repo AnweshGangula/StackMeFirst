@@ -1,18 +1,16 @@
 import pkg from "../package.json";
 
+const _webAccessibleResources = [
+  // Reference: 
+  "src/entries/contentScript/primary/content.css",
+  'icons/StackMeFirst.png',
+]
+
 const sharedManifest = {
   content_scripts: [
     {
       js: ["src/entries/contentScript/primary/main.js"],
       css: ["src/entries/contentScript/primary/content.css"],
-      matches: ["*://*.stackoverflow.com/*"],
-    },
-  ],
-  web_accessible_resources: [
-    // reference: https://developer.chrome.com/docs/extensions/mv3/manifest/web_accessible_resources/
-    //  reference: https://github.com/samrum/vite-plugin-web-extension/blob/86035ab7a48d52629c3c681f1ac6d9d77e091795/test/fixture/index/javascript/manifestV3/webAccessibleScript.ts#L16
-    {
-      resources: [`src/entries/contentScript/primary/content.css`, 'icons/StackMeFirst.png'],
       matches: ["*://*.stackoverflow.com/*"],
     },
   ],
@@ -58,6 +56,7 @@ const ManifestV2 = {
     chrome_style: false,
   },
   permissions: [...v2Permissions, ...hostPermissions],
+  web_accessible_resources: _webAccessibleResources,
   browser_specific_settings: {
     gecko: {
       id: "{d86c700e-ef2b-4ce4-a2b1-23156eaeb2b5}",
@@ -73,6 +72,14 @@ const ManifestV3 = {
     service_worker: "src/entries/background/serviceWorker.js",
   },
   host_permissions: [...hostPermissions],
+  web_accessible_resources: [
+    // reference: https://developer.chrome.com/docs/extensions/mv3/manifest/web_accessible_resources/
+    //  reference: https://github.com/samrum/vite-plugin-web-extension/blob/86035ab7a48d52629c3c681f1ac6d9d77e091795/test/fixture/index/javascript/manifestV3/webAccessibleScript.ts#L16
+    {
+      resources: _webAccessibleResources,
+      matches: ["*://*.stackoverflow.com/*"],
+    },
+  ],
   oauth2: {
     // oauth2 not supported in manifest v2: https://stackoverflow.com/questions/51608064/error-processing-manifest-in-firefox#comment90182051_51608064
     client_id: "24029",
