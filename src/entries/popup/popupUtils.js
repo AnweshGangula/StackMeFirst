@@ -92,8 +92,11 @@ export function CheckWarnings(currTab, info) {
 
     //  reference: https://stackoverflow.com/a/20023723/6908282
     const metaData = info.metaData;
-    if (metaData.currUser == undefined) {
+    if (metaData.currUser == undefined && info.userInCommunity) {
         warningText = "! Login to Stack Overflow to highlight your answers";
+        warningType.add("warn");
+    } else if (!info.userInCommunity) {
+        warningText = "! Join this Community to use Stack Me First Plugin";
         warningType.add("warn");
     } else if (!isQuestion) {
         warningText = "! Please open a Stack Overflow question to use this addin.";
