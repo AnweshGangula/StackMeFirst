@@ -1,5 +1,5 @@
 import browser from "webextension-polyfill";
-import { ignoreUrlList, defaultApiData } from "./constants";
+import { ignoreUrlList, defaultApiData, stackCommunities } from "./constants";
 export async function GetLocalTokenData() {
     let tokenData = false;
     tokenData = await browser.storage.sync.get({ apiData: defaultApiData }).then(async function (result) {
@@ -10,11 +10,22 @@ export async function GetLocalTokenData() {
     return tokenData
 }
 
-export function IsStackOverflow(baseUrl) {
-    let activeURL = new URL(baseUrl);
-    let website = activeURL.host;
-    const isStackOverflow = website == "stackoverflow.com";
+function getDomainWithoutSubdomain(url) {
+    const urlParts = new URL(url).hostname.split('.')
 
+    return urlParts
+        .slice(0)
+        .slice(-2)
+        .join('.')
+}
+
+
+export function IsStackOverflow(baseUrl) {
+    // let activeURL = new URL(baseUrl);
+    // let website = activeURL.host;
+    // const isStackOverflow = website == "stackoverflow.com";
+
+    const isStackOverflow = stackCommunities.includes(getDomainWithoutSubdomain(baseUrl));
     return isStackOverflow
 }
 export function IsQuestion(baseUrl) {

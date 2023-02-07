@@ -5,7 +5,7 @@ const sharedManifest = {
     {
       js: ["src/entries/contentScript/primary/main.js"],
       css: ["src/entries/contentScript/primary/content.css"],
-      matches: ["*://*.stackoverflow.com/*"],
+      matches: ["*://*.stackoverflow.com/*", "*://*.stackexchange.com/*"],
     },
   ],
   web_accessible_resources: [
@@ -13,7 +13,7 @@ const sharedManifest = {
     //  reference: https://github.com/samrum/vite-plugin-web-extension/blob/86035ab7a48d52629c3c681f1ac6d9d77e091795/test/fixture/index/javascript/manifestV3/webAccessibleScript.ts#L16
     {
       resources: [`src/entries/contentScript/primary/content.css`, 'icons/StackMeFirst.png'],
-      matches: ["*://*.stackoverflow.com/*"],
+      matches: ["*://*.stackoverflow.com/*", "*://*.stackexchange.com/*"],
     },
   ],
   icons: {
@@ -37,7 +37,11 @@ const sharedManifest = {
 
 
 const v2Permissions = [...sharedManifest.permissions].filter((x) => !["scripting"].includes(x)) // reference: https://stackoverflow.com/a/68230395/6908282
-const hostPermissions = ["*://*.stackoverflow.com/*", "*://api.stackexchange.com/*"]
+const hostPermissions = [
+  "*://api.stackexchange.com/*",
+  "*://*.stackoverflow.com/*",
+  "*://*.stackexchange.com/*",
+]
 
 const browserAction = {
   default_title: "Stack Me First",

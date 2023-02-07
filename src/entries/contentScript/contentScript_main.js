@@ -34,16 +34,35 @@ export default async function highlightStack() {
         };
 
         if (currUser == undefined) {
-            browser.runtime.sendMessage({
-                //  reference: https://stackoverflow.com/a/20021813/6908282
-                from: "contentScript",
-                subject: "needLogin",
-                content: {
-                    currUser: currUser,
-                }
-            }).then(function () {
-                // console.log("sending message");
-            });
+            const checkIfLogin = Array.from(document.getElementsByClassName("s-topbar--item")).filter(a => a.localName == "a" && a.href.includes("users/login?"));
+
+            if (checkIfLogin.length > 1) {
+                // if there is a "Login" button in the navbar
+                browser.runtime.sendMessage({
+                    //  reference: https://stackoverflow.com/a/20021813/6908282
+                    from: "contentScript",
+                    subject: "needLogin",
+                    content: {
+                        currUser: currUser,
+                    }
+                }).then(function () {
+                    // console.log("sending message");
+                });
+            } else {
+                // if user has not joined the community
+
+                browser.runtime.sendMessage({
+                    //  reference: https://stackoverflow.com/a/20021813/6908282
+                    from: "contentScript",
+                    subject: "joinCommunity",
+                    content: {
+                        currUser: currUser,
+                    }
+                }).then(function () {
+                    // console.log("sending message");
+                });
+            }
+
         } else if (isQuestion) {
             browser.runtime.sendMessage({
                 //  reference: https://stackoverflow.com/a/20021813/6908282
