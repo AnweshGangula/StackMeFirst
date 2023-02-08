@@ -10,7 +10,7 @@ window.scrollToTarget = scrollToTarget;
 
 export default async function highlightStack() {
     let stackAPI = new Api("");
-    let output ={};
+    let output = {};
     //TODO: if logged, then add token for stackAPI above. This will help with API limitations: https://api.stackexchange.com/docs/throttle#:~:text=If%20an%20application%20does%20have%20an%20access_token
     const currURL = window.location.href // .at(-1)
 
@@ -26,24 +26,47 @@ export default async function highlightStack() {
         // const currUser = document.getElementsByClassName("s-user-card")[0]; // this is not correct if user I not logged in at this URL: https://stackoverflow.com/questions
         let myAnsList, myCmmtList, linkData;
         const userURL = currUser == null ? undefined : currUser.href;
+        const userLoggedIn = Array.from(document.getElementsByClassName("s-topbar--item")).filter(a => a.localName == "a" && a.href.includes("users/login?")).length == 0;
+        const userInCommunity = userLoggedIn && currUser;
 
         var popupContent = {
+            userInCommunity: userInCommunity,
             metaData: {
                 currUser: userURL,
             },
         };
 
         if (currUser == undefined) {
-            browser.runtime.sendMessage({
-                //  reference: https://stackoverflow.com/a/20021813/6908282
-                from: "contentScript",
-                subject: "needLogin",
-                content: {
-                    currUser: currUser,
-                }
-            }).then(function () {
-                // console.log("sending message");
-            });
+
+            if (userLoggedIn) {
+                // if user has not joined the community
+
+                browser.runtime.sendMessage({
+                    //  reference: https://stackoverflow.com/a/20021813/6908282
+                    from: "contentScript",
+                    subject: "joinCommunity",
+                    content: {
+                        currUser: currUser,
+                    }
+                }).then(function () {
+                    // console.log("sending message");
+                });
+            } else {
+
+
+                // if there is a "Login" button in the navbar
+                browser.runtime.sendMessage({
+                    //  reference: https://stackoverflow.com/a/20021813/6908282
+                    from: "contentScript",
+                    subject: "needLogin",
+                    content: {
+                        currUser: currUser,
+                    }
+                }).then(function () {
+                    // console.log("sending message");
+                });
+            }
+
         } else if (isQuestion) {
             browser.runtime.sendMessage({
                 //  reference: https://stackoverflow.com/a/20021813/6908282
@@ -105,7 +128,7 @@ export default async function highlightStack() {
             browser.runtime.sendMessage({
                 //  reference: https://stackoverflow.com/a/20021813/6908282
                 from: "contentScript",
-                subject: "loggedIn",
+                subject: "pageIsValid",
                 content: {
                     answerCount: myAnsList ? myAnsList.length : "?",
                     commentCount: myCmmtList ? myCmmtList.length : "?",

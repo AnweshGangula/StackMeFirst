@@ -36,11 +36,19 @@ browser.runtime.onMessage.addListener(
         UpdateBadge(badgeText, browserTabId, pluginTitle, color);
         // return true; // must return true to signal asynchronous
         break;
+      case "joinCommunity":
+        badgeText = "JoinCommunity";
+        pluginTitle = "Join this Community to use Stack Me First Plugin";
+        color = "firebrick";
+
+        UpdateBadge(badgeText, browserTabId, pluginTitle, color);
+        // return true; // must return true to signal asynchronous
+        break;
       case "loading":
         UpdateBadge("...", browserTabId, "Loading...", "orange");
         // return true; // must return true to signal asynchronous
         break;
-      case "loggedIn":
+      case "pageIsValid":
         const linkCount = content.token ? "," + content.linkCount + "L" : ""
         const linkCountText = content.token ? ", " + content.linkCount + " Upvoted Links" : ""
         badgeText = `${content.answerCount}A,${content.commentCount}C${linkCount}`;

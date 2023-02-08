@@ -9,6 +9,16 @@ export const StackAppDetails = {
     }
 }
 
+export const stackCommunities = [
+    "stackoverflow.com",
+    "stackexchange.com",
+    "mathoverflow.net",
+    "askubuntu.com",
+    "superuser.com",
+    "serverfault.com",
+    "stackapps.com",
+]
+
 export const pageTypeEnum = {
     popup: "popup",
     sidebar: "sidebar",

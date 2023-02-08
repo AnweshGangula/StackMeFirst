@@ -1,4 +1,7 @@
 import pkg from "../package.json";
+import { stackCommunities } from "~/utils/constants";
+
+const websiteList = stackCommunities.map(a => "*://*." + a + "/*")
 
 const _webAccessibleResources = [
   // Reference: 
@@ -11,7 +14,7 @@ const sharedManifest = {
     {
       js: ["src/entries/contentScript/primary/main.js"],
       css: ["src/entries/contentScript/primary/content.css"],
-      matches: ["*://*.stackoverflow.com/*"],
+      matches: websiteList,
     },
   ],
   icons: {
@@ -35,7 +38,10 @@ const sharedManifest = {
 
 
 const v2Permissions = [...sharedManifest.permissions].filter((x) => !["scripting"].includes(x)) // reference: https://stackoverflow.com/a/68230395/6908282
-const hostPermissions = ["*://*.stackoverflow.com/*", "*://api.stackexchange.com/*"]
+const hostPermissions = [
+  "*://api.stackexchange.com/*",
+  ...websiteList
+]
 
 const browserAction = {
   default_title: "Stack Me First",
