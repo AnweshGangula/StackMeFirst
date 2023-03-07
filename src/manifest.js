@@ -1,4 +1,19 @@
 import pkg from "../package.json";
+const stackCommunities = [
+  "stackoverflow.com",
+  "stackexchange.com",
+  "mathoverflow.net",
+  "askubuntu.com",
+  "superuser.com",
+  "serverfault.com",
+  "stackapps.com",
+]
+
+const websiteList = [];
+
+stackCommunities.foreach(a => {
+  websiteList.push("*://*." + a + "/*");
+});
 
 const _webAccessibleResources = [
   // Reference: 
@@ -11,7 +26,7 @@ const sharedManifest = {
     {
       js: ["src/entries/contentScript/primary/main.js"],
       css: ["src/entries/contentScript/primary/content.css"],
-      matches: ["*://*.stackoverflow.com/*", "*://*.stackexchange.com/*"],
+      matches: websiteList,
     },
   ],
   icons: {
@@ -37,8 +52,7 @@ const sharedManifest = {
 const v2Permissions = [...sharedManifest.permissions].filter((x) => !["scripting"].includes(x)) // reference: https://stackoverflow.com/a/68230395/6908282
 const hostPermissions = [
   "*://api.stackexchange.com/*",
-  "*://*.stackoverflow.com/*",
-  "*://*.stackexchange.com/*",
+  ...websiteList
 ]
 
 const browserAction = {
@@ -75,13 +89,13 @@ const ManifestV3 = {
   background: {
     service_worker: "src/entries/background/serviceWorker.js",
   },
-  host_permissions: [...hostPermissions],
+  host_permissions: hostPermissions,
   web_accessible_resources: [
     // reference: https://developer.chrome.com/docs/extensions/mv3/manifest/web_accessible_resources/
     //  reference: https://github.com/samrum/vite-plugin-web-extension/blob/86035ab7a48d52629c3c681f1ac6d9d77e091795/test/fixture/index/javascript/manifestV3/webAccessibleScript.ts#L16
     {
       resources: _webAccessibleResources,
-      matches: ["*://*.stackoverflow.com/*"],
+      matches: websiteList,
     },
   ],
   oauth2: {
