@@ -103,7 +103,9 @@ export default class Api {
         return myDetails;
     }
 
-    async getAnswers(ids, queriesObj = {}) {
+    async getAnswers(currURL, ids, queriesObj = {}) {
+        const site = new URL(currURL).host.split(".")[0];
+
         if (!("pagesize" in queriesObj)) {
             queriesObj.pagesize = 100;
             // 100 is the max pagesize - https://api.stackexchange.com/docs/paging
@@ -117,7 +119,8 @@ export default class Api {
             }
             const { items, has_more } = await this._fetch(
                 `/questions/${ids}/answers`,
-                mergedQuery
+                mergedQuery,
+                site
             );
             myDetails = myDetails.concat(items);
             hasMore = has_more;
@@ -125,7 +128,9 @@ export default class Api {
         return myDetails;
     }
 
-    async getComments(ids, queriesObj = {}) {
+    async getComments(currURL, ids, queriesObj = {}) {
+        const site = new URL(currURL).host.split(".")[0];
+
         if (!("pagesize" in queriesObj)) {
             queriesObj.pagesize = 100;
             // 100 is the max pagesize - https://api.stackexchange.com/docs/paging
@@ -140,7 +145,8 @@ export default class Api {
             }
             const { items, has_more } = await this._fetch(
                 `/posts/${ids}/comments`,
-                mergedQuery
+                mergedQuery,
+                site
             );
             myDetails = myDetails.concat(items);
             hasMore = has_more;
@@ -148,7 +154,9 @@ export default class Api {
         return myDetails;
     }
 
-    async getLinkedQues(ids, queriesObj = {}) {
+    async getLinkedQues(currURL, ids, queriesObj = {}) {
+        const site = new URL(currURL).host.split(".")[0]
+
         const filter = "!IF6sbADh-1NFXRL_9Gd7_0XJ2-(Ng*6BJ2aPkdHx6rDtBZ-"
         // Checkk filter options here: https://api.stackexchange.com/docs/read-filter#filters=!gA._5vuQCU1LfxLMryEA8lClXXUw*bEruKr&filter=default&run=true
 
@@ -167,7 +175,8 @@ export default class Api {
             }
             const { items, has_more } = await this._fetch(
                 `/questions/${ids}/linked`,
-                mergedQuery
+                mergedQuery,
+                site
             );
             myDetails = myDetails.concat(items);
             hasMore = has_more;

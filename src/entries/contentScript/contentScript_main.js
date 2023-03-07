@@ -85,13 +85,13 @@ export default async function highlightStack() {
             let idforCmts = [];
             let cmtIsAPI = true;
 
-            const getAnswers = await stackAPI.getAnswers(qId);
+            const getAnswers = await stackAPI.getAnswers(currURL, qId);
             ansJson = getAnswers;
             idforCmts.push(qId);
             const cmtIds = getCmtIds(getAnswers, ansIsAPI);
             idforCmts.push(...cmtIds)
 
-            const getComments = await stackAPI.getComments(idforCmts.join(";"));
+            const getComments = await stackAPI.getComments(currURL, idforCmts.join(";"));
             allComments = getComments;
             if (allComments == []) {
                 allComments = document.getElementsByClassName("comment");
@@ -119,7 +119,7 @@ export default async function highlightStack() {
             myAnsList = highlightAnswer(ansJson, ansIsAPI, userConfig, DOM_Opts, currURL);
             myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
 
-            const linkData = await HighlightLinks(userConfig, qId, DOM_Opts);
+            const linkData = await HighlightLinks(userConfig, currURL, qId, DOM_Opts);
 
             popupContent.answerList = myAnsList;
             popupContent.commentList = myCmmtList;

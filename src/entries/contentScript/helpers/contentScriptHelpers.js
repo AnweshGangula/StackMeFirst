@@ -118,7 +118,7 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
     return commentList;
 }
 
-export async function HighlightLinks(preferences, currentQid, DOM_Opts) {
+export async function HighlightLinks(preferences, currURL, currentQid, DOM_Opts) {
     // example URL: https://api.stackexchange.com/docs/linked-questions#order=desc&sort=activity&ids=73591695&site=stackoverflow&run=true
     const currUser = DOM_Opts.currUser;
     let linkedQids = [];
@@ -129,7 +129,7 @@ export async function HighlightLinks(preferences, currentQid, DOM_Opts) {
         token = tokenData.token;
         if (token != "") {
             const stackAPI = new Api(token);
-            const allLinkedQs = await stackAPI.getLinkedQues(currentQid);
+            const allLinkedQs = await stackAPI.getLinkedQues(currURL, currentQid);
             const domLinkedQ = document.getElementById("h-linked")?.parentNode.querySelector(".linked");
             allLinkedQs.forEach((ques) => {
                 const isQuesAuthor = ques.owner.link == currUser.href
