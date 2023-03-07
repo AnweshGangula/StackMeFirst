@@ -11,7 +11,7 @@ const stackCommunities = [
 
 const websiteList = [];
 
-stackCommunities.foreach(a => {
+stackCommunities.forEach(a => {
   websiteList.push("*://*." + a + "/*");
 });
 
