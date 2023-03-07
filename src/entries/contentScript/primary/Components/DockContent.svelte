@@ -99,11 +99,11 @@
         <div id="dockContent" class="glassmorphic">
 			<div id="dockContentChild">
             <Header />
-			{#if badgeTextList.length > 0}
+			<!-- {#if badgeTextList.length > 0} -->
                 <PopupDock {stackData} />
-            {:else}
+            <!-- {:else}
                 <p id="noStack" class="featureOff">! This question doesn't have any answers/comments submitted by you.</p>
-            {/if}
+            {/if} -->
 			</div>
         </div>
 		{/if}
