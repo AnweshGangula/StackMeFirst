@@ -7,7 +7,7 @@
 	export let pageType;
 	export let eleList = [];
 	export let type;
-	export let tab = { id: 0, url: "https://stackoverflow.com/" }; // this is updated by the props of StackContent component
+	export let tab; // this is updated by the props of StackContent component
 	let OffsetHeight = 60;
 	const count = eleList ? eleList.length : 0;
 	const itemVerb = type == "linkq" ? "upvoted/favorited/posted" : "posted";

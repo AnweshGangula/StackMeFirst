@@ -69,7 +69,11 @@ export function LinkToAnswer(baseUrl, eleId) {
 }
 
 export function LinkToLinkQ(baseUrl, eleId) {
-    const href = BaseUrl(baseUrl) + "/q/" + eleId + "?lq=1"
+    // const href = BaseUrl(baseUrl) + "/q/" + eleId + "?lq=1"
+    let activeURL = new URL(baseUrl);
+    const baseURL = activeURL.protocol + "//" + activeURL.host + "/questions/";
+
+    const href = baseURL + eleId;
 
     return href;
 }

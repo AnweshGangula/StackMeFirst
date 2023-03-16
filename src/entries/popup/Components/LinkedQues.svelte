@@ -9,7 +9,7 @@
 	export let linkQData;
 
 	const currPref = GetPreferences();
-	let glCurrTab;
+	export let glCurrTab;
 	let token;
 	let linkedQ = [];
 	let isQ;
