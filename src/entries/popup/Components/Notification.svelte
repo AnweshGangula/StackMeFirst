@@ -1,4 +1,5 @@
 <script>
+	import browser from "webextension-polyfill";
 	import ExecuteScroll from "../popupUtils";
 
 	export let warningType = new Set(),
@@ -22,7 +23,15 @@
 			</p>
 		{/if}
 		{#if warningText != ""}
-			<p class="warn">{warningText}</p>
+			<p class="warn">
+				{#if warningText.startsWith("! Please open a Stack Overflow")}
+					! Please open a 
+					<a href='https://stackoverflow.com/' on:click|preventDefault={() => browser.tabs.create({ url: 'https://stackoverflow.com/'})} >Stack Overflow</a>
+					 question to use this addin.
+				{:else}
+					 {warningText}
+				{/if}
+			</p>
 		{/if}
 	</div>
 {/if}
