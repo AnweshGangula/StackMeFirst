@@ -1,6 +1,7 @@
 import pkg from "../package.json";
 
 const sharedManifest = {
+  homepage_url: pkg.homepage,
   content_scripts: [
     {
       js: ["src/entries/contentScript/primary/main.js"],

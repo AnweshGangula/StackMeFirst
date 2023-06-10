@@ -4,6 +4,7 @@
 	"displayName": "Stack Me First",
 	"author": "Anwesh Gangula",
 	"description": "Highlight and sort answers posted by current user in Stack overflow to the top",
+	"homepage": "https://github.com/AnweshGangula/StackMeFirst#readme",
 	"scripts": {
 		"build": "vite build",
 		"watch": "vite build --watch",

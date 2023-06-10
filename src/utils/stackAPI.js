@@ -1,3 +1,4 @@
+import browser from "webextension-polyfill";
 import { customFilterEg, StackAppDetails } from "./constants";
 import { GetBrowser } from "./utils";
 
@@ -5,8 +6,9 @@ import { GetBrowser } from "./utils";
 
 const baseURL = 'https://api.stackexchange.com/2.3';
 
+const currBrowser = GetBrowser();
 let apiKey;
-if (GetBrowser() == "Mozilla Firefox") {
+if (currBrowser == "Mozilla Firefox") {
     apiKey = StackAppDetails.firefox.key;
 } else {
     apiKey = StackAppDetails.chromium.key;
@@ -19,6 +21,27 @@ export default class Api {
     constructor(token) {
         this.token = token;
     }
+
+    static auth(sendResponse) {
+        let clientId;
+      
+        if (currBrowser == "Mozilla Firefox") {
+          clientId = StackAppDetails.firefox.clientId;
+        } else {
+          clientId = StackAppDetails.chromium.clientId;
+        }
+      
+        const scope = 'read_inbox,no_expiry,private_info';
+        const redirectUrl = browser.identity.getRedirectURL('oauth2');
+        const url = `https://stackoverflow.com/oauth/dialog?client_id=${clientId}&scope=${scope}&redirect_uri=${redirectUrl}`;
+        browser.identity.launchWebAuthFlow(
+          { url: url, interactive: true }).then(
+            redirect_url => {
+              const token = redirect_url.match(/access_token=(.+)/)[1];
+              sendResponse({ token });
+            }
+          );
+      }
 
     _buildURL(endpoint, queriesObj, site) {
         const query = `?${this._objToQuery({
@@ -145,6 +168,7 @@ export default class Api {
             myDetails = myDetails.concat(items);
             hasMore = has_more;
         } while (hasMore);
+        console.log({myDetails})
         return myDetails;
     }
 
