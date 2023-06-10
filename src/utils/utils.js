@@ -43,9 +43,9 @@ export function BaseUrl(baseUrl) {
     return baseURL
 }
 
-export function LinkToComment(baseUrl, eleId) {
+export function LinkToComment(baseUrl, eleId, cmtQuesId) {
     const quesId = QuesIdUrl(baseUrl);
-    const linkToComment = BaseUrl(baseUrl) + "#" + eleId.replace("-", "") + "_" + quesId;
+    const linkToComment = BaseUrl(baseUrl) + "#comment" + eleId + "_" + cmtQuesId;
 
     return linkToComment;
 }

@@ -28,6 +28,10 @@
 	}
 
 	function updateVars(eleId) {
+		const eleData = eleId
+		if (type == "comment") {
+			eleId = eleData.commentId + eleData.suffix;
+		}
 		let suffixDOM = "";
 		let eleClass = new Set();
 		if (eleId.includes(suffix.hidden)) {
@@ -50,7 +54,7 @@
 
 		let linkRef = "";
 		if (type == "comment") {
-			linkRef = LinkToComment(tab.url, eleId);
+			linkRef = LinkToComment(tab.url, eleId, eleData.cmtQuesId);
 		} else if (type == "answer") {
 			linkRef = LinkToAnswer(tab.url, eleId);
 		} else if (type == "linkq") {

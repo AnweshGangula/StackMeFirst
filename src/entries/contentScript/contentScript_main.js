@@ -56,9 +56,10 @@ export default async function highlightStack() {
             const getAnswers = await stackAPI.getAnswers(qId);
             ansJson = getAnswers;
             idforCmts.push(qId);
-            const cmtIds = getCmtIds(getAnswers);
-            idforCmts.push(...cmtIds)
+            const ansIds = getAnsIds(getAnswers);
+            idforCmts.push(...ansIds)
 
+            console.log(idforCmts.join(";"))
             const getComments = await stackAPI.getComments(idforCmts.join(";"));
             allComments = getComments;
             if (allComments == []) {
@@ -99,7 +100,7 @@ export default async function highlightStack() {
 
             })
 
-            function getCmtIds(ansJson) {
+            function getAnsIds(ansJson) {
                 let idforCmts = [];
                 if (ansJson == []) {
                     ansJson = document.getElementsByClassName('answer');
@@ -203,13 +204,15 @@ export default async function highlightStack() {
         let commentList = [];
         if (hlCmnts == true) {
             for (let comment of comments) {
-                let commentUser, commentId;
+                let commentUser, commentId, cmtQuesId;
                 if (cmtIsAPI) {
                     commentUser = comment.owner.link;
                     commentId = comment.comment_id;
+                    cmtQuesId = comment.post_id;
                 } else {
                     commentUser = comment.getElementsByClassName("comment-user")[0].href;
                     commentId = comment.dataset.commentId;
+                    cmtQuesId = comment.parentElement.parentElement.dataset.postId;
                 }
                 if (commentUser == currUser.href) {
                     const commentEle = document.getElementById("comment-" + commentId);
@@ -223,7 +226,7 @@ export default async function highlightStack() {
                         commentToHighlight.classList.add("smcHighlight", "smfCmtLnk")
                     }
 
-                    commentList.push("comment-" + commentId + suffix);
+                    commentList.push({commentId , suffix, cmtQuesId});
                 }
             }
         }

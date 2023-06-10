@@ -1,4 +1,5 @@
 import pkg from "../package.json";
+// manifest v3 available properties: https://developer.chrome.com/docs/extensions/mv3/manifest/
 
 const sharedManifest = {
   homepage_url: pkg.homepage,
