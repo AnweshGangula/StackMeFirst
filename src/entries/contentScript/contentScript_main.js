@@ -179,7 +179,7 @@ export default async function highlightStack() {
                     } else {
                         suffix = " (hidden)"
                     }
-                    answerList.push("answer-" + answerId + suffix);
+                    answerList.push({answerId, suffix});
                 }
 
                 if (currURL.indexOf(answerId + "#" + answerId) > -1) {

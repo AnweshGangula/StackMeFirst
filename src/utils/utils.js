@@ -43,16 +43,21 @@ export function BaseUrl(baseUrl) {
     return baseURL
 }
 
-export function LinkToComment(baseUrl, eleId, cmtQuesId) {
+export function LinkToComment(baseUrl, eleData) {
     const quesId = QuesIdUrl(baseUrl);
-    const linkToComment = BaseUrl(baseUrl) + "#comment" + eleId + "_" + cmtQuesId;
+    const linkToComment = BaseUrl(baseUrl) + "#comment" + eleData.commentId + "_" + eleData.cmtQuesId;
 
     return linkToComment;
 }
 
-export function LinkToAnswer(baseUrl, eleId) {
-    const ansId = eleId.replace("answer-", "");
-    const linkToAnswer = BaseUrl(baseUrl) + "/" + ansId + "#" + ansId;
+export function LinkToAnswer(tabUrl, eleData) {
+    const baseUrl = BaseUrl(tabUrl);
+    let appendAnsId = "/" + eleData.answerId + "#" + eleData.answerId;
+    
+    if(baseUrl.endsWith("/" + eleData.answerId)) {
+        appendAnsId = "#" + eleData.answerId;
+    }
+    const linkToAnswer = baseUrl + appendAnsId;
 
     return linkToAnswer;
 }

@@ -32,6 +32,13 @@
 		if (type == "comment") {
 			eleId = eleData.commentId + eleData.suffix;
 		}
+		if (type == "linkq") {
+			eleId = eleData.linQId + eleData.suffix;
+		}
+		if (type == "answer") {
+			eleId = eleData.answerId + eleData.suffix;
+		}
+
 		let suffixDOM = "";
 		let eleClass = new Set();
 		if (eleId.includes(suffix.hidden)) {
@@ -54,12 +61,12 @@
 
 		let linkRef = "";
 		if (type == "comment") {
-			linkRef = LinkToComment(tab.url, eleId, eleData.cmtQuesId);
+			linkRef = LinkToComment(tab.url, eleData);
 		} else if (type == "answer") {
-			linkRef = LinkToAnswer(tab.url, eleId);
+			linkRef = LinkToAnswer(tab.url, eleData);
 		} else if (type == "linkq") {
 			eleClass.add(classList.redirect);
-			linkRef = LinkToLinkQ(eleId);
+			linkRef = LinkToLinkQ(eleData.linQId);
 		}
 
 		return { eleId, eleClass, linkRef, suffixDOM };
