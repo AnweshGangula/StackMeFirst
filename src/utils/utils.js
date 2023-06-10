@@ -1,5 +1,5 @@
 import browser from "webextension-polyfill";
-import { ignoreUrlList, defaultApiData } from "./constants";
+import { ignoreUrlList, defaultApiData, affeliateIds } from "./constants";
 export async function GetLocalTokenData() {
     let tokenData = false;
     tokenData = await browser.storage.sync.get({ apiData: defaultApiData }).then(async function (result) {
@@ -57,13 +57,26 @@ export function LinkToAnswer(tabUrl, eleData) {
     if(baseUrl.endsWith("/" + eleData.answerId)) {
         appendAnsId = "#" + eleData.answerId;
     }
-    const linkToAnswer = baseUrl + appendAnsId;
+
+    let linkToAnswer = baseUrl + appendAnsId;
+
+    // affeliate link below associated with "Booster" badge - https://stackoverflow.com/help/badges/261/booster
+    const originUrl = new URL(tabUrl).origin;
+    const urlHost = new URL(tabUrl).hostname;
+    const affeliateId = affeliateIds[urlHost] ?? "";
+    linkToAnswer = originUrl + "/a/" + eleData.answerId + "/" + affeliateId;
 
     return linkToAnswer;
 }
 
-export function LinkToLinkQ(eleId) {
-    const href = `https://stackoverflow.com/q/${eleId}?lq=1`
+export function LinkToLinkQ(tabUrl, eleId) {
+    const baseUrl = BaseUrl(tabUrl);
+    const originUrl = new URL(tabUrl).origin;
+    const urlHost = new URL(tabUrl).hostname;
+    const affeliateId = affeliateIds[urlHost] ?? "";
+    
+    const href = originUrl + "/q/" + eleId + "/" + affeliateId;
+    
 
     return href;
 }

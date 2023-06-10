@@ -13,8 +13,8 @@ Optionally, you can also use the login button in the popup to highlight & list
 - Comments hidden under "show more comments"
 - Linked questions that have been Upvoted/Bookmarked/Posted by the logged in user.
 
-> Note: this does not store or share any data externally.
-
+> Note: this does not store or share any data externally.\
+> Disclaimer: The linked questions are affiliated with my account - which is associated with "Booster" badge - https://stackoverflow.com/help/badges/261/booster
 ## Instructions
 
 In order to see this plugin in action, open any StackOverflow question where you have posted at least one answer. Note that you need to be logged in to StackOverflow.com in your browser.

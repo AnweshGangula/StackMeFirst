@@ -75,3 +75,19 @@ export const customFilterEg = {
     ],
     base: "default",
 }
+
+export const affeliateIds = {
+    "stackoverflow.com": "6908282",
+    "superuser.com": "863212",
+    "meta.stackexchange.com": "381523",
+    "stackapps.com": "96492",
+    "computergraphics.stackexchange.com": "19180",
+    "emacs.stackexchange.com": "36093",
+    "webapps.stackexchange.com": "173960",
+    "graphicdesign.stackexchange.com": "169726",
+    "sharepoint.stackexchange.com": "75471",
+    "blender.stackexchange.com": "82724",
+    "softwarerecs.stackexchange.com": "68472",
+    "ell.stackexchange.com": "123311",
+    "puzzling.stackexchange.com": "81234",
+}

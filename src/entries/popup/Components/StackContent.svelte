@@ -66,7 +66,7 @@
 			linkRef = LinkToAnswer(tab.url, eleData);
 		} else if (type == "linkq") {
 			eleClass.add(classList.redirect);
-			linkRef = LinkToLinkQ(eleData.linQId);
+			linkRef = LinkToLinkQ(tab.url, eleData.linQId);
 		}
 
 		return { eleId, eleClass, linkRef, suffixDOM };
