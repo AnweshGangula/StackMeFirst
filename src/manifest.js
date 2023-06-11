@@ -1,4 +1,5 @@
 import pkg from "../package.json";
+// manifest v3 available properties: https://developer.chrome.com/docs/extensions/mv3/manifest/
 const stackCommunities = [
   "stackoverflow.com",
   "stackexchange.com",
@@ -22,6 +23,7 @@ const _webAccessibleResources = [
 ]
 
 const sharedManifest = {
+  homepage_url: pkg.homepage,
   content_scripts: [
     {
       js: ["src/entries/contentScript/primary/main.js"],

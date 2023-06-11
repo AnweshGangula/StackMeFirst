@@ -108,12 +108,25 @@
 			{/if}
 		</div>
 	{/await}
+
+	<div>
+		<input type="button" 
+		on:click|preventDefault={() => browser.tabs.create({ url: 'https://github.com/AnweshGangula/StackMeFirst#stackmefirst'})} 
+		title="Documentation"
+		value="Docs" />
+		<input type="button" 
+		on:click|preventDefault={() => browser.tabs.create({ url: 'https://github.com/AnweshGangula/StackMeFirst/discussions'})} 
+		title="Help/Feedback"
+		value="Help" />
+	</div>
 </header>
 
 <style>
 	header {
 		display: flex;
 		align-items: center;
+		flex-wrap: wrap;
+		justify-content: flex-end;
 	}
 
 	#logo {

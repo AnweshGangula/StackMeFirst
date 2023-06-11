@@ -1,6 +1,7 @@
 import browser from "webextension-polyfill";
 import { defaultApiData, StackAppDetails, pageTypeEnum } from "~/utils/constants";
 import { GetBrowser } from "~/utils/utils";
+import Api from "~/utils/stackAPI";
 
 const currBrowser = GetBrowser();
 const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION)
@@ -58,7 +59,7 @@ browser.runtime.onMessage.addListener(
         UpdateBadge(badgeText, browserTabId, pluginTitle, color);
         break;
       case 'GET_TOKEN':
-        auth(sendResponse);
+        Api.auth(sendResponse);
         return true; // must return true to signal asynchronous
         break;
       case 'REMOVE_TOKEN':
@@ -117,23 +118,3 @@ function UpdateBadge(badgeText, tabId, pluginTitle, color) {
   });
 }
 
-function auth(sendResponse) {
-  let clientId;
-
-  if (currBrowser == "Mozilla Firefox") {
-    clientId = StackAppDetails.firefox.clientId;
-  } else {
-    clientId = StackAppDetails.chromium.clientId;
-  }
-
-  const scope = 'read_inbox,no_expiry,private_info';
-  const redirectUrl = browser.identity.getRedirectURL('oauth2');
-  const url = `https://stackoverflow.com/oauth/dialog?client_id=${clientId}&scope=${scope}&redirect_uri=${redirectUrl}`;
-  browser.identity.launchWebAuthFlow(
-    { url: url, interactive: true }).then(
-      redirect_url => {
-        const token = redirect_url.match(/access_token=(.+)/)[1];
-        sendResponse({ token });
-      }
-    );
-}

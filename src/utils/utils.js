@@ -1,5 +1,5 @@
 import browser from "webextension-polyfill";
-import { ignoreUrlList, defaultApiData, stackCommunities } from "./constants";
+import { ignoreUrlList, defaultApiData, affeliateIds, stackCommunities } from "./constants";
 export async function GetLocalTokenData() {
     let tokenData = false;
     tokenData = await browser.storage.sync.get({ apiData: defaultApiData }).then(async function (result) {
@@ -54,26 +54,40 @@ export function BaseUrl(baseUrl) {
     return baseURL
 }
 
-export function LinkToComment(baseUrl, eleId) {
+export function LinkToComment(baseUrl, eleData) {
     const quesId = QuesIdUrl(baseUrl);
-    const linkToComment = BaseUrl(baseUrl) + "#" + eleId.replace("-", "") + "_" + quesId;
+    const linkToComment = BaseUrl(baseUrl) + "#comment" + eleData.commentId + "_" + eleData.cmtQuesId;
 
     return linkToComment;
 }
 
-export function LinkToAnswer(baseUrl, eleId) {
-    const ansId = eleId.replace("answer-", "");
-    const linkToAnswer = BaseUrl(baseUrl) + "/" + ansId + "#" + ansId;
+export function LinkToAnswer(tabUrl, eleData) {
+    const baseUrl = BaseUrl(tabUrl);
+    let appendAnsId = "/" + eleData.answerId + "#" + eleData.answerId;
+    
+    if(baseUrl.endsWith("/" + eleData.answerId)) {
+        appendAnsId = "#" + eleData.answerId;
+    }
+
+    let linkToAnswer = baseUrl + appendAnsId;
+
+    // affeliate link below associated with "Booster" badge - https://stackoverflow.com/help/badges/261/booster
+    const originUrl = new URL(tabUrl).origin;
+    const urlHost = new URL(tabUrl).hostname;
+    const affeliateId = affeliateIds[urlHost] ?? "";
+    linkToAnswer = originUrl + "/a/" + eleData.answerId + "/" + affeliateId;
 
     return linkToAnswer;
 }
 
-export function LinkToLinkQ(baseUrl, eleId) {
-    // const href = BaseUrl(baseUrl) + "/q/" + eleId + "?lq=1"
-    let activeURL = new URL(baseUrl);
-    const baseURL = activeURL.protocol + "//" + activeURL.host + "/questions/";
-
-    const href = baseURL + eleId;
+export function LinkToLinkQ(tabUrl, eleId) {
+    const baseUrl = BaseUrl(tabUrl);
+    const originUrl = new URL(tabUrl).origin;
+    const urlHost = new URL(tabUrl).hostname;
+    const affeliateId = affeliateIds[urlHost] ?? "";
+    
+    const href = originUrl + "/q/" + eleId + "/" + affeliateId;
+    
 
     return href;
 }

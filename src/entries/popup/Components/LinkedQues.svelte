@@ -64,10 +64,10 @@
 		token = info.token;
 		const allLinkedQs = info.linkedQids;
 
-		allLinkedQs.forEach((ques) => {
-			let suffix = ques.isHidden + ques.isFavorite + ques.isAuthor;
-			linkedQ.push(ques.linkJson.question_id.toString() + suffix);
-		});
+						allLinkedQs.forEach((ques) => {
+							let suffix = ques.isHidden + ques.isFavorite + ques.isAuthor;
+							linkedQ.push({linQId: ques.linkJson.question_id.toString(), suffix});
+						});
 
 		if (!token) {
 			warning = 'Click the "Login" button above to provide access to linked questions';
