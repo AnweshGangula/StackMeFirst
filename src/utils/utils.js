@@ -85,6 +85,7 @@ export function LinkToLinkQ(tabUrl, eleId) {
     const originUrl = new URL(tabUrl).origin;
     const urlHost = new URL(tabUrl).hostname;
     const affeliateId = affeliateIds[urlHost] ?? "";
+    console.log({affeliateId})
     
     const href = originUrl + "/q/" + eleId + "/" + affeliateId;
     

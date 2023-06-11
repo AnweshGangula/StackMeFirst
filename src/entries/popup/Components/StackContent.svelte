@@ -35,32 +35,29 @@
 	function updateVars(eleId) {
 		const eleData = eleId
 		if (type == "comment") {
-			eleId = eleData.commentId + eleData.suffix;
+			eleData.eleId = eleData.commentId + eleData.suffix;
 		}
 		if (type == "linkq") {
-			eleId = eleData.linQId + eleData.suffix;
+			eleData.eleId = eleData.linQId + eleData.suffix;
 		}
 		if (type == "answer") {
-			eleId = eleData.answerId + eleData.suffix;
+			eleData.eleId = eleData.answerId + eleData.suffix;
 		}
 
 		let suffixDOM = "";
 		let eleClass = new Set();
-		if (eleId.includes(suffix.hidden)) {
+		if (eleData.suffix.includes(suffix.hidden)) {
 			eleClass.add(classList.redirect);
-			eleId = eleId.replace(suffix.hidden, "");
 			suffixDOM += suffix.hidden;
 		}
 
-		if (eleId.includes(suffix.favorite)) {
+		if (eleData.suffix.includes(suffix.favorite)) {
 			eleClass.add(classList.favorite);
-			eleId = eleId.replace(suffix.favorite, "");
 			suffixDOM += suffix.favorite;
 		}
 
-		if (eleId.includes(suffix.author)) {
+		if (eleData.suffix.includes(suffix.author)) {
 			eleClass.add(classList.author);
-			eleId = eleId.replace(suffix.author, "");
 			suffixDOM += suffix.author;
 		}
 
@@ -74,7 +71,7 @@
 			linkRef = LinkToLinkQ(tab.url, eleData.linQId);
 		}
 
-		return { eleId, eleClass, linkRef, suffixDOM };
+		return { eleId: eleData.eleId, eleClass, linkRef, suffixDOM };
 	}
 </script>
 

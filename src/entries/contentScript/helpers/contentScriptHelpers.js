@@ -62,7 +62,7 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
                 } else {
                     suffix = " (hidden)"
                 }
-                answerList.push("answer-" + answerId + suffix);
+                answerList.push({answerId, suffix});
             }
 
             if (currURL.indexOf(answerId + "#" + answerId) > -1) {
@@ -107,7 +107,7 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
                     commentToHighlight.classList.add("smcHighlight", "smfCmtLnk")
                 }
 
-                commentList.push("comment-" + commentId + suffix);
+                commentList.push({commentId, suffix});
             }
         }
     }

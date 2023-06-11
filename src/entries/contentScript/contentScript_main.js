@@ -143,6 +143,7 @@ export default async function highlightStack() {
                 userConfig,
                 popupContent,
             }
+            console.log({popupContent})
         }
         browser.runtime.onMessage.addListener((msg, sender, response) => {
             // Reference: https://stackoverflow.com/a/20023723/6908282
