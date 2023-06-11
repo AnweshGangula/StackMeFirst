@@ -109,7 +109,7 @@
 		</div>
 	{/await}
 
-	<div>
+	<div id="docsHelp">
 		<input type="button" 
 		on:click|preventDefault={() => browser.tabs.create({ url: 'https://github.com/AnweshGangula/StackMeFirst#stackmefirst'})} 
 		title="Documentation"
@@ -126,6 +126,13 @@
 		display: flex;
 		align-items: center;
 		flex-wrap: wrap;
+		justify-content: flex-end;
+	}
+
+	#docsHelp{
+		width: 100%; 
+		display: flex; 
+		gap: 5px; 
 		justify-content: flex-end;
 	}
 

@@ -68,7 +68,7 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
             if (currURL.indexOf(answerId + "#" + answerId) > -1) {
                 // if the user clicks on a link to a specific answer, scroll that into view
                 // answer.scrollIntoView();
-                scrollToTarget("answer-" + answerId, "answer", 60)
+                scrollToTarget(answerId, "answer", 60)
             }
         }
     }

@@ -82,7 +82,7 @@
 			<div>
 				<input type="checkbox" id="displaySidebar" name="displaySidebar" value="Display Dock" />
 				<label for="displaySidebar">Display the sidebar</label>
-				<i id="sidebarTooltip" class="infoTooltip" title="Displays a dockable sidebar within the Stack-Overflow page">i</i>
+				<i id="sidebarTooltip" class="infoTooltip" title="Displays a collapsible sidebar within the Stack-Overflow page">i</i>
 			</div>
 			<div style="display: none;">
 				<!-- this is needed to save the dockSidebar property during save_options function - since it used DOM to save each option -->
