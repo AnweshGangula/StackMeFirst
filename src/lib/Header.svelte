@@ -2,6 +2,7 @@
 	import browser from "webextension-polyfill";
 	import Api from "~/utils/stackAPI";
 	import { GetLocalTokenData } from "~/utils/utils";
+	import { pageTypeEnum } from "~/utils/constants";
 
 	import ProfilePic from "./ProfilePic.svelte";
 
@@ -10,6 +11,8 @@
 	let loginError = false;
 	let profileData;
 	let loading = "";
+	let logoUrl = browser.runtime.getURL("/icons/StackMeFirst.png");
+	// console.log(logoUrl);
 
 	async function headerDOM() {
 		const tokenData = await GetLocalTokenData();
@@ -25,7 +28,7 @@
 
 		browser.runtime
 			.sendMessage({
-				from: "popup",
+				from: pageTypeEnum.popup,
 				subject: "GET_TOKEN",
 			})
 			.then(async ({ token: tokenMsg, error }) => {
@@ -71,7 +74,7 @@
 	async function RemoveToken(tokenVar) {
 		browser.runtime
 			.sendMessage({
-				from: "popup",
+				from: pageTypeEnum.popup,
 				subject: "REMOVE_TOKEN",
 				content: { token: tokenVar },
 			})
@@ -87,7 +90,7 @@
 </script>
 
 <header>
-	<img id="logo" src="/icons/StackMeFirst.png" alt="Stack Me First Logo" width="20" height="20" />
+	<img id="logo" src={logoUrl} alt="Stack Me First Logo" width="20" height="20" />
 	<h1>Stack Me First</h1>
 	{#if loginError}
 		<p id="loginError">Unable to Login. Please Try Again</p>
@@ -106,7 +109,7 @@
 		</div>
 	{/await}
 
-	<div>
+	<div id="docsHelp">
 		<input type="button" 
 		on:click|preventDefault={() => browser.tabs.create({ url: 'https://github.com/AnweshGangula/StackMeFirst#stackmefirst'})} 
 		title="Documentation"
@@ -126,14 +129,30 @@
 		justify-content: flex-end;
 	}
 
+	#docsHelp{
+		width: 100%; 
+		display: flex; 
+		gap: 5px; 
+		justify-content: flex-end;
+	}
+
 	#logo {
 		margin: 5px;
+	}
+
+	h1{
+		margin-right: 1em;
+		white-space: nowrap;
 	}
 
 	.loginDiv {
 		margin-left: auto;
 		display: flex;
 		align-items: center;
+	}
+
+	.loginDiv button{
+		cursor: pointer;
 	}
 
 	#loginError {

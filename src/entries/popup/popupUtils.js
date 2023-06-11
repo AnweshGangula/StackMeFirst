@@ -2,11 +2,13 @@ import browser from "webextension-polyfill";
 
 import scrollToTarget from "../executeScript/executeScript";
 import { IsQuestion } from "~/utils/utils";
-import { defaultPreferances } from "~/utils/constants";
+import { defaultPreferances, pageTypeEnum } from "~/utils/constants";
 
 const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION);
-export default function ExecuteScroll(tabId, eleId, type, offsetHeight) {
-    if (manifestVer == 3) {
+export default function ExecuteScroll(tabId, eleId, type, offsetHeight, pageType = null) {
+    if (pageType == pageTypeEnum.sidebar) {
+        scrollToTarget(eleId, type, offsetHeight + 10);
+    }else if (manifestVer == 3) {
         //  reference: https://stackoverflow.com/a/70932186/6908282
         browser.scripting.executeScript({
             target: { tabId: tabId, allFrames: false },
@@ -35,12 +37,16 @@ export function restore_options(pageType) {
     });
 }
 export function UpdateUI(Options, pageType) {
+    if (pageType == pageTypeEnum.sidebar) return;
+
     document.getElementById("hlAnswers").checked = Options.hlAns;
     document.getElementById("srtAns").checked = Options.srtAns;
     document.getElementById("hlComments").checked = Options.hlCmnts;
     document.getElementById("hlLinkQs").checked = Options.hlLinkQs;
+    document.getElementById("displaySidebar").checked = Options.displaySidebar;
+    document.getElementById("dockSidebar").checked = Options.dockSidebar;
 
-    if (pageType == "popup") {
+    if (pageType == pageTypeEnum.popup) {
         const ansList = document.getElementById("answerList");
         const ansOff = document.getElementById("answerOff");
         const cmtList = document.getElementById("commentList");
@@ -82,12 +88,15 @@ export function UpdateUI(Options, pageType) {
 export function CheckWarnings(currTab, info) {
     let warningText = "";
     let warningType = new Set();
-    const isQuestion = IsQuestion(currTab.url);
+    const isQuestion = currTab == pageTypeEnum.sidebar ? true : IsQuestion(currTab.url) ; // always true for contentscript
 
     //  reference: https://stackoverflow.com/a/20023723/6908282
     const metaData = info.metaData;
-    if (metaData.currUser == undefined) {
+    if (metaData.currUser == undefined && info.userInCommunity) {
         warningText = "! Login to Stack Overflow to highlight your answers";
+        warningType.add("warn");
+    } else if (!info.userInCommunity) {
+        warningText = "! Join this Community to use Stack Me First Plugin";
         warningType.add("warn");
     } else if (!isQuestion) {
         warningText = "! Please open a Stack Overflow question to use this addin.";

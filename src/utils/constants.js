@@ -9,6 +9,22 @@ export const StackAppDetails = {
     }
 }
 
+export const stackCommunities = [
+    "stackoverflow.com",
+    "stackexchange.com",
+    "mathoverflow.net",
+    "askubuntu.com",
+    "superuser.com",
+    "serverfault.com",
+    "stackapps.com",
+]
+
+export const pageTypeEnum = {
+    popup: "popup",
+    sidebar: "sidebar",
+    options: "options",
+};
+
 export const ignoreUrlList = [
     "/ask",
     "/tagged",
@@ -20,6 +36,8 @@ export const defaultPreferances = {
     srtAns: true,
     hlCmnts: false,
     hlLinkQs: false,
+    displaySidebar: true,
+    dockSidebar: false,
 };
 
 export const defaultApiData = {

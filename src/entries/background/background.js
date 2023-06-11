@@ -1,5 +1,5 @@
 import browser from "webextension-polyfill";
-import { defaultApiData } from "~/utils/constants";
+import { defaultApiData, StackAppDetails, pageTypeEnum } from "~/utils/constants";
 import { GetBrowser } from "~/utils/utils";
 import Api from "~/utils/stackAPI";
 
@@ -21,7 +21,7 @@ browser.runtime.onMessage.addListener(
     // console.log("message received");
     let content = request.content;
     let subject = request.subject;
-    let browserTabId = request.from == "popup" ? null : sender.tab.id;
+    let browserTabId = request.from == pageTypeEnum.popup ? null : sender.tab.id;
     let badgeText, pluginTitle, color;
 
     switch (subject) {
@@ -37,11 +37,19 @@ browser.runtime.onMessage.addListener(
         UpdateBadge(badgeText, browserTabId, pluginTitle, color);
         // return true; // must return true to signal asynchronous
         break;
+      case "joinCommunity":
+        badgeText = "JoinCommunity";
+        pluginTitle = "Join this Community to use Stack Me First Plugin";
+        color = "firebrick";
+
+        UpdateBadge(badgeText, browserTabId, pluginTitle, color);
+        // return true; // must return true to signal asynchronous
+        break;
       case "loading":
         UpdateBadge("...", browserTabId, "Loading...", "orange");
         // return true; // must return true to signal asynchronous
         break;
-      case "loggedIn":
+      case "pageIsValid":
         const linkCount = content.token ? "," + content.linkCount + "L" : ""
         const linkCountText = content.token ? ", " + content.linkCount + " Upvoted Links" : ""
         badgeText = `${content.answerCount}A,${content.commentCount}C${linkCount}`;

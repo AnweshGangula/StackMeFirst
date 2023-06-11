@@ -1,5 +1,7 @@
 .smcHighlight {
 	border: 2px solid darkgreen;
+	border-color: orange;
+	border-color: mediumseagreen;
 	border-radius: 5px;
 }
 

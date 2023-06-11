@@ -1,7 +1,7 @@
 <script>
 	import browser from "webextension-polyfill";
 	import { restore_options, UpdateUI } from "~/entries/popup/popupUtils";
-	import { defaultPreferances } from "~/utils/constants";
+	import { defaultPreferances, pageTypeEnum } from "~/utils/constants";
 
 	export let pageType = "";
 
@@ -13,11 +13,15 @@
 		const srtAns = document.getElementById("srtAns").checked;
 		const hlComments = document.getElementById("hlComments").checked;
 		const hlLinkQs = document.getElementById("hlLinkQs").checked;
+		const displaySidebar = document.getElementById("displaySidebar").checked;
+		const dockSidebar = document.getElementById("dockSidebar").checked;
 		let stackMeData = {
 			hlAns: hlAnswers,
 			srtAns: srtAns,
 			hlCmnts: hlComments,
 			hlLinkQs: hlLinkQs,
+			displaySidebar: displaySidebar,
+			dockSidebar: dockSidebar,
 		};
 		browser.storage.sync.set({ stackMeData: stackMeData }).then(function () {
 			UpdateStatus("Options Saved");
@@ -38,7 +42,7 @@
 	function UpdateStatus(statusText) {
 		// Update status to let user know options were saved.
 		var status = document.getElementById("status");
-		const statusSuffix = pageType != "options" ? " - Please reload the tab for accurate behaviour" : "";
+		const statusSuffix = pageType != pageTypeEnum.options ? " - Please reload the tab for accurate behaviour" : "";
 		status.textContent = statusText + statusSuffix;
 		status.style.visibility = "visible";
 		setTimeout(function () {
@@ -48,7 +52,7 @@
 </script>
 
 <div id="config">
-	<form id="options">
+	<form id={pageTypeEnum.options}>
 		<fieldset>
 			<legend>User Preferences</legend>
 
@@ -71,7 +75,20 @@
 			<div>
 				<input type="checkbox" id="hlLinkQs" name="hlLinkQs" value="Highlight LinkQs" />
 				<label for="hlLinkQs">Highlight Upvoted Linked Questions</label>
-				<i id="loginTooltip" title="Needs StackOverflow Login">i</i>
+				<i id="loginTooltip" class="infoTooltip" title="Needs StackOverflow Login">i</i>
+				<br />
+			</div>
+			<hr />
+			<div>
+				<input type="checkbox" id="displaySidebar" name="displaySidebar" value="Display Dock" />
+				<label for="displaySidebar">Display the sidebar</label>
+				<i id="sidebarTooltip" class="infoTooltip" title="Displays a collapsible sidebar within the Stack-Overflow page">i</i>
+			</div>
+			<div style="display: none;">
+				<!-- this is needed to save the dockSidebar property during save_options function - since it used DOM to save each option -->
+				<input type="checkbox" id="dockSidebar" name="dockSidebar" value="Dock Sidebar" />
+				<label for="dockSidebar">Dock sidebar on page load</label>
+				<i id="dockTooltip" class="infoTooltip" title="Hides the sidebar on page load. Only the logo is displayed">i</i>
 				<br />
 			</div>
 		</fieldset>
@@ -111,7 +128,7 @@
 		padding: 5px;
 	}
 
-	#loginTooltip {
+	.infoTooltip {
 		cursor: default;
 		border-radius: 100%;
 		background-color: firebrick;
