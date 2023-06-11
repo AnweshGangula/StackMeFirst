@@ -131,6 +131,11 @@
 		/* transition: border-radius 250ms ease-in; */ /* TODO: work on transition later*/
 	}
 
+	@media(max-width: 1400px) {
+		#dockRoot {
+			top: 50px;
+		}
+	}
     #dockContent {
 		/* height: 100vh; */
 		/* max-width: 400px; */
