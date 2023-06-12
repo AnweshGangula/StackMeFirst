@@ -6,6 +6,7 @@
 
 	import ProfilePic from "./ProfilePic.svelte";
 
+	export let pageType;
 	let token = false;
 	let domData = headerDOM();
 	let loginError = false;
@@ -13,6 +14,9 @@
 	let loading = "";
 	let logoUrl = browser.runtime.getURL("/icons/StackMeFirst.png");
 	// console.log(logoUrl);
+
+	const docsUrl = "https://github.com/AnweshGangula/StackMeFirst#stackmefirst";
+	const helpURL = "https://github.com/AnweshGangula/StackMeFirst/discussions";
 
 	async function headerDOM() {
 		const tokenData = await GetLocalTokenData();
@@ -64,6 +68,16 @@
 		// return true;
 	}
 
+	function onClickEvent(url) {
+
+		if(pageType == pageTypeEnum.sidebar){
+			window.open(url)
+		}else{
+			browser.tabs.create({ url });
+		}
+
+	}
+
 	async function myStackDetails(token) {
 		const stackAPI = new Api(token);
 		const myData = await stackAPI.getMyDetails();
@@ -110,14 +124,20 @@
 	{/await}
 
 	<div id="docsHelp">
-		<input type="button" 
-		on:click|preventDefault={() => browser.tabs.create({ url: 'https://github.com/AnweshGangula/StackMeFirst#stackmefirst'})} 
-		title="Documentation"
-		value="Docs" />
-		<input type="button" 
-		on:click|preventDefault={() => browser.tabs.create({ url: 'https://github.com/AnweshGangula/StackMeFirst/discussions'})} 
-		title="Help/Feedback"
-		value="Help" />
+		<a href={docsUrl} on:click|preventDefault={() => onClickEvent(docsUrl)}>
+			<button 
+				type="button"
+				title="Documentation" >
+				Docs
+			</button>
+		</a>
+		<a href={helpURL} on:click|preventDefault={() => onClickEvent(helpURL)}>
+			<button
+				type="button" 
+				title="Help/Feedback" >
+				Help
+			</button>
+		</a>
 	</div>
 </header>
 

@@ -6,7 +6,7 @@
 
 	import logo from "~/assets/logo.svg";
 
-	import { defaultPreferances } from "~/utils/constants";
+	import { defaultPreferances, pageTypeEnum } from "~/utils/constants";
 
 	export let stackData;
 	const logoImageUrl = new URL(logo, import.meta.url).href;
@@ -98,7 +98,7 @@
 		{#if !dockSidebar}
         <div id="dockContent" class="glassmorphic">
 			<div id="dockContentChild">
-            <Header />
+            <Header pageType={pageTypeEnum.sidebar} />
 			<!-- {#if badgeTextList.length > 0} -->
                 <PopupDock {stackData} />
             <!-- {:else}
@@ -122,7 +122,7 @@
 	#dockRoot {
 		position: fixed;
 		z-index: 9999;
-		top: 0px;
+		top: 50px;
 		right: 0px;
 		/* margin: 10px; */
 		display: flex;
