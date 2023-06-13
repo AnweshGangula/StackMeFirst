@@ -139,7 +139,8 @@ export async function HighlightLinks(preferences, currURL, currentQid, DOM_Opts)
                     let isAuthor = isQuesAuthor ? " (author)" : "";
 
                     for (let link of domLinkedQ?.children) {
-                        const isLink = !Array.from(link.classList).includes("more"); // if the child is "See more inked         questions DOM"
+                        // check if question is visible in DOM
+                        const isLink = !Array.from(link.classList).includes("more"); // if the child is "See more linked questions DOM"
                         const isUpvoted = (("gpsTrack" in link.dataset) && link.dataset.gpsTrack.includes(ques.question_id));
                         if (isLink && isUpvoted) {
                             isHidden = ""

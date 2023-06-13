@@ -1,5 +1,6 @@
 <script>
 	import browser from "webextension-polyfill";
+	import { onMount } from 'svelte';
 
 	import PopupDock from "../../../popup/PopupDock.svelte";
     import Header from "~/lib/Header.svelte";
@@ -22,11 +23,15 @@
 		badgeText = badgeTextList.join(",");
 	}
 
-	const currPref = GetPreferences();
-	currPref.then((savedPref) => {
-		dockSidebar = savedPref.dockSidebar;
-	}).then(()=>{
-		slideSidebar = !dockSidebar;
+	onMount(async () => {
+		const currPref = GetPreferences();
+		currPref.then((savedPref) => {
+			dockSidebar = savedPref.dockSidebar;
+		}).then(()=>{
+			setTimeout(function() {
+			slideSidebar = !dockSidebar;
+			}, 20); // without setTimeout, the slide animation is snappy
+		});
 	});
 
 	function ToggleDock() {
@@ -94,7 +99,15 @@
 </script>
 
 <div id="dockRoot" class={dockSidebar ? "dockSidebar" : ""} class:slideSidebar={slideSidebar}>
-	{#await currPref then Options}
+	<div id="dockLogo" class:greenBorder={isGreenBorder}>
+		<button type="button" on:click|preventDefault={() => ToggleDock()}>
+			<span id="badgeText">
+				<small class:greenBorder={isGreenBorder}>{badgeText}</small>
+			</span>
+			<img src={logoImageUrl} height="20" alt="Stack Me First Logo" />
+		</button>
+	</div>
+	<!-- {#await currPref then Options} -->
 		{#if !dockSidebar}
         <div id="dockContent" class="glassmorphic">
 			<div id="dockContentChild">
@@ -107,15 +120,7 @@
 			</div>
         </div>
 		{/if}
-	{/await}
-	<div id="dockLogo" class:greenBorder={isGreenBorder}>
-		<button type="button" on:click|preventDefault={() => ToggleDock()}>
-			<span id="badgeText">
-				<small class:greenBorder={isGreenBorder}>{badgeText}</small>
-			</span>
-			<img src={logoImageUrl} height="20" alt="Stack Me First Logo" />
-		</button>
-	</div>
+	<!-- {/await} -->
 </div>
 
 <style>
@@ -123,7 +128,7 @@
 		position: fixed;
 		z-index: 9999;
 		top: 50px;
-		right: 0px;
+		right: 0;
 		/* margin: 10px; */
 		display: flex;
 		max-width: 400px;
@@ -137,10 +142,12 @@
 		}
 	}
     #dockContent {
+		position: absolute;
 		/* height: 100vh; */
-		/* max-width: 400px; */
-		position: fixed;
-    	right: -30%;
+		width: max-content;
+		max-width: 400px;
+		top: 20px;
+    	left: 100px;
 		/* padding: 10px; */
 		margin-top: 5px;
 		/* background-color: rgba(0, 0, 0, 0.6); */
@@ -149,14 +156,14 @@
 		color: black;
 		/* backdrop-filter: blur(3px); */
 		border-radius: 5px;
-		transition: transform 1s cubic-bezier(.82,-0.4,.19,1.4), right 1s cubic-bezier(.82,-0.4,.19,1.4);
-		transform: scaleX(1.5); /* this adds more realistic sliding animation - like a cartoon speedcar stop */
+		transition: transform 1s cubic-bezier(.82,-0.4,.19,1.4), left 1s cubic-bezier(.82,-0.4,.19,1.4);
+		transform: scaleX(1.5) translateX(50%); /* this adds more realistic sliding animation - like a cartoon speedcar stop */
 	}
 
 	#dockRoot.slideSidebar > #dockContent{
 		/* transform: translateX(-142%); */
-		transform: scaleX(1);
-		right: 30px;
+		transform: scaleX(1) translate(-100%);
+		left: 0; 
 	}
 
 	#dockContent.glassmorphic{
@@ -214,8 +221,6 @@
 	}
 
 	#dockLogo {
-		width: 30px;
-		height: 30px;
 		display: flex;
 		justify-content: center;
 		/* aspect-ratio: 1; */
@@ -237,13 +242,14 @@
   } */
 
 	#dockLogo button {
+		width: 30px;
+		height: 30px;
 		cursor: pointer;
-		height: inherit;
 		background: none;
 		border: none;
 	}
 	#dockLogo img {
-		padding: 5px;
+		/* padding: 5px; */
 		height: 70%;
 	}
 
