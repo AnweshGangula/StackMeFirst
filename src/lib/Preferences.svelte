@@ -81,7 +81,7 @@
 			<hr />
 			<div>
 				<input type="checkbox" id="displaySidebar" name="displaySidebar" value="Display Dock" />
-				<label for="displaySidebar">Display the sidebar</label>
+				<label for="displaySidebar">Display the dockable sidebar</label>
 				<i id="sidebarTooltip" class="infoTooltip" title="Displays a collapsible sidebar within the Stack-Overflow page">i</i>
 			</div>
 			<div style="display: none;">

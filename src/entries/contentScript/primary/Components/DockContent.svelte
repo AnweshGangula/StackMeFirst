@@ -127,7 +127,7 @@
 	#dockRoot {
 		position: fixed;
 		z-index: 9999;
-		top: 50px;
+		top: 30px;
 		right: 0;
 		/* margin: 10px; */
 		display: flex;

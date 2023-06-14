@@ -1,0 +1,28 @@
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "startDev", // my shortcut - CTRL +SHIFT + /
+			"type": "npm",
+			"script": "start:host"
+		}
+	],
+	"inputs": [
+		// reference: https://code.visualstudio.com/docs/editor/variables-reference#_input-variables
+		{
+			"type": "promptString",
+			"id": "prompt",
+			"description": "Enter the command to run",
+			"default": ""
+		},
+		{
+			"type": "pickString",
+			"id": "pickCommand",
+			"description": "choose a command to run",
+			"options": ["build", "start:host", "dev"],
+			"default": "component"
+		}
+	]
+}
