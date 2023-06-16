@@ -147,6 +147,12 @@
 		align-items: center;
 		flex-wrap: wrap;
 		justify-content: flex-end;
+
+		/* position: sticky;
+		background-color: white;
+		top: 0;
+		padding-bottom: 5px;
+		border-bottom: 1px solid lightgray; */
 	}
 
 	#docsHelp{

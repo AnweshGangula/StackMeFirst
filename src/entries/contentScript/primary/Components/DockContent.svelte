@@ -14,7 +14,7 @@
 
 	let dockSidebar = true;
 	let isGreenBorder = false;
-	let slideSidebar;
+	let slideSidebar = true;
 	let badgeTextList = GetBadgeText(stackData.popupContent);
 	let badgeText = "0A,0C";
 
@@ -35,27 +35,30 @@
 	});
 
 	function ToggleDock(openClose) {
+		console.log({openClose, slideSidebar})
+		slideSidebar = openClose === "open" ? true : false;
+		dockSidebar = openClose === "open" ? false : true;
+		// slideSidebar doesn't work right now
+		// TODO: replace sliding with expand animation
 
-		if(openClose = "open"){
-			slideSidebar = !slideSidebar;
-			dockSidebar = false;
-				// GetPreferences().then((savedPref) => {
-				// 	// console.log(savedPref);
-				// 	savedPref.dockSidebar = dockSidebar;
+		// if(openClose == "open"){
+		// 	dockSidebar = false;
+		// 		// GetPreferences().then((savedPref) => {
+		// 		// 	// console.log(savedPref);
+		// 		// 	savedPref.dockSidebar = dockSidebar;
 		
-				// 	browser.storage.sync.set({ stackMeData: savedPref }).then(function () {});
-				// });
-			}
-			if(openClose == "close"){
-				dockSidebar = true;
-				// GetPreferences().then((savedPref) => {
-					// 	// console.log(savedPref);
-					// 	savedPref.dockSidebar = dockSidebar;
+		// 		// 	browser.storage.sync.set({ stackMeData: savedPref }).then(function () {});
+		// 		// });
+		// 	}
+		// 	if(openClose == "close"){
+		// 		dockSidebar = true;
+		// 		// GetPreferences().then((savedPref) => {
+		// 			// 	// console.log(savedPref);
+		// 			// 	savedPref.dockSidebar = dockSidebar;
 					
-					// 	browser.storage.sync.set({ stackMeData: savedPref }).then(function () {});
-					// });
-					slideSidebar = !slideSidebar;
-				}
+		// 			// 	browser.storage.sync.set({ stackMeData: savedPref }).then(function () {});
+		// 			// });
+		// 		}
 
 
 
@@ -154,7 +157,7 @@
 		top: 20px;
     	left: 100px;
 		/* padding: 10px; */
-		margin-top: 5px;
+		margin-top: 15px;
 		/* background-color: rgba(0, 0, 0, 0.6); */
 		/* backdrop-filter: blur(3px); */
 		background-color: rgba(255, 255, 255, 0.8);
