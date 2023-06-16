@@ -74,7 +74,6 @@
 			<StackContent eleList={answerList} type="answer" tab={glCurrTab} />
 			<StackContent eleList={commentList} type="comment" tab={glCurrTab} />
 			<LinkedQues />
-			<hr />
 		</div>
 		<Preferences pageType={pageTypeEnum.popup} />
 	{:catch error}

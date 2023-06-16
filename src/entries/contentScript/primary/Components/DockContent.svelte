@@ -12,7 +12,7 @@
 	export let stackData;
 	const logoImageUrl = new URL(logo, import.meta.url).href;
 
-	let dockSidebar = false;
+	let dockSidebar = true;
 	let isGreenBorder = false;
 	let slideSidebar;
 	let badgeTextList = GetBadgeText(stackData.popupContent);
@@ -24,39 +24,38 @@
 	}
 
 	onMount(async () => {
-		const currPref = GetPreferences();
-		currPref.then((savedPref) => {
-			dockSidebar = savedPref.dockSidebar;
-		}).then(()=>{
-			setTimeout(function() {
-			slideSidebar = !dockSidebar;
-			}, 20); // without setTimeout, the slide animation is snappy
-		});
+		// const currPref = GetPreferences();
+		// currPref.then((savedPref) => {
+		// 	dockSidebar = savedPref.dockSidebar;
+		// }).then(()=>{
+		// 	// setTimeout(function() {
+		// 	// slideSidebar = !dockSidebar;
+		// 	// }, 500); // without setTimeout, the slide animation is snappy
+		// });
 	});
 
-	function ToggleDock() {
+	function ToggleDock(openClose) {
 
-		if(slideSidebar){
+		if(openClose = "open"){
 			slideSidebar = !slideSidebar;
-			setTimeout(function(){		
-				dockSidebar = !dockSidebar;
-				GetPreferences().then((savedPref) => {
-					// console.log(savedPref);
-					savedPref.dockSidebar = dockSidebar;
+			dockSidebar = false;
+				// GetPreferences().then((savedPref) => {
+				// 	// console.log(savedPref);
+				// 	savedPref.dockSidebar = dockSidebar;
 		
-					browser.storage.sync.set({ stackMeData: savedPref }).then(function () {});
-				});
-			}, 1000);
-		}else{
-			dockSidebar = !dockSidebar;
-			GetPreferences().then((savedPref) => {
-				// console.log(savedPref);
-				savedPref.dockSidebar = dockSidebar;
-				
-				browser.storage.sync.set({ stackMeData: savedPref }).then(function () {});
-				slideSidebar = !slideSidebar;
-			});
-		}
+				// 	browser.storage.sync.set({ stackMeData: savedPref }).then(function () {});
+				// });
+			}
+			if(openClose == "close"){
+				dockSidebar = true;
+				// GetPreferences().then((savedPref) => {
+					// 	// console.log(savedPref);
+					// 	savedPref.dockSidebar = dockSidebar;
+					
+					// 	browser.storage.sync.set({ stackMeData: savedPref }).then(function () {});
+					// });
+					slideSidebar = !slideSidebar;
+				}
 
 
 
@@ -98,15 +97,10 @@
 	}
 </script>
 
-<div id="dockRoot" class={dockSidebar ? "dockSidebar" : ""} class:slideSidebar={slideSidebar}>
-	<div id="dockLogo" class:greenBorder={isGreenBorder}>
-		<button type="button" on:click|preventDefault={() => ToggleDock()}>
-			<span id="badgeText">
-				<small class:greenBorder={isGreenBorder}>{badgeText}</small>
-			</span>
-			<img src={logoImageUrl} height="20" alt="Stack Me First Logo" />
-		</button>
-	</div>
+<div id="dockRoot" 
+	class={dockSidebar ? "dockSidebar" : ""} class:slideSidebar={slideSidebar}
+	on:mouseleave={() => ToggleDock("close")}
+>
 	<!-- {#await currPref then Options} -->
 		{#if !dockSidebar}
         <div id="dockContent" class="glassmorphic">
@@ -121,6 +115,15 @@
         </div>
 		{/if}
 	<!-- {/await} -->
+	<div id="dockLogo" class:greenBorder={isGreenBorder}>
+		<!-- <button type="button" on:click|preventDefault={() => ToggleDock()}> -->
+		<button type="button" on:mouseenter={() => ToggleDock("open")}>
+			<span id="badgeText">
+				<small class:greenBorder={isGreenBorder}>{badgeText}</small>
+			</span>
+			<img src={logoImageUrl} height="20" alt="Stack Me First Logo" />
+		</button>
+	</div>
 </div>
 
 <style>
@@ -142,10 +145,12 @@
 		}
 	}
     #dockContent {
-		position: absolute;
+		/* position: absolute; */
 		/* height: 100vh; */
 		width: max-content;
 		max-width: 400px;
+		max-height: 80vh;
+		overflow: hidden auto;
 		top: 20px;
     	left: 100px;
 		/* padding: 10px; */
@@ -156,13 +161,13 @@
 		color: black;
 		/* backdrop-filter: blur(3px); */
 		border-radius: 5px;
+		transform: scaleX(1.5) translateX(120%); /* this adds more realistic sliding animation - like a cartoon speedcar stop */
 		transition: transform 1s cubic-bezier(.82,-0.4,.19,1.4), left 1s cubic-bezier(.82,-0.4,.19,1.4);
-		transform: scaleX(1.5) translateX(50%); /* this adds more realistic sliding animation - like a cartoon speedcar stop */
 	}
 
 	#dockRoot.slideSidebar > #dockContent{
 		/* transform: translateX(-142%); */
-		transform: scaleX(1) translate(-100%);
+		transform: scaleX(1) translate(0%);
 		left: 0; 
 	}
 
@@ -192,13 +197,13 @@
 		content: "";
 		z-index: -1;
 		position: absolute;
-		inset: -2px;
+		inset: 0px; /* -2px; */
 		/* top: 0;
 		left: 0;
 		right: 0;
 		bottom: 0; */
 		border-radius: 10px; 
-		border: 3px solid transparent;
+		border: 2px solid transparent;
 		background: linear-gradient(45deg,purple,orange) border-box;
 		-webkit-mask:
 			linear-gradient(#fff 0 0) padding-box, 
@@ -223,6 +228,7 @@
 	#dockLogo {
 		display: flex;
 		justify-content: center;
+		height: fit-content;
 		/* aspect-ratio: 1; */
 		align-items: center;
 		border: 3px solid firebrick; /* rgb(255, 255, 255, 50%); */

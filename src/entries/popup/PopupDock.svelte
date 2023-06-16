@@ -57,7 +57,6 @@
         <StackContent pageType={pageTypeEnum.sidebar} eleList={answerList} type="answer" tab={glCurrTab} />
         <StackContent pageType={pageTypeEnum.sidebar} eleList={commentList} type="comment" tab={glCurrTab} />
         <LinkedQues pageType={pageTypeEnum.sidebar} linkQData={linkData} glCurrTab={glCurrTab}/>
-        <hr />
     </div>
     <!-- <Preferences pageType={pageType.popup} /> -->
 </main>

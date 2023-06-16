@@ -6,7 +6,7 @@
 		{
 			"label": "startDev", // my shortcut - CTRL +SHIFT + /
 			"type": "npm",
-			"script": "start:host"
+			"script": "build"
 		}
 	],
 	"inputs": [

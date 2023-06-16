@@ -52,6 +52,7 @@
 </script>
 
 <div id="config">
+	<hr />
 	<form id={pageTypeEnum.options}>
 		<fieldset>
 			<legend>User Preferences</legend>

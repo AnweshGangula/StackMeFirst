@@ -171,7 +171,7 @@
 		align-items: center;
 	}
 
-	.loginDiv button{
+	header button{
 		cursor: pointer;
 	}
 
