@@ -66,7 +66,7 @@
 
 						allLinkedQs.forEach((ques) => {
 							let suffix = ques.isHidden + ques.isFavorite + ques.isAuthor;
-							linkedQ.push({linQId: ques.linkJson.question_id.toString(), suffix});
+							linkedQ.push({linQId: ques.linkJson.question_id.toString(), suffix, title: ques.linkJson.title});
 						});
 
 		if (!token) {

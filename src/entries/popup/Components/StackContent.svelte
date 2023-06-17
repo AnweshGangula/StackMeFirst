@@ -35,13 +35,13 @@
 	function updateVars(eleId) {
 		const eleData = eleId
 		if (type == "comment") {
-			eleData.eleId = eleData.commentId + eleData.suffix;
+			eleData.eleId = eleData.commentId // + eleData.suffix;
 		}
 		if (type == "linkq") {
-			eleData.eleId = eleData.linQId + eleData.suffix;
+			eleData.eleId = eleData.linQId // + eleData.suffix;
 		}
 		if (type == "answer") {
-			eleData.eleId = eleData.answerId + eleData.suffix;
+			eleData.eleId = eleData.answerId // + eleData.suffix;
 		}
 
 		let suffixDOM = "";
@@ -84,8 +84,17 @@
 		<ul>
 			{#each eleList as eleId}
 				{@const meta = updateVars(eleId)}
-				<li class={Array.from(meta.eleClass).join(" ")}>
-					<a href={meta.linkRef} on:click|preventDefault={() => onClickEvent({ dest: meta.eleClass, eleId: meta.eleId, url: meta.linkRef })}>
+				<li 
+				  class={"backLinks " + Array.from(meta.eleClass).join(" ")}
+				  data-title={eleId.title ?? ""}>
+					<a href={meta.linkRef} 
+						title={eleId.title ?? ""}
+						on:click|preventDefault={() => onClickEvent({ 
+								dest: meta.eleClass, 
+								eleId: meta.eleId, 
+								url: meta.linkRef 
+								})
+							}>
 						{meta.eleId}
 					</a>
 					{meta.suffixDOM}
@@ -157,5 +166,18 @@
 		content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
 		position: absolute;
 		left: -2.5em;
-}
+	
+	}
+
+	.backLinks{
+		position: relative;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+	.backLinks:after {
+		content:attr(data-title);
+		font-size: smaller;
+		margin-left: 10px;
+	}
 </style>
