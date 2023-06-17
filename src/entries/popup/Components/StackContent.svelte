@@ -86,18 +86,19 @@
 				{@const meta = updateVars(eleId)}
 				<li 
 				  class={"backLinks " + Array.from(meta.eleClass).join(" ")}
-				  data-title={eleId.title ?? ""}>
-					<a href={meta.linkRef} 
-						title={eleId.title ?? ""}
-						on:click|preventDefault={() => onClickEvent({ 
-								dest: meta.eleClass, 
-								eleId: meta.eleId, 
-								url: meta.linkRef 
-								})
-							}>
+				  title={eleId.title ?? ""}
+				  on:click|preventDefault={() => onClickEvent({ 
+					dest: meta.eleClass, 
+					eleId: meta.eleId, 
+					url: meta.linkRef 
+					})
+				}>
+				<span id="backLinkText" data-title={eleId.title ?? ""}>
+					<a href={meta.linkRef} >
 						{meta.eleId}
 					</a>
 					{meta.suffixDOM}
+				</span>
 				</li>
 			{/each}
 		</ul>
@@ -110,11 +111,16 @@
 		margin: 5px 0;
 	}
 
+	ul{
+		/* list-style-position: inside; */
+	}
+
 	li {
 		position: relative;
 		margin: 3px 0;
 		/* display: flex; */
 		align-items: center;
+		cursor: pointer;
 	}
 	.itemCount {
 		background-color: gold;
@@ -175,16 +181,25 @@
 	.backLinks{
 		position: relative;
 		white-space: nowrap;
-		text-overflow: ellipsis;
-		overflow: hidden;
+		/* overflow: hidden; */
 	}
-	.backLinks:after {
+
+	#backLinkText {
+		display: inline-flex;
+		align-items: flex-end;
+		width: 100%;
+		text-overflow: ellipsis;
+	}
+	.backLinks:hover #backLinkText:after {
+		opacity: 0.6;
+	}
+	#backLinkText:after {
 		content: attr(data-title);
 		font-size: smaller;
 		margin-left: 10px;
 		/* width: 100%; */
 		overflow: hidden;
-		text-overflow: ellipsis;
-		opacity: 0.6;
+		text-overflow: inherit;
+		opacity: 0;
 	}
 </style>
