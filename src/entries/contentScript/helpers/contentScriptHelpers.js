@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 
-import { GetLocalTokenData } from "~/utils/utils";
+import { GetHtmlStringText, GetLocalTokenData, TrimText } from "~/utils/utils";
 import Api from "~/utils/stackAPI";
 import scrollToTarget from "../../executeScript/executeScript"
 
@@ -36,15 +36,17 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
     let answerList = [];
     if (hlAns || srtAns) {
         for (let answer of answers) {
-            let answerUser, answerId;
+            let answerUser, answerId, body;
             if (ansIsAPI) {
                 answerUser = answer.owner.link;
                 answerId = answer.answer_id;
+                body = TrimText(GetHtmlStringText(answer.body));
             } else {
                 const userDetails = answer.querySelectorAll('.user-details');
                 const userHTML = userDetails[userDetails.length - 1];
                 answerUser = userHTML.children.item(0).href;
                 answerId = answer.dataset.answerid;
+                body = TrimText(answer.querySelectorAll(".answercell")[0].textContent.replaceAll("\n    ",""));
             }
             if (answerUser == currUser.href) {
                 const answerToHighlight = document.querySelector("#answer-" + answerId);
@@ -62,7 +64,7 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
                 } else {
                     suffix = " (hidden)"
                 }
-                answerList.push({answerId, suffix});
+                answerList.push({answerId, suffix, title: body});
             }
 
             if (currURL.indexOf(answerId + "#" + answerId) > -1) {
@@ -87,13 +89,17 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
     let commentList = [];
     if (hlCmnts == true) {
         for (let comment of comments) {
-            let commentUser, commentId;
+            let commentUser, commentId, body, parentId;
             if (cmtIsAPI) {
                 commentUser = comment.owner.link;
                 commentId = comment.comment_id;
+                body = TrimText(GetHtmlStringText(comment.body));
+                parentId = comment.post_id.toString();
             } else {
                 commentUser = comment.getElementsByClassName("comment-user")[0].href;
                 commentId = comment.dataset.commentId;
+                body = TrimText(comment.querySelectorAll(".comment-copy")[0].textContent);
+                parentId = comment.querySelectorAll(".comment-copy")[0].closest(".question").dataset.questionid;
             }
             if (commentUser == currUser.href) {
                 const commentEle = document.getElementById("comment-" + commentId);
@@ -107,7 +113,7 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
                     commentToHighlight.classList.add("smfHighlight", "smfCmtLnk")
                 }
 
-                commentList.push({commentId, suffix});
+                commentList.push({commentId, suffix, title: body, cmtParentId: parentId});
             }
         }
     }
@@ -131,7 +137,7 @@ export async function HighlightLinks(preferences, currURL, currentQid, DOM_Opts)
             const stackAPI = new Api(token);
             const allLinkedQs = await stackAPI.getLinkedQues(currURL, currentQid);
             const domLinkedQ = document.getElementById("h-linked")?.parentNode.querySelector(".linked");
-            console.log("DOM linkedQ: ", allLinkedQs)
+            // console.log("DOM linkedQ: ", allLinkedQs)
             allLinkedQs.forEach((ques) => {
                 const isQuesAuthor = ques.owner.link == currUser.href
                 if (ques.upvoted || ques.favorited || isQuesAuthor) {

@@ -129,6 +129,7 @@ export default class Api {
     async getAnswers(currURL, ids, queriesObj = {}) {
         const site = new URL(currURL).host.split(".")[0];
 
+        queriesObj.filter = "withbody"; // https://stackoverflow.com/a/69166789/6908282
         if (!("pagesize" in queriesObj)) {
             queriesObj.pagesize = 100;
             // 100 is the max pagesize - https://api.stackexchange.com/docs/paging
@@ -154,6 +155,7 @@ export default class Api {
     async getComments(currURL, ids, queriesObj = {}) {
         const site = new URL(currURL).host.split(".")[0];
 
+        queriesObj.filter = "withbody"; // https://stackoverflow.com/a/69166789/6908282
         if (!("pagesize" in queriesObj)) {
             queriesObj.pagesize = 100;
             // 100 is the max pagesize - https://api.stackexchange.com/docs/paging
@@ -174,7 +176,7 @@ export default class Api {
             myDetails = myDetails.concat(items);
             hasMore = has_more;
         } while (hasMore);
-        console.log({myDetails})
+        // console.log({myDetails})
         return myDetails;
     }
 

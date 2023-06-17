@@ -111,7 +111,10 @@
 	}
 
 	li {
+		position: relative;
 		margin: 3px 0;
+		/* display: flex; */
+		align-items: center;
 	}
 	.itemCount {
 		background-color: gold;
@@ -176,8 +179,12 @@
 		overflow: hidden;
 	}
 	.backLinks:after {
-		content:attr(data-title);
+		content: attr(data-title);
 		font-size: smaller;
 		margin-left: 10px;
+		/* width: 100%; */
+		overflow: hidden;
+		text-overflow: ellipsis;
+		opacity: 0.6;
 	}
 </style>

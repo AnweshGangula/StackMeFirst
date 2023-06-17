@@ -56,7 +56,7 @@ export function BaseUrl(baseUrl) {
 
 export function LinkToComment(baseUrl, eleData) {
     const quesId = QuesIdUrl(baseUrl);
-    const linkToComment = BaseUrl(baseUrl) + "#comment" + eleData.commentId + "_" + eleData.cmtQuesId;
+    const linkToComment = BaseUrl(baseUrl) + "#comment" + eleData.commentId + "_" + eleData.cmtParentId;
 
     return linkToComment;
 }
@@ -106,3 +106,13 @@ export function GetBrowser() {
         default: return "Other";
     }
 };
+
+export function GetHtmlStringText(htmlString){
+    var span = document.createElement('span');
+    span.innerHTML = htmlString;
+    return span.textContent || span.innerText;
+}
+
+export function TrimText(text){
+    return text.substring(0, 100) + "...";
+}
