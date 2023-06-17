@@ -1,4 +1,4 @@
-.smcHighlight {
+.smfHighlight {
 	border: 2px solid darkgreen;
 	border-color: orange;
 	border-color: mediumseagreen;
@@ -16,11 +16,27 @@
 }
 .smfFavorite:before {
 	position: absolute;
+	content: "\2605"; /*\23F6 or "\25B2"*/
+	/* Unicode symbol: https://www.fileformat.info/info/unicode/category/So/list.htm */
 	left: -11px;
 	top: -11px;
-	content: "\2605";
 	color: orange;
 	font-size: large;
+}
+
+.smfAuthor{
+	border-color: orange;
+	position: relative;
+}
+.smfAuthor:before {
+	position: absolute;
+    content: "\2756"; /*\2764*/
+	/* Unicode symbol: https://www.fileformat.info/info/unicode/category/So/list.htm */
+    left: -11px;
+    top: -11px;
+    color: orange;
+    font-size: large;
+    /* transform: rotate(180deg); */
 }
 
 .smfCmtLnk {

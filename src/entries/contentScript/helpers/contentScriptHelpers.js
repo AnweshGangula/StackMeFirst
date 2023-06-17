@@ -57,7 +57,7 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
                         insertAfter(topEle, answerToHighlight);
                     }
                     if (hlAns) {
-                        answerToHighlight.classList.add("smcHighlight", "smfAnswer");
+                        answerToHighlight.classList.add("smfHighlight", "smfAnswer");
                     }
                 } else {
                     suffix = " (hidden)"
@@ -104,7 +104,7 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
                     // console.log("Hidden comment: #comment-" + commentId)
                 } else {
                     const commentToHighlight = commentEle.getElementsByClassName("comment-text")[0];
-                    commentToHighlight.classList.add("smcHighlight", "smfCmtLnk")
+                    commentToHighlight.classList.add("smfHighlight", "smfCmtLnk")
                 }
 
                 commentList.push({commentId, suffix});
@@ -131,6 +131,7 @@ export async function HighlightLinks(preferences, currURL, currentQid, DOM_Opts)
             const stackAPI = new Api(token);
             const allLinkedQs = await stackAPI.getLinkedQues(currURL, currentQid);
             const domLinkedQ = document.getElementById("h-linked")?.parentNode.querySelector(".linked");
+            console.log("DOM linkedQ: ", allLinkedQs)
             allLinkedQs.forEach((ques) => {
                 const isQuesAuthor = ques.owner.link == currUser.href
                 if (ques.upvoted || ques.favorited || isQuesAuthor) {
@@ -144,9 +145,12 @@ export async function HighlightLinks(preferences, currURL, currentQid, DOM_Opts)
                         const isUpvoted = (("gpsTrack" in link.dataset) && link.dataset.gpsTrack.includes(ques.question_id));
                         if (isLink && isUpvoted) {
                             isHidden = ""
-                            link.classList.add("smcHighlight", "smfCmtLnk");
+                            link.classList.add("smfHighlight", "smfCmtLnk");
                             if (ques.favorited) {
                                 link.classList.add("smfFavorite")
+                            }
+                            if(isAuthor){
+                                link.classList.add("smfAuthor")
                             }
                         }
                     }
