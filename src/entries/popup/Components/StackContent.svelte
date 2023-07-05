@@ -191,7 +191,8 @@
 		text-overflow: ellipsis;
 	}
 	.backLinks:hover #backLinkText:after {
-		opacity: 0.6;
+		width: auto;
+		opacity: 0.7;
 	}
 	#backLinkText:after {
 		content: attr(data-title);
@@ -200,6 +201,7 @@
 		/* width: 100%; */
 		overflow: hidden;
 		text-overflow: inherit;
-		opacity: 0;
+		width: 100px;
+		opacity: 0.3;
 	}
 </style>
