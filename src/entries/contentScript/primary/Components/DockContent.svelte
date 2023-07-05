@@ -17,6 +17,7 @@
 	let slideSidebar = true;
 	let badgeTextList = GetBadgeText(stackData.popupContent);
 	let badgeText = "0A,0C";
+	let closing = false;
 
 	if (badgeTextList.length > 0) {
 		isGreenBorder = true;
@@ -34,10 +35,24 @@
 		// });
 	});
 
+	let timeoutId;
 	function ToggleDock(openClose) {
 		console.log({openClose, slideSidebar})
-		slideSidebar = openClose === "open" ? true : false;
-		dockSidebar = openClose === "open" ? false : true;
+		if(openClose !== "open"){
+			closing = true;
+			timeoutId = setTimeout(() => {
+				slideSidebar = false;
+				dockSidebar = true;
+				closing = false;
+			}, 2000)
+		}else{
+			clearTimeout(timeoutId); 
+			closing = false;
+	
+			slideSidebar = true;
+			dockSidebar = false;
+		}
+
 		// slideSidebar doesn't work right now
 		// TODO: replace sliding with expand animation
 
@@ -101,8 +116,11 @@
 </script>
 
 <div id="dockRoot" 
-	class={dockSidebar ? "dockSidebar" : ""} class:slideSidebar={slideSidebar}
+	class={dockSidebar ? "dockSidebar" : ""} 
+	class:slideSidebar={slideSidebar}
+	class:closing={closing}
 	on:mouseleave={() => ToggleDock("close")}
+	on:mouseenter={() => ToggleDock("open")}
 >
 	<!-- {#await currPref then Options} -->
 		{#if !dockSidebar}
@@ -142,6 +160,18 @@
 		/* transition: border-radius 250ms ease-in; */ /* TODO: work on transition later*/
 	}
 
+	#dockRoot.closing::before{
+		content: "closing in 2 seconds";
+		position: absolute;
+		top: 25px;
+		left: 10px;
+		z-index: 100;
+		color: white;
+		background-color: firebrick;
+		padding: 0 5px;
+		border-radius: 5px;
+	}
+	
 	@media(max-width: 1400px) {
 		#dockRoot {
 			top: 50px;
