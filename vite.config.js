@@ -48,6 +48,11 @@ export default defineConfig(({ mode }) => {
       svelte(),
       webExtension({
         manifest: getManifest(Number(env.VITE_MANIFEST_VERSION)),
+        additionalInputs: {
+          // styles: [
+          //   "src/entries/contentScript/primary/content.css"
+          // ]
+        }
       }),
     ],
     resolve: {

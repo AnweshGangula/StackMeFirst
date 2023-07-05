@@ -18,7 +18,7 @@ stackCommunities.forEach(a => {
 
 const _webAccessibleResources = [
   // Reference: 
-  "src/entries/contentScript/primary/content.css",
+  "src/entries/contentScript/primary/content.css", // TODO: check if this shoud be in vite.config under additionalInputs
   'icons/StackMeFirst.png',
 ]
 
