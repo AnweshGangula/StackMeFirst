@@ -37,7 +37,7 @@
 
 	let timeoutId;
 	function ToggleDock(openClose) {
-		console.log({openClose, slideSidebar})
+		// console.log({openClose, slideSidebar})
 		if(openClose !== "open"){
 			closing = true;
 			timeoutId = setTimeout(() => {
