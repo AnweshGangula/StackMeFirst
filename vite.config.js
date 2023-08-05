@@ -9,6 +9,7 @@ export default defineConfig(({ mode }) => {
   let buildOptions = {};
 
   buildOptions = {
+    target: "esnext",
     sourcemap: true,
     rollupOptions: {
       output: {
