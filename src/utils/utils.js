@@ -108,9 +108,18 @@ export function GetBrowser() {
 };
 
 export function GetHtmlStringText(htmlString){
-    var span = document.createElement('span');
+    const span = document.createElement('span');
     span.innerHTML = htmlString;
+
+    // .innerHTML is not safe - https://stackoverflow.com/questions/28899298/extract-the-text-out-of-html-string-using-javascript#comment135466556_28899585
     return span.textContent || span.innerText;
+}
+
+export function extractHTMLContent(html) {
+    // https://stackoverflow.com/a/28900362/6908282
+    return new DOMParser()
+        .parseFromString(html, "text/html")
+        .documentElement.textContent;
 }
 
 export function TrimText(text){

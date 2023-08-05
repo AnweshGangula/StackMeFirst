@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 
-import { GetHtmlStringText, GetLocalTokenData, TrimText } from "~/utils/utils";
+import { extractHTMLContent, GetLocalTokenData, TrimText } from "~/utils/utils";
 import Api from "~/utils/stackAPI";
 import scrollToTarget from "../../executeScript/executeScript"
 
@@ -40,7 +40,7 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
             if (ansIsAPI) {
                 answerUser = answer.owner.link;
                 answerId = answer.answer_id;
-                body = TrimText(GetHtmlStringText(answer.body));
+                body = TrimText(extractHTMLContent(answer.body));
             } else {
                 const userDetails = answer.querySelectorAll('.user-details');
                 const userHTML = userDetails[userDetails.length - 1];
@@ -93,7 +93,7 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
             if (cmtIsAPI) {
                 commentUser = comment.owner.link;
                 commentId = comment.comment_id;
-                body = TrimText(GetHtmlStringText(comment.body));
+                body = TrimText(extractHTMLContent(comment.body));
                 parentId = comment.post_id.toString();
             } else {
                 commentUser = comment.getElementsByClassName("comment-user")[0].href;
