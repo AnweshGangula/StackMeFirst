@@ -27,7 +27,7 @@ export default async function highlightStack() {
         let myAnsList, myCmmtList, linkData;
         const userURL = currUser == null ? undefined : currUser.href;
         const userLoggedIn = Array.from(document.getElementsByClassName("s-topbar--item")).filter(a => a.localName == "a" && a.href.includes("users/login?")).length == 0;
-        const userInCommunity = userLoggedIn && currUser;
+        const userInCommunity = (userLoggedIn && currUser) ? true: false;
 
         var popupContent = {
             userInCommunity: userInCommunity,
