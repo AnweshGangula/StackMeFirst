@@ -2,6 +2,9 @@ import browser from "webextension-polyfill";
 import { defaultApiData, StackAppDetails, pageTypeEnum } from "~/utils/constants";
 import { GetBrowser } from "~/utils/utils";
 import Api from "~/utils/stackAPI";
+import backgroundAnalytics from "./googleAnalyticsBackground";
+
+backgroundAnalytics();
 
 const currBrowser = GetBrowser();
 const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION)

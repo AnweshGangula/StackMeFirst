@@ -12,6 +12,10 @@
 	import Loader from "./Components/Loader.svelte";
 	import LinkedQues from "./Components/LinkedQues.svelte";
 
+	import popupAnalytics from "./googleAnalyticsPopup";
+
+	popupAnalytics();
+
 	export let stackData;
 
 	let warningText;
