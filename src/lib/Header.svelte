@@ -131,6 +131,7 @@
 	<div id="docsHelp">
 		<a href={docsUrl} on:click|preventDefault={() => onClickEvent(docsUrl)}>
 			<button 
+				id="btnDocs"
 				type="button"
 				title="{docsUrl}" >
 				Docs
@@ -138,6 +139,7 @@
 		</a>
 		<a href={helpURL} on:click|preventDefault={() => onClickEvent(helpURL)}>
 			<button
+				id="btnHelp"
 				type="button" 
 				title="{helpURL}" >
 				Help

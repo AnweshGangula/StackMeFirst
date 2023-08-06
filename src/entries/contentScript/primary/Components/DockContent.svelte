@@ -9,6 +9,8 @@
 
 	import { defaultPreferances, pageTypeEnum } from "~/utils/constants";
 
+	import DockMixpanel from "./mixpanelDock";
+
 	export let stackData;
 	const logoImageUrl = new URL(logo, import.meta.url).href;
 
@@ -26,6 +28,7 @@
 	}
 
 	onMount(async () => {
+		console.log("onMount");
 		// const currPref = GetPreferences();
 		// currPref.then((savedPref) => {
 		// 	dockSidebar = savedPref.dockSidebar;
@@ -45,11 +48,11 @@
 		if (openClose !== "open") {
 			closing = true;
 
-			closingTimer = `closing in ${time} seconds`;
+			closingTimer = `closing in ${time} second${time == 1? "": "s"}`;
 			const interval = 1;
 			startCount = setInterval(function () {
 				time -= interval;
-				closingTimer = `closing in ${time} seconds`;
+				closingTimer = `closing in ${time} second${time == 1? "": "s"}`;
 				if (time == 0) {
 					closingTimer = "";
 					time = 3;
@@ -145,6 +148,7 @@
 	class:slideSidebar
 	class:closing
 	data-closing={closingTimer}
+	on:click={(e) => DockMixpanel(e)}
 	on:mouseleave={() => ToggleDock("close")}
 	on:mouseenter={() => ToggleDock("open")}
 >

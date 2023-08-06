@@ -166,6 +166,7 @@ export async function renderContent(
         mode: import.meta.env.DEV ? "open" : "closed",
     });
     const appRoot = document.createElement("div");
+    appRoot.setAttribute("id", "StackMeFirst_Root");
 
     if (import.meta.hot) {
         const { addViteStyleTarget } = await import(

@@ -12,6 +12,9 @@
 	import Loader from "./Components/Loader.svelte";
 	import LinkedQues from "./Components/LinkedQues.svelte";
 
+	import popupMixpanel from "./mixpanelPopup";
+	popupMixpanel();
+
 	export let stackData;
 
 	let warningText;
