@@ -12,6 +12,11 @@
 	import Loader from "./Components/Loader.svelte";
 	import LinkedQues from "./Components/LinkedQues.svelte";
 
+	import SmfMixpanel from "~/utils/mixpanel";
+
+	const smfMixPanelTest = new SmfMixpanel("");
+	smfMixPanelTest.testTrack();
+
 	export let stackData;
 
 	let warningText;

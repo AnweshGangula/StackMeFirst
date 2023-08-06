@@ -26,6 +26,7 @@
 		"web-ext": "^7.2.0"
 	},
 	"dependencies": {
+		"mixpanel-browser": "^2.47.0",
 		"webextension-polyfill": "^0.10.0"
 	},
 	"type": "module"
