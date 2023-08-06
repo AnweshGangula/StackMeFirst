@@ -1,9 +1,9 @@
 <script>
 	import browser from "webextension-polyfill";
-	import { onMount } from 'svelte';
+	import { onMount } from "svelte";
 
 	import PopupDock from "../../../popup/PopupDock.svelte";
-    import Header from "~/lib/Header.svelte";
+	import Header from "~/lib/Header.svelte";
 
 	import logo from "~/assets/logo.svg";
 
@@ -18,6 +18,7 @@
 	let badgeTextList = GetBadgeText(stackData.popupContent);
 	let badgeText = "0A,0C";
 	let closing = false;
+	let closingTimer = "";
 
 	if (badgeTextList.length > 0) {
 		isGreenBorder = true;
@@ -36,19 +37,39 @@
 	});
 
 	let timeoutId;
+	let time = 3;
+	let startCount;
+
 	function ToggleDock(openClose) {
 		// console.log({openClose, slideSidebar})
-		if(openClose !== "open"){
+		if (openClose !== "open") {
 			closing = true;
+
+			closingTimer = `closing in ${time} seconds`;
+			const interval = 1;
+			startCount = setInterval(function () {
+				time -= interval;
+				closingTimer = `closing in ${time} seconds`;
+				if (time == 0) {
+					closingTimer = "";
+					time = 3;
+					clearInterval(this);
+				}
+			}, interval * 1000);
+
 			timeoutId = setTimeout(() => {
 				slideSidebar = false;
 				dockSidebar = true;
 				closing = false;
-			}, 2000)
-		}else{
-			clearTimeout(timeoutId); 
+				clearInterval(startCount);
+			}, time * 1000);
+		} else {
+			clearTimeout(timeoutId);
+			clearInterval(startCount);
 			closing = false;
-	
+			closingTimer = "";
+			time = 3;
+
 			slideSidebar = true;
 			dockSidebar = false;
 		}
@@ -61,7 +82,7 @@
 		// 		// GetPreferences().then((savedPref) => {
 		// 		// 	// console.log(savedPref);
 		// 		// 	savedPref.dockSidebar = dockSidebar;
-		
+
 		// 		// 	browser.storage.sync.set({ stackMeData: savedPref }).then(function () {});
 		// 		// });
 		// 	}
@@ -70,29 +91,28 @@
 		// 		// GetPreferences().then((savedPref) => {
 		// 			// 	// console.log(savedPref);
 		// 			// 	savedPref.dockSidebar = dockSidebar;
-					
+
 		// 			// 	browser.storage.sync.set({ stackMeData: savedPref }).then(function () {});
 		// 			// });
 		// 		}
-
-
-
 	}
 
 	async function GetPreferences() {
 		var sotrageOpts = new Promise(function (resolve, reject) {
 			// TODO: Replace Promise with Async-Await
 			//  reference: https://stackoverflow.com/a/58491883/6908282
-			browser.storage.sync.get({ stackMeData: defaultPreferances }).then(function (result) {
-				// You can set default for values not in the storage by providing a dictionary:
-				// reference: https://stackoverflow.com/a/26898749/6908282
-				// if stackMeData is not found, use defaultPreferances for a first time user
-				if (result) {
-					resolve(result.stackMeData);
-				} else {
-					reject(new Error("throw"));
-				}
-			});
+			browser.storage.sync
+				.get({ stackMeData: defaultPreferances })
+				.then(function (result) {
+					// You can set default for values not in the storage by providing a dictionary:
+					// reference: https://stackoverflow.com/a/26898749/6908282
+					// if stackMeData is not found, use defaultPreferances for a first time user
+					if (result) {
+						resolve(result.stackMeData);
+					} else {
+						reject(new Error("throw"));
+					}
+				});
 		});
 		const savedPref = await sotrageOpts;
 		return savedPref;
@@ -107,7 +127,11 @@
 		if (popupContent.commentList && popupContent.commentList.length > 0) {
 			badgeTextList.push(popupContent.commentList.length + "C");
 		}
-		if (popupContent.linkData?.hlLinkQ && popupContent.linkData?.linkedQids && popupContent.linkData?.linkedQids.length > 0) {
+		if (
+			popupContent.linkData?.hlLinkQ &&
+			popupContent.linkData?.linkedQids &&
+			popupContent.linkData?.linkedQids.length > 0
+		) {
 			badgeTextList.push(popupContent.linkData.linkedQids.length + "L");
 		}
 
@@ -115,26 +139,28 @@
 	}
 </script>
 
-<div id="dockRoot" 
-	class={dockSidebar ? "dockSidebar" : ""} 
-	class:slideSidebar={slideSidebar}
-	class:closing={closing}
+<div
+	id="dockRoot"
+	class={dockSidebar ? "dockSidebar" : ""}
+	class:slideSidebar
+	class:closing
+	data-closing={closingTimer}
 	on:mouseleave={() => ToggleDock("close")}
 	on:mouseenter={() => ToggleDock("open")}
 >
 	<!-- {#await currPref then Options} -->
-		{#if !dockSidebar}
-        <div id="dockContent" class="glassmorphic">
+	{#if !dockSidebar}
+		<div id="dockContent" class="glassmorphic">
 			<div id="dockContentChild">
-            <Header pageType={pageTypeEnum.sidebar} />
-			<!-- {#if badgeTextList.length > 0} -->
-                <PopupDock {stackData} />
-            <!-- {:else}
+				<Header pageType={pageTypeEnum.sidebar} />
+				<!-- {#if badgeTextList.length > 0} -->
+				<PopupDock {stackData} />
+				<!-- {:else}
                 <p id="noStack" class="featureOff">! This question doesn't have any answers/comments submitted by you.</p>
             {/if} -->
 			</div>
-        </div>
-		{/if}
+		</div>
+	{/if}
 	<!-- {/await} -->
 	<div id="dockLogo" class:greenBorder={isGreenBorder}>
 		<!-- <button type="button" on:click|preventDefault={() => ToggleDock()}> -->
@@ -160,8 +186,8 @@
 		/* transition: border-radius 250ms ease-in; */ /* TODO: work on transition later*/
 	}
 
-	#dockRoot.closing::before{
-		content: "closing in 2 seconds";
+	#dockRoot.closing::before {
+		content: attr(data-closing);
 		position: absolute;
 		top: 25px;
 		left: 10px;
@@ -171,13 +197,13 @@
 		padding: 0 5px;
 		border-radius: 5px;
 	}
-	
-	@media(max-width: 1400px) {
+
+	@media (max-width: 1400px) {
 		#dockRoot {
 			top: 50px;
 		}
 	}
-    #dockContent {
+	#dockContent {
 		/* position: absolute; */
 		/* height: 100vh; */
 		width: max-content;
@@ -185,7 +211,7 @@
 		max-height: 80vh;
 		overflow: hidden auto;
 		top: 20px;
-    	left: 100px;
+		left: 100px;
 		/* padding: 10px; */
 		margin-top: 15px;
 		/* background-color: rgba(0, 0, 0, 0.6); */
@@ -195,20 +221,25 @@
 		/* backdrop-filter: blur(3px); */
 		border-radius: 5px;
 		transform: scaleX(1.5) translateX(120%); /* this adds more realistic sliding animation - like a cartoon speedcar stop */
-		transition: transform 1s cubic-bezier(.82,-0.4,.19,1.4), left 1s cubic-bezier(.82,-0.4,.19,1.4);
+		transition: transform 1s cubic-bezier(0.82, -0.4, 0.19, 1.4),
+			left 1s cubic-bezier(0.82, -0.4, 0.19, 1.4);
 	}
 
-	#dockRoot.slideSidebar > #dockContent{
+	#dockRoot.slideSidebar > #dockContent {
 		/* transform: translateX(-142%); */
 		transform: scaleX(1) translate(0%);
-		left: 0; 
+		left: 0;
 	}
 
-	#dockContent.glassmorphic{
+	#dockContent.glassmorphic {
 		/* color: var(--theme-body-font-color); */
 		background: rgb(255 255 255 / 25%);
 		background: linear-gradient(45deg, #00ff908a, rgb(0 184 255 / 50%));
-		background-image: linear-gradient( 135deg, rgb(46 255 228 / 50%) 10%, rgb(240 103 180 / 50%) 100%);
+		background-image: linear-gradient(
+			135deg,
+			rgb(46 255 228 / 50%) 10%,
+			rgb(240 103 180 / 50%) 100%
+		);
 		border-radius: 10px;
 		/* box-shadow: 5px 4px 1px rgb(94 233 202 / 20%); */
 		/* backdrop-filter: blur(9px); */
@@ -216,7 +247,7 @@
 		outline: 1px solid rgb(255 255 255 / 40%);
 	}
 
-	#dockContentChild{
+	#dockContentChild {
 		position: relative;
 		background: #ffffff4a;
 		backdrop-filter: blur(3px);
@@ -235,22 +266,21 @@
 		left: 0;
 		right: 0;
 		bottom: 0; */
-		border-radius: 10px; 
+		border-radius: 10px;
 		border: 2px solid transparent;
-		background: linear-gradient(45deg,purple,orange) border-box;
-		-webkit-mask:
-			linear-gradient(#fff 0 0) padding-box, 
+		background: linear-gradient(45deg, purple, orange) border-box;
+		-webkit-mask: linear-gradient(#fff 0 0) padding-box,
 			linear-gradient(#fff 0 0);
 		-webkit-mask-composite: destination-out;
 		mask-composite: exclude;
-}
+	}
 
 	.featureOff {
-        margin: 10px 0;
-        padding: 5px;
-        background-color: #ffe4e1;
-        color: #b22222;
-        border: 1px solid firebrick;
+		margin: 10px 0;
+		padding: 5px;
+		background-color: #ffe4e1;
+		color: #b22222;
+		border: 1px solid firebrick;
 
 		/* background-color: firebrick;
 		color: white;
@@ -315,5 +345,4 @@
 	#badgeText .greenBorder {
 		background-color: forestgreen;
 	}
-
 </style>
