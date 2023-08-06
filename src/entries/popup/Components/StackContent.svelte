@@ -81,7 +81,10 @@
 
 <details id="{type}List" open>
 	<summary>
-		<b class={`itemCount ${count>0 ? "" : "zeroCount"}`}><span id="{type}Count">{count}</span> {type}/s</b>
+		<b class={`itemCount ${count>0 ? "" : "zeroCount"}`}>
+			<span id="{type}Count">{count}</span> 
+			{type}{count > 1 ? "s" : ""}
+		</b>
 		- {itemVerb} by you:
 	</summary>
 	{#if count > 0}
