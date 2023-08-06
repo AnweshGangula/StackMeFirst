@@ -4,12 +4,16 @@ import { getCmtIds, highlightAnswer, highlightComments, HighlightLinks } from ".
 import { IsStackOverflow, IsQuestion } from "~/utils/utils";
 import { defaultPreferances } from "~/utils/constants";
 import Api from "~/utils/stackAPI";
+import { GetLocalTokenData } from "~/utils/utils";
 
 import scrollToTarget from "../executeScript/executeScript"
 window.scrollToTarget = scrollToTarget;
 
 export default async function highlightStack() {
-    let stackAPI = new Api("");
+    const tokenData = await GetLocalTokenData();
+    const token = tokenData.token ?? "";
+
+    let stackAPI = new Api(token);
     let output = {};
     //TODO: if logged, then add token for stackAPI above. This will help with API limitations: https://api.stackexchange.com/docs/throttle#:~:text=If%20an%20application%20does%20have%20an%20access_token
     const currURL = window.location.href // .at(-1)
@@ -27,7 +31,7 @@ export default async function highlightStack() {
         let myAnsList, myCmmtList, linkData;
         const userURL = currUser == null ? undefined : currUser.href;
         const userLoggedIn = Array.from(document.getElementsByClassName("s-topbar--item")).filter(a => a.localName == "a" && a.href.includes("users/login?")).length == 0;
-        const userInCommunity = (userLoggedIn && currUser) ? true: false;
+        const userInCommunity = (userLoggedIn && currUser) ? true : false;
 
         var popupContent = {
             userLoggedIn,
