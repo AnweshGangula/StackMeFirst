@@ -24,24 +24,24 @@ export default class Api {
 
     static auth(sendResponse) {
         let clientId;
-      
+
         if (currBrowser == "Mozilla Firefox") {
-          clientId = StackAppDetails.firefox.clientId;
+            clientId = StackAppDetails.firefox.clientId;
         } else {
-          clientId = StackAppDetails.chromium.clientId;
+            clientId = StackAppDetails.chromium.clientId;
         }
-      
+
         const scope = 'read_inbox,no_expiry,private_info';
         const redirectUrl = browser.identity.getRedirectURL('oauth2');
         const url = `https://stackoverflow.com/oauth/dialog?client_id=${clientId}&scope=${scope}&redirect_uri=${redirectUrl}`;
         browser.identity.launchWebAuthFlow(
-          { url: url, interactive: true }).then(
-            redirect_url => {
-              const token = redirect_url.match(/access_token=(.+)/)[1];
-              sendResponse({ token });
-            }
-          );
-      }
+            { url: url, interactive: true }).then(
+                redirect_url => {
+                    const token = redirect_url.match(/access_token=(.+)/)[1];
+                    sendResponse({ token });
+                }
+            );
+    }
 
     _buildURL(endpoint, queriesObj, site) {
         const query = `?${this._objToQuery({
@@ -129,7 +129,8 @@ export default class Api {
     async getAnswers(currURL, ids, queriesObj = {}) {
         const site = new URL(currURL).host.split(".")[0];
 
-        queriesObj.filter = "withbody"; // https://stackoverflow.com/a/69166789/6908282
+        const filter = this.token ? "!*Mg4PjfvuWMFghsH" : "withbody";
+        // queriesObj.filter = "withbody"; // https://stackoverflow.com/a/69166789/6908282
         if (!("pagesize" in queriesObj)) {
             queriesObj.pagesize = 100;
             // 100 is the max pagesize - https://api.stackexchange.com/docs/paging
