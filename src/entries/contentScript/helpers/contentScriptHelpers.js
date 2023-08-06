@@ -46,9 +46,9 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
                 const userHTML = userDetails[userDetails.length - 1];
                 answerUser = userHTML.children.item(0).href;
                 answerId = answer.dataset.answerid;
-                body = TrimText(answer.querySelectorAll(".answercell")[0].textContent.replaceAll("\n    ",""));
+                body = TrimText(answer.querySelectorAll(".answercell")[0].textContent.replaceAll("\n    ", ""));
             }
-            if (answerUser == currUser.href) {
+            if (answerUser == currUser.href || answer.upvoted) {
                 const answerToHighlight = document.querySelector("#answer-" + answerId);
                 const isAnsVisible = answerToHighlight != null
                 let suffix = ""
@@ -64,7 +64,8 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
                 } else {
                     suffix = " (hidden)"
                 }
-                answerList.push({answerId, suffix, title: body});
+                if(answerUser == currUser.href) suffix += " (author)";
+                answerList.push({ answerId, suffix, title: body });
             }
 
             if (currURL.indexOf(answerId + "#" + answerId) > -1) {
@@ -113,7 +114,7 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
                     commentToHighlight.classList.add("smfHighlight", "smfCmtLnk")
                 }
 
-                commentList.push({commentId, suffix, title: body, cmtParentId: parentId});
+                commentList.push({ commentId, suffix, title: body, cmtParentId: parentId });
             }
         }
     }
@@ -155,7 +156,7 @@ export async function HighlightLinks(preferences, currURL, currentQid, DOM_Opts)
                             if (ques.favorited) {
                                 link.classList.add("smfFavorite")
                             }
-                            if(isAuthor){
+                            if (isAuthor) {
                                 link.classList.add("smfAuthor")
                             }
                         }
