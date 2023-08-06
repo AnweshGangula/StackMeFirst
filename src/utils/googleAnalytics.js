@@ -1,3 +1,13 @@
+// NOTE - THIS IS NOT WORKING WITH EDGE
+// https://stackoverflow.com/q/76844911/6908282
+// -------
+// -------
+// -------
+// -------
+// -------
+// -------
+
+
 // ref: https://developer.chrome.com/docs/extensions/mv3/tut_analytics/
 import browser from "webextension-polyfill";
 
@@ -20,110 +30,110 @@ export class Analytics {
   // Returns the client id, or creates a new one if one doesn't exist.
   // Stores client id in local storage to keep the same client id as long as
   // the extension is installed.
-  async getOrCreateClientId() {
-    try {
+  // async getOrCreateClientId() {
+  //   try {
       
-      // Stack Me First Google Analytics Client ID
-      let { smfGa4ClientId } = await browser.storage.local.get('smfGa4ClientId');
-      if (!smfGa4ClientId) {
-        // Generate a unique client ID, the actual value is not relevant
-        smfGa4ClientId = self.crypto.randomUUID();
-        await browser.storage.local.set({ smfGa4ClientId });
-      }
-      return smfGa4ClientId;
+  //     // Stack Me First Google Analytics Client ID
+  //     let { smfGa4ClientId } = await browser.storage.local.get('smfGa4ClientId');
+  //     if (!smfGa4ClientId) {
+  //       // Generate a unique client ID, the actual value is not relevant
+  //       smfGa4ClientId = self.crypto.randomUUID();
+  //       await browser.storage.local.set({ smfGa4ClientId });
+  //     }
+  //     return smfGa4ClientId;
 
-    } catch (error) {
-      console.log({error})
-    }
-  }
+  //   } catch (error) {
+  //     console.log({error})
+  //   }
+  // }
 
-  // Returns the current session id, or creates a new one if one doesn't exist or
-  // the previous one has expired.
-  async getOrCreateSessionId() {
-    // Use storage.session because it is only in memory
-    let { sessionData } = await browser.storage.session.get('sessionData');
-    const currentTimeInMs = Date.now();
-    // Check if session exists and is still valid
-    if (sessionData && sessionData.timestamp) {
-      // Calculate how long ago the session was last updated
-      const durationInMin = (currentTimeInMs - sessionData.timestamp) / 60000;
-      // Check if last update lays past the session expiration threshold
-      if (durationInMin > SESSION_EXPIRATION_IN_MIN) {
-        // Clear old session id to start a new session
-        sessionData = null;
-      } else {
-        // Update timestamp to keep session alive
-        sessionData.timestamp = currentTimeInMs;
-        await browser.storage.session.set({ sessionData });
-      }
-    }
-    if (!sessionData) {
-      // Create and store a new session
-      sessionData = {
-        session_id: currentTimeInMs.toString(),
-        timestamp: currentTimeInMs.toString()
-      };
-      await browser.storage.session.set({ sessionData });
-    }
-    return sessionData.session_id;
-  }
+  // // Returns the current session id, or creates a new one if one doesn't exist or
+  // // the previous one has expired.
+  // async getOrCreateSessionId() {
+  //   // Use storage.session because it is only in memory
+  //   let { sessionData } = await browser.storage.session.get('sessionData');
+  //   const currentTimeInMs = Date.now();
+  //   // Check if session exists and is still valid
+  //   if (sessionData && sessionData.timestamp) {
+  //     // Calculate how long ago the session was last updated
+  //     const durationInMin = (currentTimeInMs - sessionData.timestamp) / 60000;
+  //     // Check if last update lays past the session expiration threshold
+  //     if (durationInMin > SESSION_EXPIRATION_IN_MIN) {
+  //       // Clear old session id to start a new session
+  //       sessionData = null;
+  //     } else {
+  //       // Update timestamp to keep session alive
+  //       sessionData.timestamp = currentTimeInMs;
+  //       await browser.storage.session.set({ sessionData });
+  //     }
+  //   }
+  //   if (!sessionData) {
+  //     // Create and store a new session
+  //     sessionData = {
+  //       session_id: currentTimeInMs.toString(),
+  //       timestamp: currentTimeInMs.toString()
+  //     };
+  //     await browser.storage.session.set({ sessionData });
+  //   }
+  //   return sessionData.session_id;
+  // }
 
-  // Fires an event with optional params. Event names must only include letters and underscores.
-  async fireEvent(name, params = {}) {
-    // Configure session id and engagement time if not present, for more details see:
-    // https://developers.google.com/analytics/devguides/collection/protocol/ga4/sending-events?client_type=gtag#recommended_parameters_for_reports
-    if (!params.session_id) {
-      params.session_id = await this.getOrCreateSessionId();
-    }
-    if (!params.engagement_time_msec) {
-      params.engagement_time_msec = DEFAULT_ENGAGEMENT_TIME_MSEC;
-    }
+  // // Fires an event with optional params. Event names must only include letters and underscores.
+  // async fireEvent(name, params = {}) {
+  //   // Configure session id and engagement time if not present, for more details see:
+  //   // https://developers.google.com/analytics/devguides/collection/protocol/ga4/sending-events?client_type=gtag#recommended_parameters_for_reports
+  //   if (!params.session_id) {
+  //     params.session_id = await this.getOrCreateSessionId();
+  //   }
+  //   if (!params.engagement_time_msec) {
+  //     params.engagement_time_msec = DEFAULT_ENGAGEMENT_TIME_MSEC;
+  //   }
 
-    try {
-      const response = await fetch(
-        `${
-          this.debug ? GA_DEBUG_ENDPOINT : GA_ENDPOINT
-        }?measurement_id=${MEASUREMENT_ID}&api_secret=${API_SECRET}`,
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            client_id: await this.getOrCreateClientId(),
-            events: [
-              {
-                name,
-                params
-              }
-            ]
-          })
-        }
-      );
-      if (!this.debug) {
-        return;
-      }
-      console.log(await response.text());
-    } catch (e) {
-      console.error('Google Analytics request failed with an exception', e);
-    }
-  }
+  //   try {
+  //     const response = await fetch(
+  //       `${
+  //         this.debug ? GA_DEBUG_ENDPOINT : GA_ENDPOINT
+  //       }?measurement_id=${MEASUREMENT_ID}&api_secret=${API_SECRET}`,
+  //       {
+  //         method: 'POST',
+  //         body: JSON.stringify({
+  //           client_id: await this.getOrCreateClientId(),
+  //           events: [
+  //             {
+  //               name,
+  //               params
+  //             }
+  //           ]
+  //         })
+  //       }
+  //     );
+  //     if (!this.debug) {
+  //       return;
+  //     }
+  //     console.log(await response.text());
+  //   } catch (e) {
+  //     console.error('Google Analytics request failed with an exception', e);
+  //   }
+  // }
 
-  // Fire a page view event.
-  async firePageViewEvent(pageTitle, pageLocation, additionalParams = {}) {
-    return this.fireEvent('popup_opened', {
-      page_title: pageTitle,
-      page_location: pageLocation,
-      ...additionalParams
-    });
-  }
+  // // Fire a page view event.
+  // async firePageViewEvent(pageTitle, pageLocation, additionalParams = {}) {
+  //   return this.fireEvent('popup_opened', {
+  //     page_title: pageTitle,
+  //     page_location: pageLocation,
+  //     ...additionalParams
+  //   });
+  // }
 
-  // Fire an error event.
-  async fireErrorEvent(error, additionalParams = {}) {
-    // Note: 'error' is a reserved event name and cannot be used
-    // see https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference?client_type=gtag#reserved_names
-    return this.fireEvent('extension_error', {
-      ...error,
-      ...additionalParams
-    });
-  }
+  // // Fire an error event.
+  // async fireErrorEvent(error, additionalParams = {}) {
+  //   // Note: 'error' is a reserved event name and cannot be used
+  //   // see https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference?client_type=gtag#reserved_names
+  //   return this.fireEvent('extension_error', {
+  //     ...error,
+  //     ...additionalParams
+  //   });
+  // }
 }
 
 export default new Analytics();
