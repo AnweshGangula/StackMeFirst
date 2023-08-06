@@ -1,5 +1,7 @@
 Quick Links: [Instructions](#instructions) | [Features](#features) | [Known Bugs](#known-bugs) | [Contribution](#contribution)
 
+<a href="https://www.buymeacoffee.com/AnweshGangula" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 35px !important;" ></a>
+
 # StackMeFirst
 
 "Stack Me First" is a browser Extension (currently only available in [Google Chrome][1], [Microsoft Edge][2] & [Firefox][3]) that highlights & lists
