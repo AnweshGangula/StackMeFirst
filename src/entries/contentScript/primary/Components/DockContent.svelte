@@ -9,6 +9,8 @@
 
 	import { defaultPreferances, pageTypeEnum } from "~/utils/constants";
 
+	import DockMixpanel from "./mixpanelDock";
+
 	export let stackData;
 	const logoImageUrl = new URL(logo, import.meta.url).href;
 
@@ -145,6 +147,7 @@
 	class:slideSidebar
 	class:closing
 	data-closing={closingTimer}
+	on:click={(e) => DockMixpanel(e)}
 	on:mouseleave={() => ToggleDock("close")}
 	on:mouseenter={() => ToggleDock("open")}
 >

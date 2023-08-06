@@ -1,17 +1,17 @@
 import mixpanel from 'mixpanel-browser';
 
 export default class SmfMixpanel {
-    constructor(token) {
+    constructor(token = "", pageView = false) {
         this.token = token;
         this.token = "3dd982c60bba9559c0f2f428769f59b4";
 
-        this.init();
+        this.init(pageView);
     }
 
-    init() {
+    init(pageView) {
         mixpanel.init(this.token, {
-            debug: true,
-            track_pageview: true,
+            debug: false,
+            track_pageview: pageView,
             persistence: 'localStorage'
         });
     }
@@ -23,7 +23,8 @@ export default class SmfMixpanel {
         })
     }
 
-    trackEvents(name, data) {
-        mixpanel.track(name, data);
+    trackEvent(name, keyValueData = {}) {
+        console.log("tracking event", {name}, {keyValueData});
+        mixpanel.track(name, keyValueData);
     }
 }

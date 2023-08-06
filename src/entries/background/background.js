@@ -3,6 +3,9 @@ import { defaultApiData, StackAppDetails, pageTypeEnum } from "~/utils/constants
 import { GetBrowser } from "~/utils/utils";
 import Api from "~/utils/stackAPI";
 
+import backgroundMixpanel from "./mixpabelBackground";
+backgroundMixpanel();
+
 const currBrowser = GetBrowser();
 const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION)
 let browserAction = browser.action;
