@@ -28,6 +28,7 @@
 	}
 
 	onMount(async () => {
+		console.log("onMount");
 		// const currPref = GetPreferences();
 		// currPref.then((savedPref) => {
 		// 	dockSidebar = savedPref.dockSidebar;
@@ -47,11 +48,11 @@
 		if (openClose !== "open") {
 			closing = true;
 
-			closingTimer = `closing in ${time} seconds`;
+			closingTimer = `closing in ${time} second${time == 1? "": "s"}`;
 			const interval = 1;
 			startCount = setInterval(function () {
 				time -= interval;
-				closingTimer = `closing in ${time} seconds`;
+				closingTimer = `closing in ${time} second${time == 1? "": "s"}`;
 				if (time == 0) {
 					closingTimer = "";
 					time = 3;

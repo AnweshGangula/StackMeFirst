@@ -85,7 +85,7 @@ export default class Api {
         if (items.length === 0) {
             return '';
         }
-        console.log(items);
+        // console.log(items);
         const filterName = items[0].filter;
         return filterName;
     }

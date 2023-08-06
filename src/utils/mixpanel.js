@@ -1,3 +1,5 @@
+// Not working with MS Edge right now
+
 import mixpanel from 'mixpanel-browser';
 
 export default class SmfMixpanel {
