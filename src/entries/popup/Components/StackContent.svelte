@@ -78,7 +78,7 @@
 <details id="{type}List" open>
 	<summary>
 		<b class={`itemCount ${count>0 ? "" : "zeroCount"}`}>
-			<span id="{type}Count">{count}</span> 
+			<span id="{type}Count">{count}</span>
 			{type}{count > 1 ? "s" : ""}
 		</b>
 		- {itemVerb} by you:
@@ -87,21 +87,21 @@
 		<ul>
 			{#each eleList as eleId}
 				{@const meta = updateVars(eleId)}
-				<li 
-				  class={"backLinks " + Array.from(meta.eleClass).join(" ")}
-				  title={eleId.title ?? ""}
-				  on:click|preventDefault={() => onClickEvent({ 
-					dest: meta.eleClass, 
-					eleId: meta.eleId, 
-					url: meta.linkRef 
-					})
-				}>
-				<span id="backLinkText" data-title={eleId.title ?? ""}>
-					<a href={meta.linkRef} >
-						{meta.eleId}
-					</a>
-					{meta.suffixDOM}
-				</span>
+				<li
+					class={"backLinks " + Array.from(meta.eleClass).join(" ")}
+					title={eleId.title ?? ""}
+					on:click|preventDefault={() => onClickEvent({
+							dest: meta.eleClass,
+							eleId: meta.eleId,
+							url: meta.linkRef
+						})
+						}>
+					<span id="backLinkText" data-title={eleId.title ?? ""}>
+						<a href={meta.linkRef} >
+							{meta.eleId}
+						</a>
+						{meta.suffixDOM}
+					</span>
 				</li>
 			{/each}
 		</ul>
@@ -133,7 +133,7 @@
 
 	.zeroCount{
 		background-color: gray;
-    	color: lightgray;
+		color: lightgray;
 	}
 	.featureOff {
 		background-color: firebrick;
@@ -143,7 +143,7 @@
 	}
 
 	li.author {
-		background-color: palegreen;
+		background-color: rgb(152 251 152 / 55%);
 		color: darkgreen;
 		border: 0.5px solid darkgreen;
 		border-radius: 5px;
@@ -178,7 +178,7 @@
 		content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
 		position: absolute;
 		left: -2.5em;
-	
+		
 	}
 
 	.backLinks{
@@ -195,7 +195,7 @@
 	}
 	.backLinks:hover #backLinkText:after {
 		width: auto;
-		opacity: 0.7;
+		opacity: 1;
 	}
 	#backLinkText:after {
 		content: attr(data-title);
