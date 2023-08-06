@@ -9,6 +9,8 @@
 
 	import { defaultPreferances, pageTypeEnum } from "~/utils/constants";
 
+	import DockAnalytics from "../googleAnalyticsDock";
+
 	export let stackData;
 	const logoImageUrl = new URL(logo, import.meta.url).href;
 
@@ -119,6 +121,7 @@
 	class={dockSidebar ? "dockSidebar" : ""} 
 	class:slideSidebar={slideSidebar}
 	class:closing={closing}
+	on:click={(e) => DockAnalytics(e)}
 	on:mouseleave={() => ToggleDock("close")}
 	on:mouseenter={() => ToggleDock("open")}
 >

@@ -1,4 +1,5 @@
 // ref: https://developer.chrome.com/docs/extensions/mv3/tut_analytics/
+import browser from "webextension-polyfill";
 
 const GA_ENDPOINT = 'https://www.google-analytics.com/mp/collect';
 const GA_DEBUG_ENDPOINT = 'https://www.google-analytics.com/debug/mp/collect';
@@ -20,21 +21,27 @@ export class Analytics {
   // Stores client id in local storage to keep the same client id as long as
   // the extension is installed.
   async getOrCreateClientId() {
-    // Stack Me First Google Analytics Client ID
-    let { smfGa4ClientId } = await chrome.storage.local.get('smfGa4ClientId');
-    if (!smfGa4ClientId) {
-      // Generate a unique client ID, the actual value is not relevant
-      smfGa4ClientId = self.crypto.randomUUID();
-      await chrome.storage.local.set({ smfGa4ClientId });
+    try {
+      
+      // Stack Me First Google Analytics Client ID
+      let { smfGa4ClientId } = await browser.storage.local.get('smfGa4ClientId');
+      if (!smfGa4ClientId) {
+        // Generate a unique client ID, the actual value is not relevant
+        smfGa4ClientId = self.crypto.randomUUID();
+        await browser.storage.local.set({ smfGa4ClientId });
+      }
+      return smfGa4ClientId;
+
+    } catch (error) {
+      console.log({error})
     }
-    return smfGa4ClientId;
   }
 
   // Returns the current session id, or creates a new one if one doesn't exist or
   // the previous one has expired.
   async getOrCreateSessionId() {
     // Use storage.session because it is only in memory
-    let { sessionData } = await chrome.storage.session.get('sessionData');
+    let { sessionData } = await browser.storage.session.get('sessionData');
     const currentTimeInMs = Date.now();
     // Check if session exists and is still valid
     if (sessionData && sessionData.timestamp) {
@@ -47,7 +54,7 @@ export class Analytics {
       } else {
         // Update timestamp to keep session alive
         sessionData.timestamp = currentTimeInMs;
-        await chrome.storage.session.set({ sessionData });
+        await browser.storage.session.set({ sessionData });
       }
     }
     if (!sessionData) {
@@ -56,7 +63,7 @@ export class Analytics {
         session_id: currentTimeInMs.toString(),
         timestamp: currentTimeInMs.toString()
       };
-      await chrome.storage.session.set({ sessionData });
+      await browser.storage.session.set({ sessionData });
     }
     return sessionData.session_id;
   }
@@ -101,7 +108,7 @@ export class Analytics {
 
   // Fire a page view event.
   async firePageViewEvent(pageTitle, pageLocation, additionalParams = {}) {
-    return this.fireEvent('page_view', {
+    return this.fireEvent('popup_opened', {
       page_title: pageTitle,
       page_location: pageLocation,
       ...additionalParams
