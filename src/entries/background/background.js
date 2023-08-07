@@ -116,6 +116,10 @@ function onTabUpdate(tab) {
 }
 
 function UpdateBadge(badgeText, tabId, pluginTitle, color) {
+
+  color = import.meta.env.VITE_DEV_MODE == "true" ? "firebrick" : color;
+  badgeText = import.meta.env.VITE_DEV_MODE == "true" ? "DEV-"+badgeText : badgeText;
+
   browserAction.setBadgeText({
     text: badgeText,
     tabId: tabId,
