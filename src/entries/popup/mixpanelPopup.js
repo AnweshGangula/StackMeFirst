@@ -1,12 +1,13 @@
 import browser from "webextension-polyfill";
-// import SmfMixpanel from "~/utils/mixpanel";
-
-// const mixpanel = new SmfMixpanel("", true);
+import SmfMixpanel from "~/utils/mixpanel";
 
 export default function popupMixpanel() {
     window.addEventListener('load', () => {
         // pageView event is fired by default since we passed `track_pageview: true,`
         // mixpanel.trackEvent(document.title, document.location.href);
+
+        const mixpanel = new SmfMixpanel();
+        mixpanel.trackPageView("Popup");
     });
 
     // Listen globally for all button events

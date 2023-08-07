@@ -2,7 +2,7 @@ import browser from "webextension-polyfill";
 
 import SmfMixpanel from "~/utils/mixpanel";
 
-const mixpanel = new SmfMixpanel();
+const mixpanel = new SmfMixpanel("", true);
 
 export default function backgroundMixpanel() {
     addEventListener('unhandledrejection', async (event) => {

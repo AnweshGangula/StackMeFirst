@@ -9,17 +9,17 @@ const prodMixPanel = "5280502e9fa283137f3707add408d7d2";
 const currToken = devMixpanel; // prodMixPanel;
 
 export default class SmfMixpanel {
-    constructor(token = "", pageView = false) {
+    constructor(token = "", trackPageView = false) {
         this.token = token;
         this.token = currToken;
 
-        this.init(pageView);
+        this.init(trackPageView);
     }
 
-    init(pageView) {
+    init(trackPageView) {
         mixpanel.init(this.token, {
             debug: false,
-            track_pageview: pageView,
+            track_pageview: trackPageView,
             persistence: 'localStorage'
         });
     }
@@ -34,5 +34,9 @@ export default class SmfMixpanel {
     trackEvent(name, keyValueData = {}) {
         console.log("tracking event", {name}, {keyValueData});
         mixpanel.track(name, keyValueData);
+    }
+
+    trackPageView(pageName){
+        mixpanel.track_pageview({"page": pageName});
     }
 }
