@@ -104,13 +104,13 @@
 </script>
 
 <header>
-	<div id="logoDiv" 
+	<button id="logoDiv" 
 		title={docsUrl}
 		on:click|preventDefault={() => onClickEvent(docsUrl)}
 	>
 		<img id="logoImg" src={logoUrl} alt="Stack Me First Logo" width="20" height="20" />
 		<h1>Stack Me First</h1>
-	</div>
+	</button>
 	{#if loginError}
 		<p id="loginError">Unable to Login. Please Try Again</p>
 	{/if}
@@ -173,6 +173,16 @@
 		display: flex;
     	align-items: center;
 		cursor: pointer;
+
+		margin: 0;
+		padding: 0;
+		align-self: flex-start;
+		background-color: transparent;
+		border: none;
+		text-decoration: none;
+		text-align: center;
+		-webkit-appearance: none;
+		-moz-appearance: none;
 	}
 	#logoImg {
 		margin: 5px;
