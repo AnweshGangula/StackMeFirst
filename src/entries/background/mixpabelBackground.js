@@ -27,3 +27,7 @@ export default function backgroundMixpanel() {
         throw new Error("👋 I'm an test error for mixpanel");
       }
 }
+
+export function sendMixPanelData(name, data = {}) {
+    mixpanel.trackEvent(name, data);
+}

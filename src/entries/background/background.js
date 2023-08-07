@@ -3,7 +3,7 @@ import { defaultApiData, StackAppDetails, pageTypeEnum } from "~/utils/constants
 import { GetBrowser } from "~/utils/utils";
 import Api from "~/utils/stackAPI";
 
-import backgroundMixpanel from "./mixpabelBackground";
+import backgroundMixpanel, { sendMixPanelData } from "./mixpabelBackground";
 backgroundMixpanel();
 
 const currBrowser = GetBrowser();
@@ -78,6 +78,10 @@ browser.runtime.onMessage.addListener(
           sendResponse({ message: 'successfully removed token' });
         });
         return true; // must return true to signal asynchronous
+        break;
+
+      case 'sendMixPanelData':
+        sendMixPanelData(request.eventName, content)
         break;
       default:
         console.log(`no matched action: ${subject}`);
