@@ -1,6 +1,7 @@
-import SmfMixpanel from "~/utils/mixpanel";
+import browser from "webextension-polyfill";
+// import SmfMixpanel from "~/utils/mixpanel";
 
-const mixpanel = new SmfMixpanel("", true);
+// const mixpanel = new SmfMixpanel("", true);
 
 export default function popupMixpanel() {
     window.addEventListener('load', () => {
@@ -12,9 +13,22 @@ export default function popupMixpanel() {
     document.addEventListener('click', (event) => {
         if (event.target instanceof HTMLButtonElement) {
 
-            mixpanel.trackEvent('popupBtnClicked', { 
-                btnId: event.target.id ,
-                text: event.target.textContent,
+            // mixpanel.trackEvent('popupBtnClicked', { 
+            //     btnId: event.target.id ,
+            //     text: event.target.textContent,
+            // });
+
+            browser.runtime.sendMessage({
+                //  reference: https://stackoverflow.com/a/20021813/6908282
+                from: "popup",
+                subject: "sendMixPanelData",
+                eventName: 'popupBtnClicked',
+                content: {
+                    btnId: event.target.id,
+                    text: event.target.textContent,
+                }
+            }).then(function () {
+                // console.log("sending message");
             });
         }
     });
