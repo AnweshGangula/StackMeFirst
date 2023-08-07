@@ -2,6 +2,10 @@
 	import Header from "~/lib/Header.svelte";
 	import Preferences from "~/lib/Preferences.svelte";
 	import { pageTypeEnum } from "~/utils/constants";
+
+	import optionsMixpanel from "./mixpanelOptions";
+	optionsMixpanel();
+
 </script>
 
 <Header />
