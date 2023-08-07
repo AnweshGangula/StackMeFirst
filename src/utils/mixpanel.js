@@ -1,4 +1,3 @@
-// Not working with MS Edge right now
 // mixpanel project link: https://mixpanel.com/project/2794687/app/settings#project/2794687
 
 import mixpanel from 'mixpanel-browser';
