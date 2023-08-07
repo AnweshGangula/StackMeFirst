@@ -14,6 +14,7 @@
 	export let stackData;
 	const logoImageUrl = new URL(logo, import.meta.url).href;
 
+	let devMode = import.meta.env.VITE_DEV_MODE == "true";
 	let dockSidebar = true;
 	let isGreenBorder = false;
 	let slideSidebar = true;
@@ -143,6 +144,7 @@
 
 <div
 	id="dockRoot"
+	class:devMode
 	class={dockSidebar ? "dockSidebar" : ""}
 	class:slideSidebar
 	class:closing
@@ -177,6 +179,20 @@
 </div>
 
 <style>
+	#dockRoot.devMode{
+		border: 5px solid firebrick;
+	}
+	#dockRoot.devMode::before{
+		content: "Dev-Mode";
+		white-space: nowrap;
+		position: absolute;
+		padding: 3px;
+		z-index: 1000;
+		background: firebrick;
+		left: -5px;
+		top: -5px;
+		border-radius: 5px;
+	}
 	#dockRoot {
 		position: fixed;
 		z-index: 9999;
