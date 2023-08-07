@@ -1,4 +1,4 @@
-import SmfMixpanel from "~/utils/mixpanel";
+import SmfMixpanel, {httpTrackEvent} from "~/utils/mixpanel";
 
 const mixpanel = new SmfMixpanel("", true);
 
@@ -12,7 +12,7 @@ export default function popupMixpanel() {
     document.addEventListener('click', (event) => {
         if (event.originalTarget instanceof HTMLButtonElement) {
 
-            mixpanel.trackEvent('popupBtnClicked', { 
+            httpTrackEvent('popupBtnClicked', { 
                 btnId: event.originalTarget.id ,
                 text: event.originalTarget.textContent,
             });
