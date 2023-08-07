@@ -6,10 +6,12 @@ import mixpanel from 'mixpanel-browser';
 const devMixpanel = "3dd982c60bba9559c0f2f428769f59b4";
 const prodMixPanel = "5280502e9fa283137f3707add408d7d2";
 
+const currToken = prodMixPanel; // devMixpanel;
+
 export default class SmfMixpanel {
     constructor(token = "", pageView = false) {
         this.token = token;
-        this.token = prodMixPanel; // devMixpanel;
+        this.token = currToken;
 
         this.init(pageView);
     }
