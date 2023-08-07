@@ -28,7 +28,6 @@
 	}
 
 	onMount(async () => {
-		console.log("onMount");
 		// const currPref = GetPreferences();
 		// currPref.then((savedPref) => {
 		// 	dockSidebar = savedPref.dockSidebar;

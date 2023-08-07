@@ -54,6 +54,7 @@ const sharedManifest = {
 const v2Permissions = [...sharedManifest.permissions].filter((x) => !["scripting"].includes(x)) // reference: https://stackoverflow.com/a/68230395/6908282
 const hostPermissions = [
   "*://api.stackexchange.com/*",
+  "https://api.segment.io/*",
   ...websiteList
 ]
 

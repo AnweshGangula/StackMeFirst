@@ -10,11 +10,11 @@ export default function popupMixpanel() {
 
     // Listen globally for all button events
     document.addEventListener('click', (event) => {
-        if (event.originalTarget instanceof HTMLButtonElement) {
+        if (event.target instanceof HTMLButtonElement) {
 
             mixpanel.trackEvent('popupBtnClicked', { 
-                btnId: event.originalTarget.id ,
-                text: event.originalTarget.textContent,
+                btnId: event.target.id ,
+                text: event.target.textContent,
             });
         }
     });
