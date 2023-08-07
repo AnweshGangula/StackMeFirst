@@ -26,6 +26,7 @@
 		"web-ext": "^7.2.0"
 	},
 	"dependencies": {
+		"@segment/analytics-node": "^1.1.0",
 		"mixpanel-browser": "^2.47.0",
 		"webextension-polyfill": "^0.10.0"
 	},

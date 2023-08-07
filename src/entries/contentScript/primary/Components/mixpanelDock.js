@@ -1,4 +1,5 @@
 import SmfMixpanel from "~/utils/mixpanel";
+import { segmentTrackEvent } from "~/utils/segmentAnalytics";
 
 const mixpanel = new SmfMixpanel();
 
@@ -9,5 +10,11 @@ export default function DockMixpanel(event) {
             btnId: event.target.id ,
             text: event.target.textContent,
          });
+         
+         segmentTrackEvent('dockBtnClicked', {
+             btnId: event.target.id ,
+             text: event.target.textContent,
+          });
     }
+
 }
