@@ -1,12 +1,19 @@
 import SmfMixpanel from "~/utils/mixpanel";
+import { segmentTrackEvent } from "~/utils/segmentAnalytics";
 
 const mixpanel = new SmfMixpanel();
 
 export default function DockMixpanel(event) {
-    if (event.originalTarget instanceof HTMLButtonElement) {
+    if (event.target instanceof HTMLButtonElement) {
         mixpanel.trackEvent('dockBtnClicked', { 
-            btnId: event.originalTarget.id ,
-            text: event.originalTarget.textContent,
+            btnId: event.target.id ,
+            text: event.target.textContent,
          });
+         
+         segmentTrackEvent('dockBtnClicked', {
+             btnId: event.target.id ,
+             text: event.target.textContent,
+          });
     }
+
 }
