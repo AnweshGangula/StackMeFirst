@@ -108,10 +108,12 @@ const ManifestV3 = {
   }
 };
 
-export function getManifest(manifestVersion) {
+export function getManifest(manifestVersion, devMode) {
+  const devModeSuffix = devMode == "true" ? " (dev)" : "";
+  const manifestName = (pkg.displayName ?? pkg.name) + devModeSuffix
   const manifest = {
     manifest_version: manifestVersion,
-    name: pkg.displayName ?? pkg.name,
+    name: manifestName,
     version: pkg.version,
     description: pkg.description,
     author: pkg.author,
