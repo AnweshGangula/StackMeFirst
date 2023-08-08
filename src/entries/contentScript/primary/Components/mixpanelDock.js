@@ -1,12 +1,15 @@
 import browser from "webextension-polyfill";
-import { devConsole } from "~/utils/utils";
+import { getUrlRootDomain, devConsole } from "~/utils/utils";
 
 export default function DockMixpanel(event) {
+    const website = getUrlRootDomain(window.location.href);
+
     devConsole("sending mixpanel event", {
         target: event.target,
         isButton: event.target instanceof HTMLButtonElement,
         btnId: event.target.id,
         text: event.target.textContent,
+        website,
     });
 
     if (event.target instanceof HTMLButtonElement) {
@@ -21,6 +24,7 @@ export default function DockMixpanel(event) {
             subject: "sendMixPanelData",
             eventName: 'dockBtnClicked',
             content: {
+                website,
                 btnId: event.target.id,
                 text: event.target.textContent,
             }

@@ -15,8 +15,12 @@ function getDomainWithoutSubdomain(url) {
 
     return urlParts
         .slice(0)
-        .slice(-2)
+        .slice(-2) // removes subdomain. eg: removes "meta" from "meta.stackexchange.com"
         .join('.')
+}
+
+export function getUrlRootDomain(url) {
+    return new URL(url).hostname
 }
 
 
