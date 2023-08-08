@@ -3,7 +3,7 @@ import { defaultApiData, StackAppDetails, pageTypeEnum } from "~/utils/constants
 import { GetBrowser } from "~/utils/utils";
 import Api from "~/utils/stackAPI";
 
-import backgroundMixpanel from "./mixpabelBackground";
+import backgroundMixpanel from "./mixpanelBackground";
 const mixpanel = backgroundMixpanel();
 
 const currBrowser = GetBrowser();
