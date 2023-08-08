@@ -35,7 +35,7 @@ export default class SmfMixpanel {
         mixpanel.track(name, keyValueData);
     }
 
-    trackPageView(pageName){
-        mixpanel.track_pageview({"page": pageName});
+    trackPageView(data){
+        mixpanel.track_pageview(data);
     }
 }

@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import { pageTypeEnum } from "~/utils/constants";
 
 import SmfMixpanel from "~/utils/mixpanel";
 
@@ -8,7 +9,7 @@ export default function optionsMixpanel() {
         // mixpanel.trackEvent(document.title, document.location.href);
 
         const mixpanel = new SmfMixpanel();
-        mixpanel.trackPageView("Options");
+        mixpanel.trackPageView({pageType: pageTypeEnum.options});
     });
 
     // Listen globally for all button events
@@ -24,8 +25,10 @@ export default function optionsMixpanel() {
                 //  reference: https://stackoverflow.com/a/20021813/6908282
                 from: "options",
                 subject: "sendMixPanelData",
-                eventName: 'optionsBtnClicked',
+                eventName: 'btnClicked',
                 content: {
+                    website: pageTypeEnum.options,
+                    pageType: pageTypeEnum.options,
                     btnId: event.target.id,
                     text: event.target.textContent,
                 }

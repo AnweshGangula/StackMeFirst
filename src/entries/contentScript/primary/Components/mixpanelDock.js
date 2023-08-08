@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import { pageTypeEnum } from "~/utils/constants";
 import { getUrlRootDomain, devConsole } from "~/utils/utils";
 
 export default function DockMixpanel(event) {
@@ -22,9 +23,10 @@ export default function DockMixpanel(event) {
             //  reference: https://stackoverflow.com/a/20021813/6908282
             from: "contentScript",
             subject: "sendMixPanelData",
-            eventName: 'dockBtnClicked',
+            eventName: 'btnClicked',
             content: {
                 website,
+                pageType: pageTypeEnum.sidebar,
                 btnId: event.target.id,
                 text: event.target.textContent,
             }

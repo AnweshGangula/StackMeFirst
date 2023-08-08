@@ -9,7 +9,18 @@ export default function popupMixpanel() {
         // mixpanel.trackEvent(document.title, document.location.href);
 
         const mixpanel = new SmfMixpanel();
-        mixpanel.trackPageView("Popup");
+
+        browser.tabs.query({ active: true, lastFocusedWindow: true }).then(function (tabs) {
+
+            // get current Tab - https://stackoverflow.com/a/29151677/6908282
+            let activeTab = tabs[0];
+            const website = getUrlRootDomain(activeTab.url);
+
+            mixpanel.trackPageView({
+                website,
+                pageType: pageTypeEnum.popup
+            });
+        })
     });
 
     // Listen globally for all button events
@@ -26,15 +37,16 @@ export default function popupMixpanel() {
 
                 // get current Tab - https://stackoverflow.com/a/29151677/6908282
                 let activeTab = tabs[0];
-                const website = activeTab?.url ? getUrlRootDomain(activeTab.url) : "error fetching website";
+                const website = getUrlRootDomain(activeTab.url);
     
                 browser.runtime.sendMessage({
                     //  reference: https://stackoverflow.com/a/20021813/6908282
                     from: "popup",
                     subject: "sendMixPanelData",
-                    eventName: 'popupBtnClicked',
+                    eventName: 'btnClicked',
                     content: {
                         website,
+                        pageType: pageTypeEnum.popup,
                         btnId: event.target.id,
                         text: event.target.textContent,
                     }
