@@ -1,12 +1,13 @@
 import browser from "webextension-polyfill";
+import { devConsole } from "~/utils/utils";
 
 export default function DockMixpanel(event) {
-    // console.log("sending mixpanel event", {
-    //     target: event.target,
-    //     isButton: event.target instanceof HTMLButtonElement,
-    //     btnId: event.target.id,
-    //     text: event.target.textContent,
-    // });
+    devConsole("sending mixpanel event", {
+        target: event.target,
+        isButton: event.target instanceof HTMLButtonElement,
+        btnId: event.target.id,
+        text: event.target.textContent,
+    });
 
     if (event.target instanceof HTMLButtonElement) {
         // mixpanel.trackEvent('dockBtnClicked', { 

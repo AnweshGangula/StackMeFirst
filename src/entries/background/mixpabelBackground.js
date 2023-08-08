@@ -1,6 +1,7 @@
 import browser from "webextension-polyfill";
 
 import SmfMixpanel from "~/utils/mixpanel";
+import { devConsole } from "~/utils/utils";
 
 const mixpanel = new SmfMixpanel("", true);
 
@@ -29,5 +30,6 @@ export default function backgroundMixpanel() {
 }
 
 export function sendMixPanelData(name, data = {}) {
+    devConsole("final Mixpanel call", name, data)
     mixpanel.trackEvent(name, data);
 }

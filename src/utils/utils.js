@@ -125,3 +125,10 @@ export function extractHTMLContent(html) {
 export function TrimText(text){
     return text.substring(0, 100) + "...";
 }
+
+export function devConsole(){
+    if(import.meta.env.VITE_DEV_MODE){
+        // console.log(...arguments);
+        console.trace(...arguments);
+    }
+}
