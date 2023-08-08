@@ -47,6 +47,6 @@ export function backlinkMixpanel(pageType, backlinkType, backlinkId){
             backlinkId,
         }
     }).then(function () {
-        console.log("sending backlink to mixpanel");
+        // console.log("sending backlink to mixpanel");
     });
 }

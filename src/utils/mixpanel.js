@@ -31,7 +31,7 @@ export default class SmfMixpanel {
     }
 
     trackEvent(name, keyValueData = {}) {
-        console.log("tracking event", {name}, {keyValueData});
+        // console.log("tracking event", {name}, {keyValueData});
         mixpanel.track(name, keyValueData);
     }
 
