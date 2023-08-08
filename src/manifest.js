@@ -1,4 +1,5 @@
 import pkg from "../package.json";
+import { devModeSuffix } from "./utils/constants";
 // manifest v3 available properties: https://developer.chrome.com/docs/extensions/mv3/manifest/
 const stackCommunities = [
   "stackoverflow.com",
@@ -109,8 +110,8 @@ const ManifestV3 = {
 };
 
 export function getManifest(manifestVersion, devMode) {
-  const devModeSuffix = devMode == "true" ? " (dev)" : "";
-  const manifestName = (pkg.displayName ?? pkg.name) + devModeSuffix
+  const extensionNameSuffix = devMode == "true" ? devModeSuffix : "";
+  const manifestName = (pkg.displayName ?? pkg.name) + extensionNameSuffix
   const manifest = {
     manifest_version: manifestVersion,
     name: manifestName,

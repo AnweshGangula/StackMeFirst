@@ -109,3 +109,5 @@ export const affeliateIds = {
     "ell.stackexchange.com": "123311",
     "puzzling.stackexchange.com": "81234",
 }
+
+export const devModeSuffix =  " - (Dev)";

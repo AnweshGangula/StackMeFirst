@@ -3,8 +3,8 @@ import { defaultApiData, StackAppDetails, pageTypeEnum } from "~/utils/constants
 import { GetBrowser } from "~/utils/utils";
 import Api from "~/utils/stackAPI";
 
-import backgroundMixpanel, { sendMixPanelData } from "./mixpabelBackground";
-backgroundMixpanel();
+import backgroundMixpanel from "./mixpabelBackground";
+const mixpanel = backgroundMixpanel();
 
 const currBrowser = GetBrowser();
 const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION)
@@ -81,7 +81,7 @@ browser.runtime.onMessage.addListener(
         break;
 
       case 'sendMixPanelData':
-        sendMixPanelData(request.eventName, content)
+        mixpanel.trackEvent(request.eventName, content)
         break;
       default:
         console.log(`no matched action: ${subject}`);
