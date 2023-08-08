@@ -34,3 +34,19 @@ export default function popupMixpanel() {
         }
     });
 }
+
+export function backlinkMixpanel(pageType, backlinkType, backlinkId){
+    browser.runtime.sendMessage({
+        //  reference: https://stackoverflow.com/a/20021813/6908282
+        from: pageType,
+        subject: "sendMixPanelData",
+        eventName: 'backlinkClicked',
+        content: {
+            pageType,
+            backlinkType,
+            backlinkId,
+        }
+    }).then(function () {
+        console.log("sending backlink to mixpanel");
+    });
+}

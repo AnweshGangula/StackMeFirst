@@ -4,7 +4,9 @@
 	import { LinkToComment, LinkToAnswer, LinkToLinkQ } from "~/utils/utils.js";
 	import { pageTypeEnum, suffix } from "~/utils/constants";
 
-	export let pageType;
+	import { backlinkMixpanel } from "../mixpanelPopup.js";
+
+	export let pageType = pageTypeEnum.popup;
 	export let eleList = [];
 	export let type;
 	export let tab; // this is updated by the props of StackContent component
@@ -30,6 +32,8 @@
 		} else {
 			ExecuteScroll(tab.id, eleId, type, OffsetHeight, pageType);
 		}
+
+		backlinkMixpanel(pageType, data.linkType, eleId);
 	}
 
 	function updateVars(eleId) {
@@ -87,7 +91,8 @@
 				<li 
 				  class={"backLinks " + Array.from(meta.eleClass).join(" ")}
 				  title={eleId.title ?? ""}
-				  on:click|preventDefault={() => onClickEvent({ 
+				  on:click|preventDefault={() => onClickEvent({
+					linkType: type,
 					dest: meta.eleClass, 
 					eleId: meta.eleId, 
 					url: meta.linkRef 
