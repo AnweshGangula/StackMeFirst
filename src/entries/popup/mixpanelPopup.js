@@ -8,18 +8,18 @@ export default function popupMixpanel() {
         // pageView event is fired by default since we passed `track_pageview: true,`
         // mixpanel.trackEvent(document.title, document.location.href);
 
-        const mixpanel = new SmfMixpanel();
-
+        
         browser.tabs.query({ active: true, lastFocusedWindow: true }).then(function (tabs) {
-
+            
             // get current Tab - https://stackoverflow.com/a/29151677/6908282
             let activeTab = tabs[0];
             const website = getUrlRootDomain(activeTab.url);
-
-            mixpanel.trackPageView({
+            
+            const pageViewData = {
                 website,
                 pageType: pageTypeEnum.popup
-            });
+            };
+            const mixpanel = new SmfMixpanel(pageViewData);
         })
     });
 

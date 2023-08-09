@@ -8,8 +8,11 @@ export default function optionsMixpanel() {
         // pageView event is fired by default since we passed `track_pageview: true,`
         // mixpanel.trackEvent(document.title, document.location.href);
 
-        const mixpanel = new SmfMixpanel();
-        mixpanel.trackPageView({pageType: pageTypeEnum.options});
+        const pageViewData = {
+            website: pageTypeEnum.options,
+            pageType: pageTypeEnum.options
+        }
+        const mixpanel = new SmfMixpanel(pageViewData);
     });
 
     // Listen globally for all button events

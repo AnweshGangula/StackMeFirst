@@ -23,6 +23,7 @@ export const pageTypeEnum = {
     popup: "popup",
     sidebar: "sidebar",
     options: "options",
+    background: "background",
 };
 
 export const ignoreUrlList = [

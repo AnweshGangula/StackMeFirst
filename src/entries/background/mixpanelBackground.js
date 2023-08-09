@@ -1,14 +1,21 @@
 import browser from "webextension-polyfill";
+import { pageTypeEnum } from "~/utils/constants";
 
 import SmfMixpanel from "~/utils/mixpanel";
 
 export default function backgroundMixpanel() {
-    const mixpanel = new SmfMixpanel("", true);
+    const pageViewData = {
+        website: pageTypeEnum.background,
+        pageType: pageTypeEnum.background
+    }
+    const mixpanel = new SmfMixpanel(); // no need to track background pageview in mixpanel
 
     addEventListener('unhandledrejection', async (event) => {
         // console.log("error", {event})
-        mixpanel.trackEvent("extension_error", {
-            error: event.reason.toString()
+        mixpanel.trackEvent("StackMeFirst_Error", {
+            error: event.reason.toString(),
+            website: pageTypeEnum.background,
+            pageType: pageTypeEnum.background
         });
     });
 

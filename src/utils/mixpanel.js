@@ -2,24 +2,31 @@
 
 import mixpanel from 'mixpanel-browser';
 import { devModeSuffix } from './constants';
+import { devConsole } from './utils';
 
 const devMixpanel = "3dd982c60bba9559c0f2f428769f59b4";
 const prodMixPanel = "5280502e9fa283137f3707add408d7d2";
 
-const currToken = import.meta.env.VITE_DEV_MODE == "true" ? devMixpanel : prodMixPanel; // prodMixPanel;
-
 export default class SmfMixpanel {
-    constructor(token = "", trackPageView = false) {
-        this.token = token;
-        this.token = currToken;
+    currToken = import.meta.env.VITE_DEV_MODE == "true" ? devMixpanel : prodMixPanel; // prodMixPanel;
 
-        this.init(trackPageView);
+    constructor(pageViewData = undefined) {
+        // this.token = token;
+        this.token = this.currToken;
+
+        this.init();
+        if(pageViewData){
+            this.trackPageView(pageViewData);
+        }
     }
 
-    init(trackPageView) {
+    init() {
         mixpanel.init(this.token, {
+            // debug mode doesn't send data - it logs the data in dev console in browser
+            // https://docs.mixpanel.com/docs/tracking/reference/javascript#debug-mode
+
             debug: false,
-            track_pageview: trackPageView,
+            track_pageview: false,
             persistence: 'localStorage'
         });
     }
@@ -36,7 +43,7 @@ export default class SmfMixpanel {
         const nameSuffix = import.meta.env.VITE_DEV_MODE == "true" ? devModeSuffix : "";
         name += nameSuffix;
 
-        devConsole("final Mixpanel call", name, data)
+        devConsole("final Mixpanel call", name, keyValueData); // use mixpanel.init{debug: true} instead
 
         mixpanel.track(name, keyValueData);
     }
