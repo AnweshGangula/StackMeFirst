@@ -1,3 +1,5 @@
+import pkg from '../../package.json';
+
 export const StackAppDetails = {
     firefox: {
         clientId: 24355,
@@ -111,4 +113,4 @@ export const affeliateIds = {
     "puzzling.stackexchange.com": "81234",
 }
 
-export const devModeSuffix =  " - (Dev)";
+export const devModeSuffix =  " (Dev " + pkg.version + ")";

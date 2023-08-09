@@ -9,31 +9,8 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link rel="stylesheet" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;500;700&display=swap" />
 
-		<style>
-			body{
-				padding: 0px 15px;
-				margin: 0;
-			}
-			body.devmode{
-				border: 5px solid firebrick;
-			}
-
-			body.devmode::before {
-				content: "Dev-Mode";
-				white-space: nowrap;
-				position: absolute;
-				padding: 3px;
-				z-index: 1000;
-				background: firebrick;
-				left: 5px;
-				/* top: -5px; */
-				/* border-radius: 5px; */
-				color: white;
-			}
-		</style>
-
 	</head>
-	<body>
+	<body style="margin: 0;">
 		<script type="module" src="./popup.js"></script>
 	</body>
 </html>

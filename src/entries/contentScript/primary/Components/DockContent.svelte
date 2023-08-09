@@ -7,7 +7,7 @@
 
 	import logo from "~/assets/logo.svg";
 
-	import { defaultPreferances, pageTypeEnum } from "~/utils/constants";
+	import { defaultPreferances, devModeSuffix, pageTypeEnum } from "~/utils/constants";
 
 	import DockMixpanel from "./mixpanelDock";
 
@@ -15,6 +15,12 @@
 	const logoImageUrl = new URL(logo, import.meta.url).href;
 
 	let devMode = import.meta.env.VITE_DEV_MODE == "true";
+
+	const devAttribute = () => {
+		// ref: https://stacktuts.com/how-to-have-a-conditional-attribute-in-svelte-3
+    	return devMode ? { dataDevMode: devModeSuffix } : {};
+  	}
+
 	let dockSidebar = true;
 	let isGreenBorder = false;
 	let slideSidebar = true;
@@ -149,6 +155,7 @@
 	class:slideSidebar
 	class:closing
 	data-closing={closingTimer}
+	data-devMode = {devMode ? devModeSuffix : null}
 	on:click={(e) => DockMixpanel(e)}
 	on:mouseleave={() => ToggleDock("close")}
 	on:mouseenter={() => ToggleDock("open")}
@@ -183,7 +190,7 @@
 		border: 5px solid firebrick;
 	}
 	#dockRoot.devMode::before{
-		content: "Dev-Mode";
+		content: attr(data-devMode); /* https://stackoverflow.com/a/59028650/6908282 */
 		white-space: nowrap;
 		position: absolute;
 		padding: 3px;

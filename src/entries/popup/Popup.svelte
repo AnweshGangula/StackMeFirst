@@ -87,7 +87,7 @@
 <style>
 	:global(body) {
 		font-family: "Inter", Helvetica Neue, Arial, Helvetica, sans-serif;
-		width: 350px;
+		width: 400px;
 		/* height: 0px; this doesn't show scrollbar is height is close to scroll */
 		margin: 0; /* Scrollbar is overlapping with content */
 	}
