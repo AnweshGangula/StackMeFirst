@@ -6,6 +6,7 @@
 	export let warningType = new Set(),
 		warningText,
 		glCurrTab;
+	// TODO: add mixpanels event tracking here
 </script>
 
 {#if warningType.size != 0}

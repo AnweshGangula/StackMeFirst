@@ -64,6 +64,7 @@
 			<div>
 				<input type="checkbox" id="srtAns" name="srtAns" value="Bring My Answers to Top" />
 				<label for="srtAns">Bring My Answers to Top</label>
+				<i id="srtAnsTooltip" class="infoTooltip" title="Sort answers submitted by you to the top of the list. &#10;(If Present in the current page)">i</i>
 				<br />
 			</div>
 			<hr />
