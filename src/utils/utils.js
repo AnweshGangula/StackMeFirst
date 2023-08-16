@@ -131,7 +131,7 @@ export function TrimText(text){
 }
 
 export function devConsole(){
-    if(import.meta.env.VITE_DEV_MODE){
+    if(import.meta.env.VITE_DEV_MODE == "true"){
         // console.log(...arguments);
         console.trace(...arguments);
     }

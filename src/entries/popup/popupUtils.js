@@ -92,7 +92,7 @@ export function CheckWarnings(currTab, info) {
 
     //  reference: https://stackoverflow.com/a/20023723/6908282
     const metaData = info.metaData;
-    if (metaData.currUser == undefined && info.userInCommunity) {
+    if (metaData.currUser == undefined){ // } && !info.userInCommunity) {
         warningText = "! Login to Stack Overflow to highlight your answers";
         warningType.add("warn");
     } else if (!info.userInCommunity) {

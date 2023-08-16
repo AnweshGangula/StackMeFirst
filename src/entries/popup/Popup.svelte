@@ -73,11 +73,16 @@
 		<Loader />
 	{:then result}
 		<Notification {warningType} {warningText} {glCurrTab} />
-		<div id="myStack">
-			<StackContent eleList={answerList} type="answer" tab={glCurrTab} />
-			<StackContent eleList={commentList} type="comment" tab={glCurrTab} />
-			<LinkedQues />
-		</div>
+
+		{#if warningText == "! Login to Stack Overflow to highlight your answers"}
+			<!-- If user not logged in to Stack Overflow don't render anything -->
+		{:else}
+			<div id="myStack">
+				<StackContent eleList={answerList} type="answer" tab={glCurrTab} />
+				<StackContent eleList={commentList} type="comment" tab={glCurrTab} />
+				<LinkedQues />
+			</div>
+		{/if}
 		<Preferences pageType={pageTypeEnum.popup} />
 	{:catch error}
     	<p style="color: red">{error.message}</p>

@@ -30,6 +30,7 @@ export default async function highlightStack() {
         const userInCommunity = (userLoggedIn && currUser) ? true: false;
 
         var popupContent = {
+            userLoggedIn,
             userInCommunity: userInCommunity,
             metaData: {
                 currUser: userURL,

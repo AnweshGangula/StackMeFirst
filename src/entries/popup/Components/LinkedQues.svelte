@@ -61,6 +61,8 @@
 	}
 
 	function parseLinkQData(info){
+		if(!info?.token) throw new Error("Please login again using the login button above");
+
 		token = info.token;
 		const allLinkedQs = info.linkedQids;
 
