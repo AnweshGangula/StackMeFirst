@@ -1,4 +1,4 @@
-Quick Links: [Instructions](#instructions) | [Features](#features) | [Known Bugs](#known-bugs) | [Contribution](#contribution)
+Quick Links: [Demo video](https://www.youtube.com/watch?v=Srcy3kOH3Ic) | [Instructions](#instructions) | [Features](#features) | [Known Bugs](#known-bugs) | [Contribution](#contribution)
 
 <a href="https://www.buymeacoffee.com/AnweshGangula" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 35px !important;" ></a>
 
