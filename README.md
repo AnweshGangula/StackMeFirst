@@ -4,6 +4,8 @@ Quick Links: [Instructions](#instructions) | [Features](#features) | [Known Bugs
 
 # StackMeFirst
 
+> Checkout the [YouTube video](https://www.youtube.com/watch?v=Srcy3kOH3Ic) for the demo of v5
+
 "Stack Me First" is a browser Extension (currently only available in [Google Chrome][1], [Microsoft Edge][2] & [Firefox][3]) that highlights & lists
 
 - Answers posted by the current user in the currently visible page of the Stack Overflow.
