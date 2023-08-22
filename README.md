@@ -8,8 +8,8 @@ Quick Links: [Demo video](https://www.youtube.com/watch?v=Srcy3kOH3Ic) | [Instru
 
 "Stack Me First" is a browser Extension (currently only available in [Google Chrome][1], [Microsoft Edge][2] & [Firefox][3]) that highlights & lists
 
-- Answers posted by the current user in the currently visible page of the Stack Overflow.
-- Comments posted by the current user in the currently visible page of the Stack Overflow
+- Answers posted by the current user in the currently visible page of the Stack Overflow & all other Stack Exchange communities.
+- Comments posted by the current user in the currently visible page of the Stack Overflow & all other Stack Exchange communities
 
 Optionally, you can also use the login button in the popup to highlight & list
 
@@ -38,7 +38,7 @@ Other than what you see automatically reflect on the answer (like green border a
 
 <img src="./Assets/Screenshots/Popup%20Instructions.png" alt="Screenshot of Popup window of 'Stack Me First' plugin" width="300"/>
 
-### Default features (no OAuth)
+### Default features (*without Login*)
 
 The points highlighted in orange are default features available for you (considering that you are logged in to StackOverflow.com in your browser)
 
@@ -63,7 +63,7 @@ The points highlighted in orange are default features available for you (conside
 
     So clicking on these links will open a new page navigating you to the respective comment/answer
 
-### Oauth Features
+### Advanced Features (*with Login*)
 
 > Other than the features mentioned above, you can also get enhanced insights & features by authenticating the plugin to read additional information using [StackExchange API][8]. Below are the related features
 
@@ -88,7 +88,7 @@ I'm aware of few of the issue with the current version of the plugin, You can ch
 
 # Contribution
 
-Checkout the contribution or local development instructions in the [following file][15]
+Checkout the contribution or local development instructions in the [./Contributon.md][15] file
 
 # SEO Keywords/sentences:
 

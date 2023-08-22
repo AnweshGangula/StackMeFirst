@@ -30,10 +30,10 @@
 }
 .smfAuthor:before {
 	position: absolute;
-    content: "\2756"; /*\2764*/
+    content: "👑"; /* "\2756" or \2764*/
 	/* Unicode symbol: https://www.fileformat.info/info/unicode/category/So/list.htm */
-    left: -11px;
-    top: -11px;
+    left: -15px;
+    top: -15px;
     color: orange;
     font-size: large;
     /* transform: rotate(180deg); */
