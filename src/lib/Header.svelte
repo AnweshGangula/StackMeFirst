@@ -111,49 +111,53 @@
 		<img id="logoImg" src={logoUrl} alt="Stack Me First Logo" width="20" height="20" />
 		<h1>Stack Me First</h1>
 	</button>
-	{#if loginError}
-		<p id="loginError">Unable to Login. Please Try Again</p>
-	{/if}
 
-	{#await domData then result}
+	<div>
+		{#await domData then result}
 		<div class="loginDiv">
 			{#if token}
-				<ProfilePic {profileData} />
-				<button id="btnLogout" title={profileData.userName} on:click|preventDefault={() => RemoveToken(result.token)}>Logout</button>
+			<ProfilePic {profileData} />
+			<button id="btnLogout" title={profileData.userName} on:click|preventDefault={() => RemoveToken(result.token)}>Logout</button>
 			{:else}
-				<button id="btnLogin" class={loading} on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights">
-					Login
-				</button>
+			<button id="btnLogin" class={loading} on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights">
+				Login
+			</button>
 			{/if}
 		</div>
-	{/await}
-
-	<div id="docsHelp">
-		<a href={docsUrl} on:click|preventDefault={() => onClickEvent(docsUrl)}>
-			<button 
+		{/await}
+		
+		<div id="docsHelp">
+			<a href={docsUrl} on:click|preventDefault={() => onClickEvent(docsUrl)}>
+				<button 
 				id="btnDocs"
 				type="button"
 				title="{docsUrl}" >
 				Docs
-			</button>
-		</a>
-		<a href={helpURL} on:click|preventDefault={() => onClickEvent(helpURL)}>
-			<button
-				id="btnHelp"
-				type="button" 
-				title="{helpURL}" >
-				Help
-			</button>
-		</a>
+				</button>
+			</a>
+			<a href={helpURL} on:click|preventDefault={() => onClickEvent(helpURL)}>
+				<button
+					id="btnHelp"
+					type="button" 
+					title="{helpURL}" >
+					Help
+				</button>
+			</a>
+		</div>
 	</div>
+
 </header>
+
+{#if loginError}
+	<p id="loginError">Unable to Login. Please Try Again</p>
+{/if}
 
 <style>
 	header {
 		display: flex;
-		align-items: center;
+		align-items: flex-end;
 		flex-wrap: wrap;
-		justify-content: flex-end;
+		justify-content: space-between;
 
 		/* position: sticky;
 		background-color: white;

@@ -22,7 +22,7 @@
 
 <style>
 	:global(body) {
-		width: 400px;
+		width: 450px;
 		/* height: 300px; */
 	}
 	#optionsRoot{
