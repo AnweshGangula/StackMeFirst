@@ -86,6 +86,15 @@ I'm aware of few of the issue with the current version of the plugin, You can ch
 - [Favorites not being highlighted][13]
 - [Linked questions not being highlighted for few questions][14]
 
+## Existing Alternate Extensions:
+
+There are a few extensions which you can consider as alternatives to Stack Me First, which give you different features:
+
+- [StackOverflow Power User](https://chrome.google.com/webstore/detail/stackoverflow-power-user/dghoicnlchonhhkccfmjpjconhpajhdg)
+- [StackEye](https://chrome.google.com/webstore/detail/stackeye/pihfndpmcafdecheofkjfkadecoogigm)
+- [StackOverflow Answer](https://chrome.google.com/webstore/detail/stackoverflow-answer/bmlkdgmiaemiaopodggkhfblhmefimoi)
+- [Upvote First for StackOverflow](https://chrome.google.com/webstore/detail/upvote-first-for-stackove/jafbgebfjkfejghbdeohaadmfghkmjlo)
+
 # Contribution
 
 Checkout the contribution or local development instructions in the [./Contributon.md][15] file
