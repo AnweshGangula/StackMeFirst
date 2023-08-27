@@ -12,7 +12,7 @@
 	export let tab; // this is updated by the props of StackContent component
 	let OffsetHeight = 60;
 	const count = eleList ? eleList.length : 0;
-	const itemVerb = type == "linkq" ? "upvoted/favorited/posted" : "posted";
+	const itemVerb = type == "linkq" ? "upvoted/favorited/posted" : "posted/upvoted";
 	const classList = {
 		redirect: "redirect",
 		favorite: "favorite",

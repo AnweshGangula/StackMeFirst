@@ -207,7 +207,7 @@
 		right: 0;
 		/* margin: 10px; */
 		display: flex;
-		max-width: 400px;
+		/* max-width: 500px; */
 		padding: 5px;
 		/* transition: border-radius 250ms ease-in; */ /* TODO: work on transition later*/
 	}
@@ -232,8 +232,8 @@
 	#dockContent {
 		/* position: absolute; */
 		/* height: 100vh; */
-		width: max-content;
-		max-width: 400px;
+		width: 450px;
+		/* max-width: 450px; */
 		max-height: 80vh;
 		overflow: hidden auto;
 		top: 20px;
