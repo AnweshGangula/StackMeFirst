@@ -4,6 +4,10 @@ Quick Links: [Demo video](https://www.youtube.com/watch?v=Srcy3kOH3Ic) | [Instru
 
 # StackMeFirst
 
+<a href="https://www.youtube.com/watch?v=Srcy3kOH3Ic">
+    <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/22996896/258670431-db6aba7a-5b9d-4438-aeb1-81a593fb44aa.png" alt="Stack Me First v5 Demo" width="650"/>
+</a>
+
 > Checkout the [YouTube video](https://www.youtube.com/watch?v=Srcy3kOH3Ic) for the demo of v5
 
 "Stack Me First" is a browser Extension (currently only available in [Google Chrome][1], [Microsoft Edge][2] & [Firefox][3]) that highlights & lists
