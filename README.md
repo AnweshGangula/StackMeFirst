@@ -94,6 +94,17 @@ I'm aware of few of the issue with the current version of the plugin, You can ch
 
 Checkout the contribution or local development instructions in the [./Contributon.md][15] file
 
+<!--
+# Star History
+<a href="https://star-history.com/#AnweshGangula/PKMigrator&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=AnweshGangula/PKMigrator&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=AnweshGangula/PKMigrator&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=AnweshGangula/PKMigrator&type=Date" />
+  </picture>
+</a>
+-->
+
 # SEO Keywords/sentences:
 
 - chrome extension or firefox extension to highlight & list my upvoted stack overflow answers
