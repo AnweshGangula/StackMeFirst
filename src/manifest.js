@@ -112,6 +112,8 @@ const ManifestV3 = {
 export function getManifest(manifestVersion, devMode) {
   const extensionNameSuffix = devMode == "true" ? devModeSuffix : "";
   const manifestName = (pkg.displayName ?? pkg.name) + extensionNameSuffix
+  browserAction.default_title = manifestName;
+  
   const manifest = {
     manifest_version: manifestVersion,
     name: manifestName,
