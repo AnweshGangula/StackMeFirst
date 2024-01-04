@@ -44,7 +44,10 @@ export default class Api {
     }
 
     _buildURL(endpoint, queriesObj, site) {
-        const query = `?${this._objToQuery({
+        // if endpoint == "/sites" - the API call is just to fetch the Stack exchange sites
+        // it doesn't have any query params
+        
+        const query = endpoint == "/sites" ? "" : `?${this._objToQuery({
             key: apiKey,
             access_token: this.token,
             ...(site && { site }),
@@ -127,7 +130,7 @@ export default class Api {
     }
 
     async getAnswers(currURL, ids, queriesObj = {}) {
-        const site = siteNameFromURL(currURL); //.split(".")[0];
+        const site = await this.siteNameFromURL(currURL); //.split(".")[0];
 
         const filter = this.token ? "!*Mg4PjfvuWMFghsH" : "withbody";
         // queriesObj.filter = "withbody"; // https://stackoverflow.com/a/69166789/6908282
@@ -154,7 +157,7 @@ export default class Api {
     }
 
     async getComments(currURL, ids, queriesObj = {}) {
-        const site = siteNameFromURL(currURL); //.split(".")[0];
+        const site = await this.siteNameFromURL(currURL); //.split(".")[0];
 
         queriesObj.filter = "withbody"; // https://stackoverflow.com/a/69166789/6908282
         if (!("pagesize" in queriesObj)) {
@@ -182,7 +185,7 @@ export default class Api {
     }
 
     async getLinkedQues(currURL, ids, queriesObj = {}) {
-        const site = siteNameFromURL(currURL); //.split(".")[0]
+        const site = await this.siteNameFromURL(currURL); //.split(".")[0]
 
         const filter = "!IF6sbADh-1NFXRL_9Gd7_0XJ2-(Ng*6BJ2aPkdHx6rDtBZ-"
         // Checkk filter options here: https://api.stackexchange.com/docs/read-filter#filters=!gA._5vuQCU1LfxLMryEA8lClXXUw*bEruKr&filter=default&run=true
@@ -214,8 +217,21 @@ export default class Api {
         return myDetails;
     }
 
-    siteNameFromURL(url) {
-        return new URL(url).host.split(".").slice(0,-1).join(".");
+    async siteNameFromURL(url) {
+        const stackExchangeSites = await this._fetch(
+            `/sites`,
+            {},
+            undefined
+        );
+        
+        const stackExchangeSitesNames = new Map();;
+        stackExchangeSites.items.map(site => {
+            const key = new URL(site.site_url).host;
+            stackExchangeSitesNames.set(key, site.api_site_parameter)
+        });
+        // console.log({stackExchangeSitesNames})
+
+        return stackExchangeSitesNames.get(new URL(url).host);
     }
 
 }
