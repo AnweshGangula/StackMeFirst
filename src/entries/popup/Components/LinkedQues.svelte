@@ -1,4 +1,6 @@
 <script>
+	import { toast } from '@zerodevx/svelte-toast'
+  
 	import browser from "webextension-polyfill";
 	import StackContent from "./StackContent.svelte";
 
@@ -15,6 +17,8 @@
 	let isQ;
 	let warning = "Loading";
 	let loading = warning == "Loading" ? "loading" : "";
+
+	let errorToast = false;
 
 	if(pageType == pageTypeEnum.sidebar){
 		isQ=true;
@@ -61,7 +65,15 @@
 	}
 
 	function parseLinkQData(info){
-		if(!info?.token) throw new Error("Please login again using the login button above");
+		if(!info?.token) {
+			toast.push("Please login again to get LinkQ's",{
+				// // Effectively disables autoclose when `initial`==`next`
+				// initial: 0
+			});
+			
+			console.error("Please login again using the login button above");
+			// throw new Error("Please login again using the login button above");
+		}
 
 		token = info.token;
 		const allLinkedQs = info.linkedQids;
