@@ -98,6 +98,7 @@ export default async function highlightStack() {
 
             const getComments = await stackAPI.getComments(currURL, idforCmts.join(";"));
             allComments = getComments;
+            allComments.sort((a,b)=> a.post_id - b.post_id || a.creation_date - b.creation_date); // sort comments by post and then by date
             if (allComments == []) {
                 allComments = document.getElementsByClassName("comment");
                 cmtIsAPI = false;
