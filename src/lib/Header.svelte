@@ -112,18 +112,18 @@
 		<h1>Stack Me First</h1>
 	</button>
 
-	<div>
+	<div style=" display: grid; gap: 5px; ">
 		{#await domData then result}
-		<div class="loginDiv">
-			{#if token}
-			<ProfilePic {profileData} />
-			<button id="btnLogout" title={profileData.userName} on:click|preventDefault={() => RemoveToken(result.token)}>Logout</button>
-			{:else}
-			<button id="btnLogin" class={loading} on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights">
-				Login
-			</button>
-			{/if}
-		</div>
+			<div class="loginDiv">
+				{#if token}
+				<ProfilePic {profileData} />
+				<button id="btnLogout" title={profileData.userName} on:click|preventDefault={() => RemoveToken(result.token)}>Logout</button>
+				{:else}
+				<button id="btnLogin" class={loading} on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights">
+					Login
+				</button>
+				{/if}
+			</div>
 		{/await}
 		
 		<div id="docsHelp">
@@ -155,7 +155,7 @@
 <style>
 	header {
 		display: flex;
-		align-items: flex-end;
+		align-items: center;
 		flex-wrap: wrap;
 		justify-content: space-between;
 
@@ -198,7 +198,7 @@
 	}
 
 	.loginDiv {
-		margin-left: auto;
+		/* margin-left: auto; */
 		display: flex;
 		align-items: center;
 	}
