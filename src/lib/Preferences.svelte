@@ -98,7 +98,11 @@
 
 	<div id="buttons">
 		<button id="btnSave" on:click|preventDefault={() => save_options()}>Save</button>
-		<button id="btnReset" on:click|preventDefault={() => reset_options()}>Reset</button>
+		<button id="btnReset" title="Resets settings to default (Highlight & Top Answers, Display Sidebar)" on:click|preventDefault={() => reset_options()}>
+			Reset
+			<i id="resetTooltip" class="infoTooltip">i</i>
+		</button>
+
 	</div>
 
 	<p id="status" />
