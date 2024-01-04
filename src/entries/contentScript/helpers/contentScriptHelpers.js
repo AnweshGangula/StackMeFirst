@@ -37,6 +37,11 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
     if (hlAns || srtAns) {
         for (let answer of answers) {
             let answerUser, answerId, body;
+            if(!answer.upvoted){
+                // if user did not Login to Stack Exchange, then the API will not return the upvoted status of the answer
+                const upvoted = document.getElementById(`answer-${answer.answer_id}`).getElementsByClassName("js-vote-up-btn")[0].ariaPressed
+                answer.upvoted = upvoted == "true";
+            }
             if (ansIsAPI) {
                 answerUser = answer.owner.link;
                 answerId = answer.answer_id;
