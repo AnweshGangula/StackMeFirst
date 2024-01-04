@@ -127,7 +127,7 @@ export default class Api {
     }
 
     async getAnswers(currURL, ids, queriesObj = {}) {
-        const site = new URL(currURL).host.split(".")[0];
+        const site = siteNameFromURL(currURL); //.split(".")[0];
 
         const filter = this.token ? "!*Mg4PjfvuWMFghsH" : "withbody";
         // queriesObj.filter = "withbody"; // https://stackoverflow.com/a/69166789/6908282
@@ -154,7 +154,7 @@ export default class Api {
     }
 
     async getComments(currURL, ids, queriesObj = {}) {
-        const site = new URL(currURL).host.split(".")[0];
+        const site = siteNameFromURL(currURL); //.split(".")[0];
 
         queriesObj.filter = "withbody"; // https://stackoverflow.com/a/69166789/6908282
         if (!("pagesize" in queriesObj)) {
@@ -182,7 +182,7 @@ export default class Api {
     }
 
     async getLinkedQues(currURL, ids, queriesObj = {}) {
-        const site = new URL(currURL).host.split(".")[0]
+        const site = siteNameFromURL(currURL); //.split(".")[0]
 
         const filter = "!IF6sbADh-1NFXRL_9Gd7_0XJ2-(Ng*6BJ2aPkdHx6rDtBZ-"
         // Checkk filter options here: https://api.stackexchange.com/docs/read-filter#filters=!gA._5vuQCU1LfxLMryEA8lClXXUw*bEruKr&filter=default&run=true
@@ -212,6 +212,10 @@ export default class Api {
             allowPagination = false;
         } while (hasMore && allowPagination);
         return myDetails;
+    }
+
+    siteNameFromURL(url) {
+        return new URL(url).host.split(".").slice(0,-1).join(".");
     }
 
 }
