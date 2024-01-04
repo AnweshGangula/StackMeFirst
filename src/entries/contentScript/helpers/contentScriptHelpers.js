@@ -65,6 +65,10 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
                     }
                     if (hlAns) {
                         answerToHighlight.classList.add("smfHighlight", "smfAnswer");
+                        if(answer.upvoted){
+                            answerToHighlight.classList.add("smfUpvoted");
+                        
+                        }
                     }
                 } else {
                     suffix = " (hidden)"
