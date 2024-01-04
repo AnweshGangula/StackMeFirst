@@ -1,4 +1,5 @@
 <script>
+	import { onMount } from "svelte";
 	import { toast } from '@zerodevx/svelte-toast'
   
 	import browser from "webextension-polyfill";
@@ -18,14 +19,21 @@
 	let warning = "Loading";
 	let loading = warning == "Loading" ? "loading" : "";
 
-	let errorToast = false;
+	onMount(async () => {
+		currPref.then((savedPref) => {
 
-	if(pageType == pageTypeEnum.sidebar){
-		isQ=true;
-		parseLinkQData(linkQData);
-	}else{
-		GetUpvotedLinks();
-	}
+			if(savedPref.hlLinkQs){
+				if(pageType == pageTypeEnum.sidebar){
+					isQ=true;
+					parseLinkQData(linkQData);
+				}else{
+					GetUpvotedLinks();
+				}
+			}
+		}).then(()=>{
+
+		});
+	});
 
 
 	async function GetPreferences() {
@@ -66,7 +74,7 @@
 
 	function parseLinkQData(info){
 		if(!info?.token) {
-			toast.push("Please login again to get LinkQ's",{
+			toast.push("(SMF) Please login again to get LinkQ's",{
 				// // Effectively disables autoclose when `initial`==`next`
 				// initial: 0
 			});
