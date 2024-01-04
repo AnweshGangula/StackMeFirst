@@ -4,12 +4,7 @@ export default function scrollToTarget_Main(eleId, type, headerHeight = 60) {
     if (type == "question") {
         window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-        if(type == "comment") {
-            eleId = "comment-" + eleId
-        }
-        if(type == "answer") {
-            eleId = "answer-" + eleId
-        }
+        eleId = type + "-" + eleId;
         let element = document.getElementById(eleId);
         element.classList.add("highlighted-post"); // CSS class 'highlighted-post' has a animation called
 

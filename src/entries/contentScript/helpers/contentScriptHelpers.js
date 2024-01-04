@@ -110,13 +110,33 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
             if (commentUser == currUser.href) {
                 const commentEle = document.getElementById("comment-" + commentId);
                 let suffix = ""
-                if (commentEle == null) {
+                if (!commentEle) {
                     // if comment is hidden
                     suffix = " (hidden)"
                     // console.log("Hidden comment: #comment-" + commentId)
                 } else {
                     const commentToHighlight = commentEle.getElementsByClassName("comment-text")[0];
                     commentToHighlight.classList.add("smfHighlight", "smfCmtLnk")
+
+                    const parentAnswer = commentEle.closest(".answer.js-answer");
+                    const parentQuestion = commentEle.closest(".question.js-question");
+                    const parent = parentAnswer == null ? parentQuestion : parentAnswer;
+    
+                    const voteCell = parent?.getElementsByClassName("votecell")[0];
+                    const btnExists = voteCell?.getElementsByClassName("smfAnsHasCmmts")[0]; // getElementById is only available in document
+                    if(!btnExists){
+                        const scrollToCmts = document.createElement("button");
+                        scrollToCmts.id = "smfScrollToCmts";
+                        scrollToCmts.innerText = "SMF 💬"
+                        scrollToCmts.title = "You have posted comments in this post. Click to scroll to the comments"
+                        scrollToCmts.classList.add("smfAnsHasCmmts");
+    
+                        scrollToCmts.addEventListener("click", () => {
+                            scrollToTarget(parentId, "comments", 60);
+                        });
+                        
+                        voteCell?.appendChild(scrollToCmts);
+                    }
                 }
 
                 commentList.push({ commentId, suffix, title: body, cmtParentId: parentId });
