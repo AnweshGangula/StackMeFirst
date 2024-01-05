@@ -122,24 +122,32 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
                     const commentToHighlight = commentEle.getElementsByClassName("comment-text")[0];
                     commentToHighlight.classList.add("smfHighlight", "smfCmtLnk")
 
-                    const parentAnswer = commentEle.closest(".answer.js-answer");
-                    const parentQuestion = commentEle.closest(".question.js-question");
-                    const parent = parentAnswer == null ? parentQuestion : parentAnswer;
-    
-                    const voteCell = parent?.getElementsByClassName("votecell")[0];
-                    const btnExists = voteCell?.getElementsByClassName("smfAnsHasCmmts")[0]; // getElementById is only available in document
-                    if(!btnExists){
-                        const scrollToCmts = document.createElement("button");
-                        scrollToCmts.id = "smfScrollToCmts";
-                        scrollToCmts.innerText = "SMF 💬"
-                        scrollToCmts.title = "You have posted comments in this post. Click to scroll to the comments"
-                        scrollToCmts.classList.add("smfAnsHasCmmts");
-    
-                        scrollToCmts.addEventListener("click", () => {
-                            scrollToTarget(parentId, "comments", 60);
-                        });
-                        
-                        voteCell?.appendChild(scrollToCmts);
+                    const parentAnswerRoot = commentEle.closest(".answer.js-answer");
+                    const parentQuestionRoot = commentEle.closest(".question.js-question");
+                    const parentRoot = parentAnswerRoot == null ? parentQuestionRoot : parentAnswerRoot;
+
+                    // const parentPostCell = parentAnswerRoot == null ? parentQuestionRoot.getElementsByClassName("postcell")[0] : parentAnswerRoot.getElementsByClassName("answercell")[0];
+                    // const parentPostCellHeight = parentPostCell.offsetHeight;
+                    
+                    const parentRootHeight = parentRoot.offsetHeight;
+                    const windowHeight = window.innerHeight;
+                    if (parentRootHeight > windowHeight * 0.7) {
+                        // display the Navigate to comments button only if the post is longer than 70% of the window height
+                        const voteCell = parentRoot?.getElementsByClassName("votecell")[0];
+                        const btnExists = voteCell?.getElementsByClassName("smfAnsHasCmmts")[0]; // getElementById is only available in document
+                        if (!btnExists) {
+                            const scrollToCmts = document.createElement("button");
+                            scrollToCmts.id = "smfScrollToCmts";
+                            scrollToCmts.innerText = "SMF 💬"
+                            scrollToCmts.title = "You have posted comments in this post. Click to scroll to the comments"
+                            scrollToCmts.classList.add("smfAnsHasCmmts");
+
+                            scrollToCmts.addEventListener("click", () => {
+                                scrollToTarget(parentId, "comments", 60);
+                            });
+
+                            voteCell?.appendChild(scrollToCmts);
+                        }
                     }
                 }
 

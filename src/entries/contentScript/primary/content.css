@@ -5,8 +5,8 @@
 	border-radius: 5px;
 }
 
-.smfHighlight.smfUpvoted{
-	border-color: sandybrown;
+.smfHighlight.smfUpvoted {
+    border-color: var(--theme-primary-500);
 }
 
 .smfAnswer {
