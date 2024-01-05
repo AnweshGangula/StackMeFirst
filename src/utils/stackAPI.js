@@ -20,6 +20,7 @@ const filter = '!0XXAMzZV3)6nNHjQ18538kAUL';
 export default class Api {
     constructor(token) {
         this.token = token;
+        // this.stackExchangeSiteDetails = {};
     }
 
     static auth(sendResponse) {
@@ -46,8 +47,12 @@ export default class Api {
     _buildURL(endpoint, queriesObj, site) {
         // if endpoint == "/sites" - the API call is just to fetch the Stack exchange sites
         // it doesn't have any query params
+
+        const stackExchangeSitesQuery = `?${this._objToQuery({
+            ...queriesObj,
+        })}`;
         
-        const query = endpoint == "/sites" ? "" : `?${this._objToQuery({
+        const query = endpoint == "/sites" ? stackExchangeSitesQuery : `?${this._objToQuery({
             key: apiKey,
             access_token: this.token,
             ...(site && { site }),
@@ -218,20 +223,43 @@ export default class Api {
     }
 
     async siteNameFromURL(url) {
-        const stackExchangeSites = await this._fetch(
-            `/sites`,
-            {},
-            undefined
-        );
-        
-        const stackExchangeSitesNames = new Map();;
-        stackExchangeSites.items.map(site => {
-            const key = new URL(site.site_url).host;
-            stackExchangeSitesNames.set(key, site.api_site_parameter)
-        });
-        // console.log({stackExchangeSitesNames})
+        // if(Object.keys(this.stackExchangeSiteDetails).length === 0){
+        //     let siteDetails = [];
+        //     let hasMore = false;
+        //     const mergedQuery = Object.assign({ 
+        //         page: 1, 
+        //         // filter 
+        //     }, {pagesize: 500});
+        //     let allowPagination = true;
+        //     do {
+        //         if (hasMore) {
+        //             mergedQuery.page += 1;
+        //         }
+        //         const { items, has_more } = await this._fetch(
+        //             `/sites`,
+        //             mergedQuery,
+        //             undefined
+        //         );
+        //         siteDetails = siteDetails.concat(items);
+        //         hasMore = has_more;
+        //     } while (hasMore && allowPagination);
+           
+        //     const stackExchangeSitesNames = new Map();
+        //     siteDetails.map(site => {
+        //         const key = new URL(site.site_url).host;
+        //         stackExchangeSitesNames.set(key, site.api_site_parameter)
+        //     });
+        //     console.log({stackExchangeSitesNames});
 
-        return stackExchangeSitesNames.get(new URL(url).host);
+        //     this.stackExchangeSiteDetails = stackExchangeSitesNames;
+        // }
+
+        // return this.stackExchangeSiteDetails.get(new URL(url).host);
+
+        // commenting above code because as per the docs:
+        // https://api.stackexchange.com/docs#:~:text=by%20type-,Per%2DSite%20Methods,-Each%20of%20these
+        // This parameter can be the full domain name (ie. "stackoverflow.com"), or a short form identified by api_site_parameter on the site object.
+        return new URL(url).hostname;
     }
 
 }
