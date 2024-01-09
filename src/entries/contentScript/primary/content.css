@@ -1,7 +1,8 @@
 .smfHighlight {
+	--smfBorderColor: mediumseagreen;
 	border: 2px solid darkgreen;
 	border-color: orange;
-	border-color: mediumseagreen;
+	border-color: var(--smfBorderColor, mediumseagreen);
 	border-radius: 5px;
 }
 
@@ -49,8 +50,17 @@
 	align-items: center;
 }
 
+.votecell{
+	position: relative;
+}
+
 .smfAnsHasCmmts {
-    background-color: orange;
+	position: absolute;
+    /* left: 190px; */
+    left: -5px;
+	padding: 0;
+	width: 100%;
+    background-color: var(--smfBorderColor, mediumseagreen);
     border: none;
     color: firebrick;
     /* padding: 15px 32px; */
@@ -60,6 +70,10 @@
     font-size: 16px;
     /* margin: 4px 2px; */
     cursor: pointer;
-    border-radius: 5px;
+    /* border-radius: 5px; */
     font-size: small;
+}
+
+.smfUpvoted  .smfAnsHasCmmts{
+	background-color: var(--theme-primary-500);
 }

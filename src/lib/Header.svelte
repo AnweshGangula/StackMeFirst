@@ -80,7 +80,7 @@
 
 	async function myStackDetails(token) {
 		const stackAPI = new Api(token);
-		const myData = await stackAPI.getMyDetails();
+		const {myDetails: myData, latestQuota_max, latestQuota_remaining} = await stackAPI.getMyDetails();
 
 		return myData[0];
 	}

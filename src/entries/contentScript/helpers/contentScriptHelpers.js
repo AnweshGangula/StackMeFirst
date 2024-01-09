@@ -167,13 +167,18 @@ export async function HighlightLinks(preferences, currURL, currentQid, DOM_Opts)
     const currUser = DOM_Opts.currUser;
     let linkedQids = [];
     let token = "";
+    let latestQuota_max, latestQuota_remaining
     const hlLinkQ = preferences.hlLinkQs;
     if (hlLinkQ) {
         const tokenData = await GetLocalTokenData();
         token = tokenData.token;
         if (token != "") {
             const stackAPI = new Api(token);
-            const allLinkedQs = await stackAPI.getLinkedQues(currURL, currentQid);
+            const linkedQsAPI = await stackAPI.getLinkedQues(currURL, currentQid);
+            const allLinkedQs = linkedQsAPI.myDetails;
+            latestQuota_max = linkedQsAPI.latestQuota_max;
+            latestQuota_remaining = linkedQsAPI.latestQuota_remaining;
+
             const domLinkedQ = document.getElementById("h-linked")?.parentNode.querySelector(".linked");
             // console.log("DOM linkedQ: ", allLinkedQs)
             allLinkedQs.forEach((ques) => {
@@ -212,7 +217,7 @@ export async function HighlightLinks(preferences, currURL, currentQid, DOM_Opts)
         }
     });
 
-    return { hlLinkQ, linkedQids, token };
+    return { hlLinkQ, linkedQids, token, latestQuota_max, latestQuota_remaining };
 }
 
 function insertAfter(referenceNode, newNode) {

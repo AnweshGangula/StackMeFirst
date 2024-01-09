@@ -77,7 +77,7 @@
 			<div>
 				<input type="checkbox" id="hlLinkQs" name="hlLinkQs" value="Highlight LinkQs" />
 				<label for="hlLinkQs">Highlight Upvoted Linked Questions</label>
-				<i id="loginTooltip" class="infoTooltip" title="Needs StackOverflow Login">i</i>
+				<i id="loginTooltip" class="infoTooltip" title="Needs User Login">i</i>
 				<br />
 			</div>
 			<hr />

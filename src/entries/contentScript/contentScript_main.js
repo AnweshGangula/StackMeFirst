@@ -8,6 +8,8 @@ import { GetLocalTokenData } from "~/utils/utils";
 
 import scrollToTarget from "../executeScript/executeScript"
 window.scrollToTarget = scrollToTarget;
+let currQuota_max = undefined;
+let currQuota_remaining = undefined;
 
 export default async function highlightStack() {
     const tokenData = await GetLocalTokenData();
@@ -91,13 +93,19 @@ export default async function highlightStack() {
             let cmtIsAPI = true;
 
             const getAnswers = await stackAPI.getAnswers(currURL, qId);
-            ansJson = getAnswers;
+            ansJson = getAnswers.myDetails;
+            currQuota_max = getAnswers.latestQuota_max;
+            currQuota_remaining = getAnswers.latestQuota_remaining;
+
             idforCmts.push(qId);
-            const cmtIds = getCmtIds(getAnswers, ansIsAPI);
+            const cmtIds = getCmtIds(ansJson, ansIsAPI);
             idforCmts.push(...cmtIds)
 
             const getComments = await stackAPI.getComments(currURL, idforCmts.join(";"));
-            allComments = getComments;
+            allComments = getComments.myDetails;
+            currQuota_max = getComments.latestQuota_max;
+            currQuota_remaining = getComments.latestQuota_remaining;
+
             allComments.sort((a,b)=> a.post_id - b.post_id || a.creation_date - b.creation_date); // sort comments by post and then by date
             if (allComments == []) {
                 allComments = document.getElementsByClassName("comment");
@@ -126,10 +134,16 @@ export default async function highlightStack() {
             myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
 
             const linkData = await HighlightLinks(userConfig, currURL, qId, DOM_Opts);
+            currQuota_max = linkData.latestQuota_max ?? currQuota_max;
+            currQuota_remaining = linkData.latestQuota_remaining ?? currQuota_remaining;
 
             popupContent.answerList = myAnsList;
             popupContent.commentList = myCmmtList;
             popupContent.linkData = linkData;
+            popupContent.apiQuota = {
+                currQuota_max,
+                currQuota_remaining,
+            }
 
             browser.runtime.sendMessage({
                 //  reference: https://stackoverflow.com/a/20021813/6908282
@@ -140,6 +154,10 @@ export default async function highlightStack() {
                     commentCount: myCmmtList ? myCmmtList.length : "?",
                     linkCount: linkData.hlLinkQ ? linkData.linkedQids.length : "?",
                     token: linkData.token,
+                    apiQuota: {
+                        currQuota_max,
+                        currQuota_remaining,
+                    }
                 }
             }).then(function () {
                 // console.log("sending message");

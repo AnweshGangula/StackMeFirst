@@ -5,6 +5,9 @@
 	import browser from "webextension-polyfill";
 	import StackContent from "./StackContent.svelte";
 
+	import logo from "~/assets/logo.svg";
+	const logoImageUrl = new URL(logo, import.meta.url).href;
+
 	import { defaultPreferances, pageTypeEnum } from "~/utils/constants";
 	import { IsQuestion } from "~/utils/utils";
 
@@ -74,7 +77,7 @@
 
 	function parseLinkQData(info){
 		if(!info?.token) {
-			toast.push("(SMF) Please login again to get LinkQ's",{
+			toast.push(`<img src=${logoImageUrl} height="20" alt="Stack Me First Logo" />(SMF) Please login again to get LinkQ's`,{
 				// // Effectively disables autoclose when `initial`==`next`
 				// initial: 0
 			});
@@ -86,10 +89,10 @@
 		token = info.token;
 		const allLinkedQs = info.linkedQids;
 
-						allLinkedQs.forEach((ques) => {
-							let suffix = ques.isHidden + ques.isFavorite + ques.isAuthor;
-							linkedQ.push({linQId: ques.linkJson.question_id.toString(), suffix, title: ques.linkJson.title});
-						});
+		allLinkedQs.forEach((ques) => {
+			let suffix = ques.isHidden + ques.isFavorite + ques.isAuthor;
+			linkedQ.push({linQId: ques.linkJson.question_id.toString(), suffix, title: ques.linkJson.title});
+		});
 
 		if (!token) {
 			warning = 'Click the "Login" button above to provide access to linked questions';
