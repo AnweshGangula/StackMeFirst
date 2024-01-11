@@ -4,6 +4,9 @@ import { extractHTMLContent, GetLocalTokenData, TrimText } from "~/utils/utils";
 import Api from "~/utils/stackAPI";
 import scrollToTarget from "../../executeScript/executeScript"
 
+import logo from "~/assets/logo.svg";
+const logoImageUrl = new URL(logo, import.meta.url).href;
+
 export function getCmtIds(ansJson, ansIsAPI) {
     let idforCmts = [];
     if (ansJson == []) {
@@ -138,9 +141,18 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
                         if (!btnExists) {
                             const scrollToCmts = document.createElement("button");
                             scrollToCmts.id = "smfScrollToCmts";
-                            scrollToCmts.innerText = "SMF 💬"
+                            // scrollToCmts.textContent = "SMF 💬"
                             scrollToCmts.title = "You have posted comments in this post. Click to scroll to the comments"
-                            scrollToCmts.classList.add("smfAnsHasCmmts");
+                            scrollToCmts.classList.add("smfAnsHasCmmts", "s-btn", "s-btn__filled");
+                            
+                            const smfLogo = document.createElement("img");
+                            smfLogo.src = logoImageUrl;
+                            smfLogo.height = "20";
+                            smfLogo.alt = "Stack Me First Logo";
+                            smfLogo.classList.add("smfLogo");
+                            scrollToCmts.appendChild(smfLogo); 
+
+                            console.log("img Added")
 
                             scrollToCmts.addEventListener("click", () => {
                                 scrollToTarget(parentId, "comments", 60);

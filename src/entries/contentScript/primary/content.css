@@ -63,7 +63,7 @@
     background-color: var(--smfBorderColor, mediumseagreen);
     border: none;
     color: firebrick;
-    /* padding: 15px 32px; */
+	padding: 5px 0px !important;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -72,6 +72,10 @@
     cursor: pointer;
     /* border-radius: 5px; */
     font-size: small;
+}
+
+#smfScrollToCmts .smfLogo {
+    filter: drop-shadow(2px 4px 6px black) invert(1);
 }
 
 .smfUpvoted  .smfAnsHasCmmts{
