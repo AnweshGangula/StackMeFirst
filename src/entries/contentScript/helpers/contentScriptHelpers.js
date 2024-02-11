@@ -108,15 +108,22 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
             // });
 
             // const myAns = Object.values(ansToSort).filter(ans => ans.apiAnswer.owner.link == currUser.href);
-            const myAnsKey = Object.keys(ansToSort).find(ans => ansToSort[ans].apiAnswer.owner.link == currUser.href);
+            const myAnsKeys = Object.keys(ansToSort).filter(ans => ansToSort[ans].apiAnswer.owner.link == currUser.href);
 
             sortedAnsScore.forEach(ans => {
                 insertAfter(topEle, ans.domElement);
             });
 
-            if(myAnsKey != undefined){
-                const myAns = ansToSort[myAnsKey];
-                insertAfter(topEle, myAns.domElement);
+            if(myAnsKeys.length > 0){
+                const myAns = myAnsKeys.map(key => ansToSort[key]);
+                const sortMyAns = myAns.sort((a, b) => {
+                    const aScore = a.apiAnswer.score;
+                    const bScore = b.apiAnswer.score;
+                    return aScore - bScore;
+                })
+                sortMyAns.forEach(ans => {
+                    insertAfter(topEle, ans.domElement);
+                });
             };
         }
     }
