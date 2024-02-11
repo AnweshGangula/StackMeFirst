@@ -38,6 +38,7 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
 
     let answerList = [];
     if (hlAns || srtAns) {
+        const ansToSort = {};
         for (let answer of answers) {
             let answerUser, answerId, body;
             if(!answer.upvoted){
@@ -63,15 +64,21 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
                 if (isAnsVisible) {
                     // if answer is paginated, it will not be visible in current page.
                     // Eg: https://stackoverflow.com/questions/7244321/how-do-i-update-or-sync-a-forked-repository-on-github?page=2&tab=scoredesc#tab-top 
-                    if (!isSorted && srtAns) {
-                        insertAfter(topEle, answerToHighlight);
-                    }
                     if (hlAns) {
                         answerToHighlight.classList.add("smfHighlight", "smfAnswer");
                         if(answer.upvoted){
                             answerToHighlight.classList.add("smfUpvoted");
-                        
+                            
                         }
+                    }
+                    if (!isSorted && srtAns) {
+
+                        ansToSort[answerId] = {
+                            apiAnswer: answer,
+                            domElement: answerToHighlight
+                        };
+
+                        // insertAfter(topEle, answerToHighlight);
                     }
                 } else {
                     suffix = " (hidden)"
@@ -85,6 +92,32 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
                 // answer.scrollIntoView();
                 scrollToTarget(answerId, "answer", 60)
             }
+        }
+
+        if(Object.keys(ansToSort).length > 0){
+            const sortedAnsScore = Object.values(ansToSort).sort((a, b) => {
+                const aScore = a.apiAnswer.score;
+                const bScore = b.apiAnswer.score;
+                return aScore - bScore;
+            });
+
+            // const sortMyAns = Object.values(ansToSort).sort((a, b) => {
+            //     const aOwner = a.owner.link;
+            //     const bOwner = b.apiAnswer.score;
+            //     return bScore - aScore;
+            // });
+
+            // const myAns = Object.values(ansToSort).filter(ans => ans.apiAnswer.owner.link == currUser.href);
+            const myAnsKey = Object.keys(ansToSort).find(ans => ansToSort[ans].apiAnswer.owner.link == currUser.href);
+
+            sortedAnsScore.forEach(ans => {
+                insertAfter(topEle, ans.domElement);
+            });
+
+            if(myAnsKey != undefined){
+                const myAns = ansToSort[myAnsKey];
+                insertAfter(topEle, myAns.domElement);
+            };
         }
     }
     else {
