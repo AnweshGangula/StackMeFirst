@@ -195,7 +195,7 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
                             console.log("img Added")
 
                             scrollToCmts.addEventListener("click", () => {
-                                scrollToTarget(parentId, "comments", 60);
+                                scrollToTarget(parentId, "comments", 100 + 60);
                             });
 
                             voteCell?.appendChild(scrollToCmts);
