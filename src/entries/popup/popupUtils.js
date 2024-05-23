@@ -1,8 +1,11 @@
 import browser from "webextension-polyfill";
+import { toast } from '@zerodevx/svelte-toast'
 
 import scrollToTarget from "../executeScript/executeScript";
 import { IsQuestion } from "~/utils/utils";
 import { defaultPreferances, pageTypeEnum } from "~/utils/constants";
+import logo from "~/assets/logo.svg";
+const logoImageUrl = new URL(logo, import.meta.url).href;
 
 const manifestVer = Number(import.meta.env.VITE_MANIFEST_VERSION);
 export default function ExecuteScroll(tabId, eleId, type, offsetHeight, pageType = null) {
@@ -112,4 +115,36 @@ export function CheckWarnings(currTab, info) {
     }
     const output = { warningText, warningType }
     return output;
+}
+
+
+export function DisplayToast(toastContent) {
+    const toastHTMLContent = toastContent.startsWith("<") ? toastContent :`<div>${toastContent}</div>`
+    toast.push(
+        `
+        <div class="toastContent" style="display: flex;align-items: center;gap: 3px;">
+            <a href="https://github.com/AnweshGangula/StackMeFirst" rel="nofollow" target="_blank">
+                <img src=${logoImageUrl} height="20" alt="Stack Me First Logo" />
+            </a>
+            ${toastHTMLContent}
+            <a href="https://github.com/AnweshGangula/StackMeFirst" rel="nofollow" target="_blank" 
+            style="
+                color: white;
+                margin: auto;
+                text-decoration: none;
+                padding: 2px 8px;
+                background: firebrick;
+                border-radius: 100vh;
+            ">
+                ?
+            </a>
+        </div>
+        `
+        , {
+            // // Effectively disables autoclose when `initial`==`next`
+            pausable: true,
+            classes: ["SMFToast"],
+            // initial: 0
+        }
+    );
 }

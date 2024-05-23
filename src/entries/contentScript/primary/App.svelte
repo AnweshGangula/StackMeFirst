@@ -1,11 +1,12 @@
 <script>
-	import { SvelteToast, toast } from '@zerodevx/svelte-toast'
+	import { SvelteToast } from '@zerodevx/svelte-toast'
 
 	import DockContent from "./Components/DockContent.svelte";
 
 	export let stackData;
 
 	import logo from "~/assets/logo.svg";
+    import { DisplayToast } from '~/entries/popup/popupUtils';
 	const logoImageUrl = new URL(logo, import.meta.url).href;
 
 	// Default options
@@ -27,19 +28,12 @@
 	const apiCallsPerPage = 4; // number of API calls "Stack Me First" uses per page
 	const remainingUses = Math.floor(remainingAPIQuota/apiCallsPerPage) ?? 0;
 	if(remainingUses <= 10){
-		toast.push(`
-		<img src=${logoImageUrl} height="20" alt="Stack Me First Logo" /> 
+		DisplayToast(`
 		<details>
 			<summary>Remaining API Quota: ${remainingUses}</summary>
 			<p>You can use the Stack Me First Plugin for ${remainingUses} more times</p>
 		</details>
-
-		`,{
-		// // Effectively disables autoclose when `initial`==`next`
-		pausable: true,
-		classes: ["SMFToast"],
-		// initial: 0
-		});
+		`);
 	}
 
 </script>

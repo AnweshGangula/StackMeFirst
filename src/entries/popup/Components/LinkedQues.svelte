@@ -1,6 +1,5 @@
 <script>
 	import { onMount } from "svelte";
-	import { toast } from '@zerodevx/svelte-toast'
   
 	import browser from "webextension-polyfill";
 	import StackContent from "./StackContent.svelte";
@@ -10,6 +9,7 @@
 
 	import { defaultPreferances, pageTypeEnum } from "~/utils/constants";
 	import { IsQuestion } from "~/utils/utils";
+    import { DisplayToast } from "../popupUtils";
 
 	export let pageType;
 	export let linkQData;
@@ -77,10 +77,7 @@
 
 	function parseLinkQData(info){
 		if(!info?.token) {
-			toast.push(`<img src=${logoImageUrl} height="20" alt="Stack Me First Logo" />(SMF) Please login again to get LinkQ's`,{
-				// // Effectively disables autoclose when `initial`==`next`
-				// initial: 0
-			});
+			DisplayToast("(SMF) Please login again to get LinkQ's");
 			
 			console.error("Please login again using the login button above");
 			// throw new Error("Please login again using the login button above");
