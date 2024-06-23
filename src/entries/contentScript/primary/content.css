@@ -1,15 +1,26 @@
 .smfHighlight {
-	--smfBorderColor: darkorange;
+	--smfBorderColor: var(--theme-primary-500, darkorange);
+	--smfBorderColor: var(--theme-primary, darkorange);
+	--smfBackgroundColor: var(--white, inherit);
 	border-style: solid;
 	border-width: 0px;
 	border-left-width: 5px;
 	border-color: darkorange;
 	border-color: var(--smfBorderColor, mediumseagreen);
 	border-radius: 5px;
+	background: 
+		radial-gradient(circle at 100% 100%, var(--smfBackgroundColor) 0px, var(--smfBackgroundColor) 6px, transparent 6px) 0% 0% / 8px 8px no-repeat,
+		radial-gradient(circle at 0px 100%, var(--smfBackgroundColor) 0px, var(--smfBackgroundColor) 6px, transparent 6px) 100% 0% / 8px 8px no-repeat, 
+		radial-gradient(circle at 100% 0px, var(--smfBackgroundColor) 0px, var(--smfBackgroundColor) 6px, transparent 6px) 0% 100% / 8px 8px no-repeat, 
+		radial-gradient(circle at 0px 0px, var(--smfBackgroundColor) 0px, var(--smfBackgroundColor) 6px, transparent 6px) 100% 100% / 8px 8px no-repeat,
+		linear-gradient(var(--smfBackgroundColor), var(--smfBackgroundColor)) 50% 50% / calc(100% - 4px) calc(100% - 16px) no-repeat, 
+		linear-gradient(var(--smfBackgroundColor), var(--smfBackgroundColor)) 50% 50% / calc(100% - 16px) calc(100% - 4px) no-repeat, 
+		linear-gradient(270deg, transparent 70%, var(--smfBorderColor, mediumseagreen));
 }
 
-.smfHighlight.smfUpvoted {
-    border-color: var(--theme-primary-500);
+.smfHighlight.smfAnswer:not(.smfUpvoted),
+.smfHighlight.smfAuthor {
+    --smfBorderColor: darkorange;
 }
 
 .smfAnswer {
@@ -57,11 +68,11 @@
 }
 
 #smfScrollToCmts {
-	position: absolute;
+	/* position: absolute; */
     /* left: 190px; */
-    left: -5px;
+    /* left: -5px; */
 	padding: 0;
-	width: 100%;
+	width: 80%;
     background-color:lemonchiffon;
     border: 1px solid darkgoldenrod;
     color: firebrick;

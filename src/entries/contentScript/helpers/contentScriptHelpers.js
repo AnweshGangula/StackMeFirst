@@ -177,6 +177,7 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
                     if (parentRootHeight > windowHeight * 0.7) {
                         // display the Navigate to comments button only if the post is longer than 70% of the window height
                         const voteCell = parentRoot?.getElementsByClassName("votecell")[0];
+                        const votingContainer = voteCell?.getElementsByClassName("js-voting-container")[0];
                         const btnExists = voteCell?.getElementsByClassName("smfAnsHasCmmts")[0]; // getElementById is only available in document
                         if (!btnExists) {
                             const scrollToCmts = document.createElement("button");
@@ -198,7 +199,7 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
                                 scrollToTarget(parentId, "comments", 100 + 60);
                             });
 
-                            voteCell?.appendChild(scrollToCmts);
+                            votingContainer?.appendChild(scrollToCmts);
                         }
                     }
                 }
