@@ -37,6 +37,7 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
     const topEle = pagination == null ? answersHeader : pagination;
 
     let answerList = [];
+    let scrollToAnsId = undefined;
     if (hlAns || srtAns) {
         const ansToSort = {};
         for (let answer of answers) {
@@ -90,7 +91,7 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
             if (currURL.indexOf(answerId + "#" + answerId) > -1) {
                 // if the user clicks on a link to a specific answer, scroll that into view
                 // answer.scrollIntoView();
-                scrollToTarget(answerId, "answer", 60)
+                scrollToAnsId = answerId;
             }
         }
 
@@ -125,6 +126,13 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
                     insertAfter(topEle, ans.domElement);
                 });
             };
+        }
+
+        if (scrollToAnsId) {
+            // if the user clicks on a link to a specific answer, scroll that into view
+            // answer.scrollIntoView();
+            console.log("scrolling");
+            scrollToTarget(scrollToAnsId, "answer", 60)
         }
     }
     else {
