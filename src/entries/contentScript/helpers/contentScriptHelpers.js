@@ -148,6 +148,7 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
 
 
     let commentList = [];
+    let hiddentCmtsCount = 0;
     if (hlCmnts == true) {
         for (let comment of comments) {
             let commentUser, commentId, body, parentId;
@@ -183,6 +184,7 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
 
                         hiddenCommentsDiv.style["display"] = "flex";
                         showMoreCmntsEle.classList.add("smfShowmoreCmntsBtn");
+                        hiddentCmtsCount += 1;
 
                         const moreCmntsDiv = document.createElement("div")
                         moreCmntsDiv.id = "smfMoreHiddenCmnts";
@@ -190,6 +192,7 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
 
                         hiddenCommentsDiv.appendChild(moreCmntsDiv); 
                     }
+                    showMoreCmntsEle.title = `You have ${hiddentCmtsCount} more hidden comment${hiddentCmtsCount>1 ? "s" : ""} in this answer`;
 
                 } else {
                     const commentToHighlight = commentEle.getElementsByClassName("comment-text")[0];
