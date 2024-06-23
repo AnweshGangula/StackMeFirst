@@ -57,18 +57,18 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
                 answerId = answer.dataset.answerid;
                 body = TrimText(answer.querySelectorAll(".answercell")[0].textContent.replaceAll("\n    ", ""));
             }
-            if (answerUser == currUser.href || answer.upvoted) {
-                const answerToHighlight = document.querySelector("#answer-" + answerId);
-                const isAnsVisible = answerToHighlight != null
-                let suffix = ""
-                if (isAnsVisible) {
+            const answerToHighlight = document.querySelector("#answer-" + answerId);
+            const isAnsVisible = answerToHighlight != null
+            let smfSuffix = ""
+            if (isAnsVisible) {
+                if (answerUser == currUser.href || answer.upvoted) {
                     // if answer is paginated, it will not be visible in current page.
                     // Eg: https://stackoverflow.com/questions/7244321/how-do-i-update-or-sync-a-forked-repository-on-github?page=2&tab=scoredesc#tab-top 
                     if (hlAns) {
                         answerToHighlight.classList.add("smfHighlight", "smfAnswer");
-                        if(answer.upvoted){
+                        if (answer.upvoted) {
                             answerToHighlight.classList.add("smfUpvoted");
-                            
+
                         }
                     }
                     if (!isSorted && srtAns) {
@@ -80,11 +80,11 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
 
                         // insertAfter(topEle, answerToHighlight);
                     }
-                } else {
-                    suffix = " (hidden)"
+                    if (answerUser == currUser.href) smfSuffix += " (author)";
+                    answerList.push({ answerId, suffix: smfSuffix, title: body });
                 }
-                if(answerUser == currUser.href) suffix += " (author)";
-                answerList.push({ answerId, suffix, title: body });
+            } else {
+                smfSuffix = " (hidden)"
             }
 
             if (currURL.indexOf(answerId + "#" + answerId) > -1) {
@@ -156,18 +156,36 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
             }
             if (commentUser == currUser.href) {
                 const commentEle = document.getElementById("comment-" + commentId);
+                
+                const parentAnswerRoot = document.querySelector("#answer-" + parentId);
+                const parentQuestionRoot = document.querySelector('div[data-questionid="' + parentId + '"]');
+                const parentRoot = parentAnswerRoot == null ? parentQuestionRoot : parentAnswerRoot;
+
                 let suffix = ""
                 if (!commentEle) {
                     // if comment is hidden
                     suffix = " (hidden)"
                     // console.log("Hidden comment: #comment-" + commentId)
+
+                    const hiddenCommentsDiv = parentRoot.querySelector("#comments-link-" + parentId);
+                    const showMoreCmntsEle = hiddenCommentsDiv.querySelector(".js-show-link");
+                    const isAlreadyHighlighted = showMoreCmntsEle.classList.contains("smfShowmoreCmntsBtn");
+
+                    if(!isAlreadyHighlighted){
+
+                        hiddenCommentsDiv.style["display"] = "flex";
+                        showMoreCmntsEle.classList.add("smfShowmoreCmntsBtn");
+
+                        const moreCmntsDiv = document.createElement("div")
+                        moreCmntsDiv.id = "smfMoreHiddenCmnts";
+                        moreCmntsDiv.title = "You have added more comments - hidden inside";
+
+                        hiddenCommentsDiv.appendChild(moreCmntsDiv); 
+                    }
+
                 } else {
                     const commentToHighlight = commentEle.getElementsByClassName("comment-text")[0];
                     commentToHighlight.classList.add("smfHighlight", "smfCmtLnk")
-
-                    const parentAnswerRoot = commentEle.closest(".answer.js-answer");
-                    const parentQuestionRoot = commentEle.closest(".question.js-question");
-                    const parentRoot = parentAnswerRoot == null ? parentQuestionRoot : parentAnswerRoot;
 
                     // const parentPostCell = parentAnswerRoot == null ? parentQuestionRoot.getElementsByClassName("postcell")[0] : parentAnswerRoot.getElementsByClassName("answercell")[0];
                     // const parentPostCellHeight = parentPostCell.offsetHeight;

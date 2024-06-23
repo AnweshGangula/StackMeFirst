@@ -28,6 +28,22 @@
 	padding-left: 5px;
 }
 
+.smfShowmoreCmntsBtn{
+    background: darkorange;
+    color: white;
+    padding: 0px 10px;
+    border-radius: 5px;
+}
+#smfMoreHiddenCmnts:before {
+    content: "V";
+    content: "\27A4";
+    /* content: "\27B2"; */
+    /* content: "\25B8"; */
+    display: block;
+    transform: rotate(90deg);
+	color: darkorange; /* hidden comments can be in unvoted answers too, so hard-coding the color */
+}
+
 .smfFavorite {
 	border-color: orange;
 	position: relative;
