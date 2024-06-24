@@ -19,7 +19,7 @@ chrome.runtime.onMessage.addListener(
 
         if (subject == "loggedIn") {
             let badgeText = `${content.answerCount}A,${content.commentCount}C`
-            let pluginTitle = `${content.answerCount} Answers, ${content.commentCount} Comments\n`
+            let badgeTitle = `${content.answerCount} Answers, ${content.commentCount} Comments\n`
 
             chrome.action.setIcon({ path: './icons/StackMeFirst.png', tabId: browserTabId });
 
@@ -27,7 +27,7 @@ chrome.runtime.onMessage.addListener(
                 text: badgeText,
                 tabId: browserTabId,
             }, () => {
-                chrome.action.setTitle({ title: pluginTitle, tabId: browserTabId });
+                chrome.action.setTitle({ title: badgeTitle, tabId: browserTabId });
                 chrome.action.setBadgeBackgroundColor({ color: "green", tabId: browserTabId });
             });
         }

@@ -25,7 +25,7 @@ browser.runtime.onMessage.addListener(
     let content = request.content;
     let subject = request.subject;
     let browserTabId = request.from == pageTypeEnum.popup ? null : sender.tab.id;
-    let badgeText, pluginTitle, color;
+    let badgeText, badgeTitle, color;
 
     switch (subject) {
       case "isStackOverflow":
@@ -34,18 +34,18 @@ browser.runtime.onMessage.addListener(
         break;
       case "needLogin":
         badgeText = "Login";
-        pluginTitle = "Login to Stack Overflow to highlight your answers";
+        badgeTitle = "Login to Stack Overflow to highlight your answers";
         color = "firebrick";
 
-        UpdateBadge(badgeText, browserTabId, pluginTitle, color);
+        UpdateBadge(badgeText, browserTabId, badgeTitle, color);
         // return true; // must return true to signal asynchronous
         break;
       case "joinCommunity":
         badgeText = "JoinCommunity";
-        pluginTitle = "Join this Community to use Stack Me First Plugin";
+        badgeTitle = "Join this Community to use Stack Me First Plugin";
         color = "firebrick";
 
-        UpdateBadge(badgeText, browserTabId, pluginTitle, color);
+        UpdateBadge(badgeText, browserTabId, badgeTitle, color);
         // return true; // must return true to signal asynchronous
         break;
       case "loading":
@@ -56,10 +56,10 @@ browser.runtime.onMessage.addListener(
         const linkCount = content.token ? "," + content.linkCount + "L" : ""
         const linkCountText = content.token ? ", " + content.linkCount + " Upvoted Links" : ""
         badgeText = `${content.answerCount}A,${content.commentCount}C${linkCount}`;
-        pluginTitle = `${content.answerCount} Answers, ${content.commentCount} Comments${linkCountText}\n`;
+        badgeTitle = `${content.answerCount} Answers, ${content.commentCount} Comments${linkCountText}\n`;
         color = (badgeText == "0A,0C" || badgeText == "0A,0C,0L") ? "firebrick" : "green";
 
-        UpdateBadge(badgeText, browserTabId, pluginTitle, color);
+        UpdateBadge(badgeText, browserTabId, badgeTitle, color);
         break;
       case 'GET_TOKEN':
         Api.auth(sendResponse);
@@ -115,7 +115,7 @@ function onTabUpdate(tab) {
   }
 }
 
-function UpdateBadge(badgeText, tabId, pluginTitle, color) {
+function UpdateBadge(badgeText, tabId, badgeTitle, color) {
 
   color = import.meta.env.VITE_DEV_MODE == "true" ? "firebrick" : color;
   badgeText = import.meta.env.VITE_DEV_MODE == "true" ? "DEV-"+badgeText : badgeText;
@@ -124,7 +124,7 @@ function UpdateBadge(badgeText, tabId, pluginTitle, color) {
     text: badgeText,
     tabId: tabId,
   }).then(() => {
-    browserAction.setTitle({ title: pluginTitle, tabId: tabId });
+    browserAction.setTitle({ title: badgeTitle, tabId: tabId });
     browserAction.setBadgeBackgroundColor({ color: color, tabId: tabId });
   });
 }
