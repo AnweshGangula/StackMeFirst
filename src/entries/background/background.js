@@ -41,7 +41,7 @@ browser.runtime.onMessage.addListener(
         // return true; // must return true to signal asynchronous
         break;
       case "joinCommunity":
-        badgeText = "JoinCommunity";
+        badgeText = "Join";
         badgeTitle = "Join this Community to use Stack Me First Plugin";
         color = "firebrick";
 
@@ -118,7 +118,7 @@ function onTabUpdate(tab) {
 function UpdateBadge(badgeText, tabId, badgeTitle, color) {
 
   color = import.meta.env.VITE_DEV_MODE == "true" ? "firebrick" : color;
-  badgeText = import.meta.env.VITE_DEV_MODE == "true" ? "DEV-"+badgeText : badgeText;
+  badgeText = (import.meta.env.VITE_DEV_MODE == "true" ? "DEV-" : "") + badgeText;
 
   browserAction.setBadgeText({
     text: badgeText,

@@ -29,19 +29,36 @@
 }
 
 .smfShowmoreCmntsBtn{
-    background: darkorange;
-    color: white;
+    /* background: darkorange; */
+    /* color: white; */
+	text-decoration: underline;
+	text-decoration-color: darkorange;
+	text-decoration-thickness: 3px;
     padding: 0px 10px;
     border-radius: 5px;
 }
+
+.smfShowmoreCmntsBtn:after {
+    content: "\00a0\00a0\00a0\00a0";
+}
+
+#smfMoreHiddenCmnts {
+	display: flex;
+	position: relative;
+	top: -1px;
+    left: -10px;
+	background: darkorange;
+	padding: 0 8px;
+    border-radius: 100vh;
+}
+
 #smfMoreHiddenCmnts:before {
-    content: "V";
+    /* content: "V"; */
     content: "\27A4";
     /* content: "\27B2"; */
     /* content: "\25B8"; */
-    display: block;
+    /* display: block; */
     transform: rotate(90deg);
-	color: darkorange; /* hidden comments can be in unvoted answers too, so hard-coding the color */
 }
 
 .smfFavorite {

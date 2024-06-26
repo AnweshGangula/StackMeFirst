@@ -148,7 +148,7 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
 
 
     let commentList = [];
-    let hiddentCmtsCount = 0;
+    let hiddenCmtsCount = 0;
     if (hlCmnts == true) {
         for (let comment of comments) {
             let commentUser, commentId, body, parentId;
@@ -180,19 +180,24 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
                     const showMoreCmntsEle = hiddenCommentsDiv.querySelector(".js-show-link");
                     const isAlreadyHighlighted = showMoreCmntsEle.classList.contains("smfShowmoreCmntsBtn");
 
+                    let moreCmntsDiv;
+
                     if(!isAlreadyHighlighted){
 
                         hiddenCommentsDiv.style["display"] = "flex";
                         showMoreCmntsEle.classList.add("smfShowmoreCmntsBtn");
-                        hiddentCmtsCount += 1;
+                        hiddenCmtsCount += 1;
 
-                        const moreCmntsDiv = document.createElement("div")
+                        moreCmntsDiv = document.createElement("div")
                         moreCmntsDiv.id = "smfMoreHiddenCmnts";
                         moreCmntsDiv.title = "You have added more comments - hidden inside";
-
+                        
                         hiddenCommentsDiv.appendChild(moreCmntsDiv); 
+                    }else{
+                        moreCmntsDiv = hiddenCommentsDiv.querySelector("#smfMoreHiddenCmnts");
                     }
-                    showMoreCmntsEle.title = `You have ${hiddentCmtsCount} more hidden comment${hiddentCmtsCount>1 ? "s" : ""} in this answer`;
+                    moreCmntsDiv.innerText = hiddenCmtsCount;
+                    moreCmntsDiv.title = `You have ${hiddenCmtsCount} more hidden comment${hiddenCmtsCount>1 ? "s" : ""} in this answer`;
 
                 } else {
                     const commentToHighlight = commentEle.getElementsByClassName("comment-text")[0];
