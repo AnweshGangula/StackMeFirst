@@ -1,9 +1,10 @@
 import browser from "webextension-polyfill";
 import { defaultApiData, StackAppDetails, pageTypeEnum } from "~/utils/constants";
-import { GetBrowser } from "~/utils/utils";
+import { GetBrowser, IsStackOverflow, getUrlRootDomain } from "~/utils/utils";
 import Api from "~/utils/stackAPI";
 
 import backgroundMixpanel from "./mixpanelBackground";
+import SmfMixpanel from "~/utils/mixpanel";
 const mixpanel = backgroundMixpanel();
 
 const currBrowser = GetBrowser();
@@ -81,7 +82,34 @@ browser.runtime.onMessage.addListener(
         break;
 
       case 'openGettingStarted':
-        browser.tabs.create({ url: content.gettingStartedPage_Url })
+
+          const website = getUrlRootDomain(sender.tab.url) ?? "";
+
+          const isStack = website ? IsStackOverflow(sender.tab.url) : false;
+
+          const queryParameters = [];
+          if (isStack) {
+            queryParameters.push(`domain=${website}`)
+          }
+
+          const gettingStartedPage_Url = browser.runtime.getURL('/src/entries/gettingStarted/index.html') + (queryParameters.length > 0 ? "?" + queryParameters.join("&") : "");
+
+          console.log({ gettingStartedPage_Url })
+
+          browser.tabs.create({
+            url: gettingStartedPage_Url,
+            openerTabId: sender.tab.id,
+
+            // active: false, // this does not affter the tab being focused - https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/create#active
+          })
+
+          const pageViewData = {
+              sourcePage: sender.tab.url,
+              pageType: pageTypeEnum.gettingStarted
+          };
+          const mixpanel = new SmfMixpanel(pageViewData);
+          // })
+
         break;
       case 'sendMixPanelData':
         mixpanel.trackEvent(request.eventName, content)

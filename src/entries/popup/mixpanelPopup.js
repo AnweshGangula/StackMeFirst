@@ -37,7 +37,7 @@ export default function popupMixpanel() {
 
                 // get current Tab - https://stackoverflow.com/a/29151677/6908282
                 let activeTab = tabs[0];
-                const website = getUrlRootDomain(activeTab.url);
+                const website = activeTab ? getUrlRootDomain(activeTab.url) : ""; // TODO fix this
     
                 browser.runtime.sendMessage({
                     //  reference: https://stackoverflow.com/a/20021813/6908282

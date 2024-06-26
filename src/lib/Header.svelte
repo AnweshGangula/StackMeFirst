@@ -1,7 +1,7 @@
 <script>
 	import browser from "webextension-polyfill";
 	import Api from "~/utils/stackAPI";
-	import { GetLocalTokenData } from "~/utils/utils";
+	import { GetLocalTokenData, getUrlRootDomain, IsStackOverflow } from "~/utils/utils";
 	import { pageTypeEnum } from "~/utils/constants";
 
 	import ProfilePic from "./ProfilePic.svelte";
@@ -80,21 +80,41 @@
 
 	async function GettingStartedEvent(e){
 
-		const gettingStartedPage_Url = browser.runtime.getURL('/src/entries/gettingStarted/index.html');
+		// const gettingStartedPage_Url = browser.runtime.getURL('/src/entries/gettingStarted/index.html');
 		
-		console.log({gettingStartedPage_Url})
+		// console.log({gettingStartedPage_Url})
 
 		
-		if(pageType == pageTypeEnum.sidebar){
+		if(pageType !== pageTypeEnum.popup){
 			browser.runtime.sendMessage({
 				from: "contentScript",
 				subject: "openGettingStarted",
-				content: {
-					gettingStartedPage_Url
-				}
+				// content: {
+				// 	gettingStartedPage_Url
+				// }
 			});
-		}else{
-			browser.tabs.create({ url: gettingStartedPage_Url });
+		} else {
+			browser.tabs.query({ active: true, lastFocusedWindow: true }).then(function (tabs) {
+			
+				// get current Tab - https://stackoverflow.com/a/29151677/6908282
+				let activeTab = tabs[0];
+				const tabUrl = activeTab.url;
+				const website = getUrlRootDomain(tabUrl);
+
+				const isStack = website ? IsStackOverflow(tabUrl) : false;
+
+				const queryParameters = [];
+				if (isStack) {
+					queryParameters.push(`domain=${website}`)
+				}
+
+				const gettingStartedPage_Url = browser.runtime.getURL('/src/entries/gettingStarted/index.html') + (queryParameters.length > 0 ? "?" + queryParameters.join("&") : "");
+
+				console.log({ gettingStartedPage_Url })
+				
+				browser.tabs.create({ url: gettingStartedPage_Url });
+			})
+
 		}
 
 	}

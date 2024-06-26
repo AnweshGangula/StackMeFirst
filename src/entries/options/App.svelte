@@ -14,7 +14,7 @@
 </script>
 
 <div id="optionsRoot" class:devMode data-devMode={devMode ? devModeSuffix : null}>
-	<Header />
+	<Header pageType={pageTypeEnum.options} />
 	<main>
 		<Preferences pageType={pageTypeEnum.options} />
 	</main>

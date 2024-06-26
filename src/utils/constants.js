@@ -30,6 +30,7 @@ export const pageTypeEnum = {
     sidebar: "sidebar",
     options: "options",
     background: "background",
+    gettingStarted: "getting started"
 };
 
 export const ignoreUrlList = [

@@ -67,7 +67,7 @@
 	}
 </script>
 
-<Header />
+<Header pageType={pageTypeEnum.popup} />
 <main>
 	{#await dispDOM}
 		<Loader />
