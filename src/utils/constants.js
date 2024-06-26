@@ -21,6 +21,10 @@ export const stackCommunities = [
     "stackapps.com",
 ]
 
+export const excludedSites = [
+    "api.stackexchange.com"
+]
+
 export const pageTypeEnum = {
     popup: "popup",
     sidebar: "sidebar",
