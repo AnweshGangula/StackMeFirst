@@ -80,6 +80,9 @@ browser.runtime.onMessage.addListener(
         return true; // must return true to signal asynchronous
         break;
 
+      case 'openGettingStarted':
+        browser.tabs.create({ url: content.gettingStartedPage_Url })
+        break;
       case 'sendMixPanelData':
         mixpanel.trackEvent(request.eventName, content)
         break;

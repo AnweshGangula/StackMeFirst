@@ -78,6 +78,22 @@
 
 	}
 
+	async function GettingStartedEvent(e){
+
+		const gettingStartedPage_Url = browser.runtime.getURL('/src/entries/gettingStarted/index.html');
+		
+		console.log({gettingStartedPage_Url})
+
+		browser.runtime.sendMessage({
+			from: "contentScript",
+			subject: "openGettingStarted",
+			content: {
+				gettingStartedPage_Url
+			}
+		});
+
+	}
+
 	async function myStackDetails(token) {
 		const stackAPI = new Api(token);
 		const {myDetails: myData, latestQuota_max, latestQuota_remaining} = await stackAPI.getMyDetails();
@@ -145,6 +161,14 @@
 			</a>
 		</div>
 	</div>
+
+	<button 
+		type="button" 
+		on:click|preventDefault={(e)=>GettingStartedEvent(e)}
+		id="gettingStartedDock">
+
+		Getting Started
+	</button>
 
 </header>
 

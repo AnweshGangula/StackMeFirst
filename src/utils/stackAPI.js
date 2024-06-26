@@ -125,13 +125,13 @@ export default class Api {
 
     async getMyDetails(queriesObj = {}) {
         let myDetails = [];
-        let hasMore = false;
+        // let hasMore = false;
         
         const mergedQuery = Object.assign({ page: 1, filter }, queriesObj);
-        do {
-            if (hasMore) {
-                mergedQuery.page += 1;
-            }
+        // do {
+            // if (hasMore) {
+            //     mergedQuery.page += 1;
+            // }
             const { items, has_more, quota_max, quota_remaining}  = await this._fetch(
                 '/me',
                 mergedQuery
@@ -140,8 +140,8 @@ export default class Api {
             this.latestQuota_remaining = quota_remaining;
 
             myDetails = myDetails.concat(items);
-            hasMore = has_more;
-        } while (hasMore);
+        //     hasMore = has_more;
+        // } while (hasMore);
         return {myDetails, latestQuota_max: this.latestQuota_max, latestQuota_remaining: this.latestQuota_remaining};
     }
 

@@ -6,9 +6,8 @@ import { getManifest } from "./src/manifest.js";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
-  let buildOptions = {};
 
-  buildOptions = {
+  const buildOptions = {
     sourcemap: true,
     rollupOptions: {
       output: {
@@ -39,6 +38,10 @@ export default defineConfig(({ mode }) => {
         //   }
         // },
       },
+    
+      input: {
+        gettingStarted: 'src/entries/gettingStarted/index.html'
+      }
     },
   }
 
