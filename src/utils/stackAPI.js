@@ -145,6 +145,72 @@ export default class Api {
         return {myDetails, latestQuota_max: this.latestQuota_max, latestQuota_remaining: this.latestQuota_remaining};
     }
 
+    async getUserAssociatedAccounts(accountId, queriesObj = {}){
+        // const site = await this.siteNameFromURL(currURL); //.split(".")[0];
+        
+
+        // queriesObj.filter = "withbody"; // https://stackoverflow.com/a/69166789/6908282
+        if (!("pagesize" in queriesObj)) {
+            queriesObj.pagesize = 100;
+            // 100 is the max pagesize - https://api.stackexchange.com/docs/paging
+        }
+        let myDetails = [];
+        let hasMore = false;
+        const mergedQuery = Object.assign({ page: 1 }, queriesObj);
+
+        do {
+            if (hasMore) {
+                mergedQuery.page += 1;
+            }
+
+            const { items, has_more, quota_max, quota_remaining} = await this._fetch(
+                `/users/${accountId}/associated`,
+                queriesObj,
+                null // associate API doest need any site: https://api.stackexchange.com/docs/associated-users
+            );
+            this.latestQuota_max = quota_max;
+            this.latestQuota_remaining = quota_remaining;
+
+            myDetails = myDetails.concat(items);
+            hasMore = has_more;
+        } while (hasMore);
+
+        return {myDetails, latestQuota_max: this.latestQuota_max, latestQuota_remaining: this.latestQuota_remaining};
+    }
+
+    async getPostsByUserId(currURL, userId, postType = "questions", queriesObj = {}){
+        // const site = await this.siteNameFromURL(currURL); //.split(".")[0];
+        const site = currURL;
+        
+
+        const filter = this.token ? "!*Mg4PjfvuWMFghsH" : "withbody";
+        // queriesObj.filter = "withbody"; // https://stackoverflow.com/a/69166789/6908282
+        if (!("pagesize" in queriesObj)) {
+            queriesObj.pagesize = 100;
+            // 100 is the max pagesize - https://api.stackexchange.com/docs/paging
+        }
+        let myDetails = [];
+        // let hasMore = false;
+        const mergedQuery = Object.assign({ page: 1, filter }, queriesObj);
+
+        // do {
+        //     if (hasMore) {
+        //         mergedQuery.page += 1;
+        //     }
+            const { items, has_more, quota_max, quota_remaining} = await this._fetch(
+                `/users/${userId}/${postType}`,
+                mergedQuery,
+                site
+            );
+            this.latestQuota_max = quota_max;
+            this.latestQuota_remaining = quota_remaining;
+
+            myDetails = myDetails.concat(items);
+            // hasMore = has_more;
+        // } while (hasMore);
+
+        return {myDetails, latestQuota_max: this.latestQuota_max, latestQuota_remaining: this.latestQuota_remaining};
+    }
 
     async getAnswersForPosts(currURL, ids, queriesObj = {}) {
         const site = await this.siteNameFromURL(currURL); //.split(".")[0];

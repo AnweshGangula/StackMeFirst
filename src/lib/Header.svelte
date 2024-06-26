@@ -8,6 +8,7 @@
 
 	export let pageType;
 	let token = false;
+	let accountId;
 	let domData = headerDOM();
 	let loginError = false;
 	let profileData;
@@ -21,6 +22,7 @@
 	async function headerDOM() {
 		const tokenData = await GetLocalTokenData();
 		token = tokenData.token;
+		accountId = tokenData.accountId;
 		profileData = tokenData;
 
 		return tokenData;
@@ -46,6 +48,7 @@
 						userName: myData.display_name,
 						profileImage: myData.profile_image,
 						profileUrl: myData.link,
+						accountId: myData.account_id,
 					};
 
 					profileData = apiData;
@@ -89,9 +92,9 @@
 			browser.runtime.sendMessage({
 				from: "contentScript",
 				subject: "openGettingStarted",
-				// content: {
-				// 	gettingStartedPage_Url
-				// }
+				content: {
+					accountId
+				}
 			});
 		} else {
 			browser.tabs.query({ active: true, lastFocusedWindow: true }).then(function (tabs) {
@@ -106,6 +109,10 @@
 				const queryParameters = [];
 				if (isStack) {
 					queryParameters.push(`domain=${website}`)
+				}
+
+				if(accountId){
+					queryParameters.push(`accountId=${accountId}`)
 				}
 
 				const gettingStartedPage_Url = browser.runtime.getURL('/src/entries/gettingStarted/index.html') + (queryParameters.length > 0 ? "?" + queryParameters.join("&") : "");

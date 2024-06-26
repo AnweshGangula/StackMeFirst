@@ -91,6 +91,9 @@ browser.runtime.onMessage.addListener(
           if (isStack) {
             queryParameters.push(`domain=${website}`)
           }
+          if(content.accountId){
+            queryParameters.push(`accountId=${content.accountId}`)
+          }
 
           const gettingStartedPage_Url = browser.runtime.getURL('/src/entries/gettingStarted/index.html') + (queryParameters.length > 0 ? "?" + queryParameters.join("&") : "");
 
