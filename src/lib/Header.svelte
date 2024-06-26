@@ -84,13 +84,18 @@
 		
 		console.log({gettingStartedPage_Url})
 
-		browser.runtime.sendMessage({
-			from: "contentScript",
-			subject: "openGettingStarted",
-			content: {
-				gettingStartedPage_Url
-			}
-		});
+		
+		if(pageType == pageTypeEnum.sidebar){
+			browser.runtime.sendMessage({
+				from: "contentScript",
+				subject: "openGettingStarted",
+				content: {
+					gettingStartedPage_Url
+				}
+			});
+		}else{
+			browser.tabs.create({ url: gettingStartedPage_Url });
+		}
 
 	}
 
