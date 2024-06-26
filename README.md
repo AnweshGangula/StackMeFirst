@@ -23,6 +23,19 @@ Optionally, you can also use the login button in the popup to highlight & list
 
 > Note: this does not store or share any data externally.\
 > Disclaimer: The linked questions are affiliated with my account - which is associated with "Booster" badge - https://stackoverflow.com/help/badges/261/booster
+
+## Getting Started
+
+If you're using this extensions for the first time, it may not be very obvious how, when and where is this useful. You can use **Stack Exchange Data Explorer (SEDE)** [Queries](https://data.stackexchange.com/stackoverflow/queries) to find posts where Stack Me First can show it's magic. Below are few references
+
+> NOTE: all the links below are SEDE queries, so you need to input your UserId which you can fetch from your stack exchange community profile by logging in and clicking on your profile icons and copying the UserId from the url. for example my profile url for stack overflow is https://stackoverflow.com/users/6908282/gangula and my UserId `6908282`
+
+- Posts answered by user - Find posts that are answered by you
+  - https://data.stackexchange.com/stackoverflow/query/1849271/posts-answered-by-user
+  - This shows a list of posts where you have added answers to the post.
+- Posts commented by user  - Find posts where you added atleast 1 comment
+  - https://data.stackexchange.com/stackoverflow/query/1849270/posts-commented-by-user
+
 ## Instructions
 
 In order to see this plugin in action, open any StackOverflow question where you have posted at least one answer. Note that you need to be logged in to StackOverflow.com in your browser.
@@ -78,6 +91,10 @@ The points highlighted in orange are default features available for you (conside
     2.  b. have bookmarked (_previously called favorite_) the respective question _(highlighted in yellow with a star)_ OR
     3.  c. are either **the author** of the respective question _(highlighted in green)_ OR
     - [Linked Questions reference image][6]
+
+### API Limits
+
+Stack Me First plugin uses [Stack Echange API](https://api.stackexchange.com/) to fetch the posts & comments that is associated with you (if you choose to login). But there is a [limit](https://api.stackexchange.com/docs/throttle) of no more than 2500 posts/user/day that Stack Me First can work on (*each post may 4 API calls*). But this should not be a problem since, it's highly unlikely someone will open that many posts in a day.
 
 ## Known Bugs
 

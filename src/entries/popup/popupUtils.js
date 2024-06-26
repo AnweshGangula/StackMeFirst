@@ -127,7 +127,7 @@ export function DisplayToast(toastContent) {
                 <img src=${logoImageUrl} height="20" alt="Stack Me First Logo" />
             </a>
             ${toastHTMLContent}
-            <a href="https://github.com/AnweshGangula/StackMeFirst" rel="nofollow" target="_blank" 
+            <a href="https://github.com/AnweshGangula/StackMeFirst?tab=readme-ov-file#advanced-features-with-login" rel="nofollow" target="_blank" 
             style="
                 color: white;
                 margin: auto;
