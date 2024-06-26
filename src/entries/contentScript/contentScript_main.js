@@ -92,7 +92,7 @@ export default async function highlightStack() {
             let idforCmts = [];
             let cmtIsAPI = true;
 
-            const getAnswers = await stackAPI.getAnswers(currURL, qId);
+            const getAnswers = await stackAPI.getAnswersForPosts(currURL, qId);
             ansJson = getAnswers.myDetails;
             currQuota_max = getAnswers.latestQuota_max;
             currQuota_remaining = getAnswers.latestQuota_remaining;
@@ -101,7 +101,7 @@ export default async function highlightStack() {
             const cmtIds = getCmtIds(ansJson, ansIsAPI);
             idforCmts.push(...cmtIds)
 
-            const getComments = await stackAPI.getComments(currURL, idforCmts.join(";"));
+            const getComments = await stackAPI.getCommentsForPosts(currURL, idforCmts.join(";"));
             allComments = getComments.myDetails;
             currQuota_max = getComments.latestQuota_max;
             currQuota_remaining = getComments.latestQuota_remaining;

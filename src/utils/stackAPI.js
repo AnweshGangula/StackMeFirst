@@ -18,6 +18,9 @@ if (currBrowser == "Mozilla Firefox") {
 const filter = '!0XXAMzZV3)6nNHjQ18538kAUL';
 
 export default class Api {
+    latestQuota_max;
+    latestQuota_remaining;
+
     constructor(token) {
         this.token = token;
         // this.stackExchangeSiteDetails = {};
@@ -101,7 +104,7 @@ export default class Api {
     async getFavorites(queriesObj = {}) {
         let favorites = [];
         let hasMore = false;
-        let latestQuota_max, latestQuota_remaining;
+        
         const mergedQuery = Object.assign({ page: 1, filter }, queriesObj);
         do {
             if (hasMore) {
@@ -111,19 +114,19 @@ export default class Api {
                 '/me/favorites',
                 mergedQuery
             );
-            latestQuota_max = quota_max;
-            latestQuota_remaining = quota_remaining;
+            this.latestQuota_max = quota_max;
+            this.latestQuota_remaining = quota_remaining;
 
             favorites = favorites.concat(items);
             hasMore = has_more;
         } while (hasMore);
-        return {favorites, latestQuota_max, latestQuota_remaining};
+        return {favorites, latestQuota_max: this.latestQuota_max, latestQuota_remaining: this.latestQuota_remaining};
     }
 
     async getMyDetails(queriesObj = {}) {
         let myDetails = [];
         let hasMore = false;
-        let latestQuota_max, latestQuota_remaining;
+        
         const mergedQuery = Object.assign({ page: 1, filter }, queriesObj);
         do {
             if (hasMore) {
@@ -133,18 +136,19 @@ export default class Api {
                 '/me',
                 mergedQuery
             );
-            latestQuota_max = quota_max;
-            latestQuota_remaining = quota_remaining;
+            this.latestQuota_max = quota_max;
+            this.latestQuota_remaining = quota_remaining;
 
             myDetails = myDetails.concat(items);
             hasMore = has_more;
         } while (hasMore);
-        return {myDetails, latestQuota_max, latestQuota_remaining};
+        return {myDetails, latestQuota_max: this.latestQuota_max, latestQuota_remaining: this.latestQuota_remaining};
     }
 
-    async getAnswers(currURL, ids, queriesObj = {}) {
+
+    async getAnswersForPosts(currURL, ids, queriesObj = {}) {
         const site = await this.siteNameFromURL(currURL); //.split(".")[0];
-        let latestQuota_max, latestQuota_remaining;
+        
 
         const filter = this.token ? "!*Mg4PjfvuWMFghsH" : "withbody";
         // queriesObj.filter = "withbody"; // https://stackoverflow.com/a/69166789/6908282
@@ -164,19 +168,19 @@ export default class Api {
                 mergedQuery,
                 site
             );
-            latestQuota_max = quota_max;
-            latestQuota_remaining = quota_remaining;
+            this.latestQuota_max = quota_max;
+            this.latestQuota_remaining = quota_remaining;
 
             myDetails = myDetails.concat(items);
             hasMore = has_more;
         } while (hasMore);
 
-        return {myDetails, latestQuota_max, latestQuota_remaining};
+        return {myDetails, latestQuota_max: this.latestQuota_max, latestQuota_remaining: this.latestQuota_remaining};
     }
 
-    async getComments(currURL, ids, queriesObj = {}) {
+    async getCommentsForPosts(currURL, ids, queriesObj = {}) {
         const site = await this.siteNameFromURL(currURL); //.split(".")[0];
-        let latestQuota_max, latestQuota_remaining;
+        
 
         queriesObj.filter = "withbody"; // https://stackoverflow.com/a/69166789/6908282
         if (!("pagesize" in queriesObj)) {
@@ -196,19 +200,19 @@ export default class Api {
                 mergedQuery,
                 site
             );
-            latestQuota_max = quota_max;
-            latestQuota_remaining = quota_remaining;
+            this.latestQuota_max = quota_max;
+            this.latestQuota_remaining = quota_remaining;
 
             myDetails = myDetails.concat(items);
             hasMore = has_more;
         } while (hasMore);
         // console.log({myDetails})
-        return {myDetails, latestQuota_max, latestQuota_remaining};
+        return {myDetails, latestQuota_max: this.latestQuota_max, latestQuota_remaining: this.latestQuota_remaining};
     }
 
     async getLinkedQues(currURL, ids, queriesObj = {}) {
         const site = await this.siteNameFromURL(currURL); //.split(".")[0]
-        let latestQuota_max, latestQuota_remaining;
+        
 
         const filter = "!IF6sbADh-1NFXRL_9Gd7_0XJ2-(Ng*6BJ2aPkdHx6rDtBZ-"
         // Checkk filter options here: https://api.stackexchange.com/docs/read-filter#filters=!gA._5vuQCU1LfxLMryEA8lClXXUw*bEruKr&filter=default&run=true
@@ -231,8 +235,8 @@ export default class Api {
                 mergedQuery,
                 site
             );
-            latestQuota_max = quota_max;
-            latestQuota_remaining = quota_remaining;
+            this.latestQuota_max = quota_max;
+            this.latestQuota_remaining = quota_remaining;
 
             myDetails = myDetails.concat(items);
             hasMore = has_more;
@@ -240,7 +244,7 @@ export default class Api {
             //pagination not working if more than 100 links - https://meta.stackexchange.com/q/307314/381523
             allowPagination = false;
         } while (hasMore && allowPagination);
-        return {myDetails, latestQuota_max, latestQuota_remaining};
+        return {myDetails, latestQuota_max: this.latestQuota_max, latestQuota_remaining: this.latestQuota_remaining};
     }
 
     async siteNameFromURL(url) {
