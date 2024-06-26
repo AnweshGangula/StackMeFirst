@@ -11,6 +11,7 @@
   const urlParams = new URLSearchParams(window.location.search);
   let domain = urlParams.get('domain');
 
+  let listOfJoinedCommunities;
   let getUserQuestions;
   let getUserAnswers;
   let getUserComments;
@@ -29,6 +30,10 @@
     } = await stackAPI.getUserAssociatedAccounts(accountId);
 
     const sortedAccountByReputation = userAssociatedAccounts.sort((a, b) => a.reputation > b.reputation ? -1 : 1);
+
+    listOfJoinedCommunities = sortedAccountByReputation;
+
+    console.log({listOfJoinedCommunities})
 
     // browser.tabs.query({ active: true, lastFocusedWindow: true }).then(function (tabs) {
     // 	isQ = IsStackOverflow(tabs[0].url);
@@ -93,6 +98,15 @@ GettingStartedContent();
 
 <div id="GettingStarted_Root">
   <h1>Getting Started</h1>
+
+  {#if listOfJoinedCommunities}
+    <ul>
+      {#each listOfJoinedCommunities as site}
+          <li>{site.site_name}</li>
+      {/each} 
+    </ul>
+{/if}
+
   <p>Domain: {domain}</p>
 
   {#if getUserQuestions}
