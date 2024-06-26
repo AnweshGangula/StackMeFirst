@@ -192,7 +192,7 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
                         moreCmntsDiv.id = "smfMoreHiddenCmnts";
                         moreCmntsDiv.title = "You have added more comments - hidden inside";
                         
-                        hiddenCommentsDiv.appendChild(moreCmntsDiv); 
+                        showMoreCmntsEle.appendChild(moreCmntsDiv); 
                     }else{
                         moreCmntsDiv = hiddenCommentsDiv.querySelector("#smfMoreHiddenCmnts");
                     }
