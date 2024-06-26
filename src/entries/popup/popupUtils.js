@@ -95,7 +95,7 @@ export function CheckWarnings(currTab, info) {
 
     //  reference: https://stackoverflow.com/a/20023723/6908282
     const metaData = info.metaData;
-    if (metaData.currUser == undefined){ // } && !info.userInCommunity) {
+    if (!info.userLoggedIn == undefined){ // } && !info.userInCommunity) {
         warningText = "! Login to Stack Overflow to highlight your answers";
         warningType.add("warn");
     } else if (!info.userInCommunity) {
@@ -109,7 +109,7 @@ export function CheckWarnings(currTab, info) {
         warningType.add("warn");
     }
 
-    if (metaData.currUser && metaData.currUser == metaData.quesAuthor) {
+    if ((metaData.currUser && metaData.quesAuthor) && metaData.currUser == metaData.quesAuthor) {
         // warningText = "";
         warningType.add("notify_author");
     }
@@ -124,7 +124,7 @@ export function DisplayToast(toastContent) {
         `
         <div class="toastContent" style="display: flex;align-items: center;gap: 3px;">
             <a href="https://github.com/AnweshGangula/StackMeFirst" rel="nofollow" target="_blank">
-                <img src=${logoImageUrl} height="20" alt="Stack Me First Logo" />
+                <img src=${logoImageUrl} height="23" alt="Stack Me First Logo" />
             </a>
             ${toastHTMLContent}
             <a href="https://github.com/AnweshGangula/StackMeFirst?tab=readme-ov-file#advanced-features-with-login" rel="nofollow" target="_blank" 

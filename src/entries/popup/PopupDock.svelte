@@ -53,11 +53,16 @@
 
 <main>
     <Notification pageType={pageTypeEnum.sidebar} {warningType} {warningText} {glCurrTab} />
-    <div id="myStack">
-        <StackContent pageType={pageTypeEnum.sidebar} eleList={answerList} type="answer" tab={glCurrTab} />
-        <StackContent pageType={pageTypeEnum.sidebar} eleList={commentList} type="comment" tab={glCurrTab} />
-        <LinkedQues pageType={pageTypeEnum.sidebar} linkQData={linkData} glCurrTab={glCurrTab}/>
-    </div>
+	{#if (warningText == "! Login to Stack Overflow to highlight your answers" || warningText == "! Join this Community to use Stack Me First Plugin")}
+		<!-- If user not logged in to Stack Overflow don't render anything -->
+	{:else}
+		<div id="myStack">
+			<StackContent pageType={pageTypeEnum.sidebar} eleList={answerList} type="answer" tab={glCurrTab} />
+			<StackContent pageType={pageTypeEnum.sidebar} eleList={commentList} type="comment" tab={glCurrTab} />
+			<LinkedQues pageType={pageTypeEnum.sidebar} linkQData={linkData} glCurrTab={glCurrTab}/>
+		</div>
+	{/if}
+
     <!-- <Preferences pageType={pageType.popup} /> -->
 </main>
 

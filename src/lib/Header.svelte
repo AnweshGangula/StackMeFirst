@@ -108,7 +108,7 @@
 		title={docsUrl}
 		on:click|preventDefault={() => onClickEvent(docsUrl)}
 	>
-		<img id="logoImg" src={logoUrl} alt="Stack Me First Logo" width="20" height="20" />
+		<img id="logoImg" src={logoUrl} alt="Stack Me First Logo" width="23" height="23" />
 		<h1>Stack Me First</h1>
 	</button>
 
@@ -190,6 +190,10 @@
 	}
 	#logoImg {
 		margin: 5px;
+		background: lemonchiffon;
+		padding: 5px;
+		border-radius: 8px;
+		border-color: darkgoldenrod;
 	}
 
 	h1{

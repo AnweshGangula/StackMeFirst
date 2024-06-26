@@ -16,7 +16,18 @@ export default async function highlightStack() {
     const token = tokenData.token ?? "";
 
     let stackAPI = new Api(token);
-    let output = {};
+    let output = {
+        userConfig: {},
+        popupContent: {
+            commentList: [],
+            answerList: [],
+            metaData: {
+                currUser: undefined,
+                quesAuthor: undefined
+            }
+        }
+    };
+
     //TODO: if logged, then add token for stackAPI above. This will help with API limitations: https://api.stackexchange.com/docs/throttle#:~:text=If%20an%20application%20does%20have%20an%20access_token
     const currURL = window.location.href // .at(-1)
 
@@ -32,142 +43,154 @@ export default async function highlightStack() {
         // const currUser = document.getElementsByClassName("s-user-card")[0]; // this is not correct if user I not logged in at this URL: https://stackoverflow.com/questions
         let myAnsList, myCmmtList, linkData;
         const userURL = currUser == null ? undefined : currUser.href;
-        const userLoggedIn = Array.from(document.getElementsByClassName("s-topbar--item")).filter(a => a.localName == "a" && a.href.includes("users/login?")).length == 0;
-        const userInCommunity = (userLoggedIn && currUser) ? true : false;
+        
+        const joinCommunityBtn = Array.from(document.getElementsByClassName("s-topbar--item")).filter(a => a.localName == "a" && a.innerText.includes("Join this community"));
+        const userProfileBtn = Array.from(document.getElementsByClassName("s-topbar--item")).filter(a => a.localName == "a" && a.id.includes("user-profile-button"))
+
+        const userInCommunity = joinCommunityBtn.length == 0 ? true : false;
+        const userLoggedIn = (userProfileBtn.length > 0 || joinCommunityBtn.length > 0);
 
         var popupContent = {
             userLoggedIn,
             userInCommunity: userInCommunity,
             metaData: {
                 currUser: userURL,
+                quesAuthor: undefined
             },
         };
 
-        if (currUser == undefined) {
+        if (isQuestion) {
 
-            if (userLoggedIn) {
-                // if user has not joined the community
+            if (currUser == undefined) {
 
-                browser.runtime.sendMessage({
-                    //  reference: https://stackoverflow.com/a/20021813/6908282
-                    from: "contentScript",
-                    subject: "joinCommunity",
-                    content: {
-                        currUser: currUser,
-                    }
-                }).then(function () {
-                    // console.log("sending message");
-                });
-            } else {
+                if (userLoggedIn) {
+                    // if user has not joined the community
+    
+                    output.userConfig = {displaySidebar: "JoinCommunity"};
 
-
-                // if there is a "Login" button in the navbar
-                browser.runtime.sendMessage({
-                    //  reference: https://stackoverflow.com/a/20021813/6908282
-                    from: "contentScript",
-                    subject: "needLogin",
-                    content: {
-                        currUser: currUser,
-                    }
-                }).then(function () {
-                    // console.log("sending message");
-                });
-            }
-
-        } else if (isQuestion) {
-            browser.runtime.sendMessage({
-                //  reference: https://stackoverflow.com/a/20021813/6908282
-                from: "contentScript",
-                subject: "loading",
-            }).then(function () {
-                // console.log("sending message");
-            });
-
-            question = document.getElementById('question');
-            const qId = question.dataset.questionid;
-            quesAuthor = document.querySelector(".post-signature.owner")?.getElementsByTagName("a")[0];
-            let ansJson = [];
-            let ansIsAPI = true;
-            let allComments = [];
-            let idforCmts = [];
-            let cmtIsAPI = true;
-
-            const getAnswers = await stackAPI.getAnswersForPosts(currURL, qId);
-            ansJson = getAnswers.myDetails;
-            currQuota_max = getAnswers.latestQuota_max;
-            currQuota_remaining = getAnswers.latestQuota_remaining;
-
-            idforCmts.push(qId);
-            const cmtIds = getCmtIds(ansJson, ansIsAPI);
-            idforCmts.push(...cmtIds)
-
-            const getComments = await stackAPI.getCommentsForPosts(currURL, idforCmts.join(";"));
-            allComments = getComments.myDetails;
-            currQuota_max = getComments.latestQuota_max;
-            currQuota_remaining = getComments.latestQuota_remaining;
-
-            allComments.sort((a,b)=> a.post_id - b.post_id || a.creation_date - b.creation_date); // sort comments by post and then by date
-            if (allComments == []) {
-                allComments = document.getElementsByClassName("comment");
-                cmtIsAPI = false;
-                console.log("Comments API did not work")
-            }
-
-            const queryParams = new Proxy(new URLSearchParams(window.location.search), {
-                get: (searchParams, prop) => searchParams.get(prop),
-            });
-            const isSorted = queryParams.answertab != undefined;
-
-            const DOM_Opts = { currUser, isSorted }
-
-            const quesAuth = quesAuthor == null ? undefined : quesAuthor.href;
-            popupContent.metaData.quesAuthor = quesAuth;
-
-            const result = await browser.storage.sync.get({ 'stackMeData': defaultPreferances });
-
-            const userConfig = result.stackMeData;
-            // You can set default for values not in the storage by providing a dictionary:
-            // reference: https://stackoverflow.com/a/26898749/6908282
-
-
-            myAnsList = highlightAnswer(ansJson, ansIsAPI, userConfig, DOM_Opts, currURL);
-            myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
-
-            const linkData = await HighlightLinks(userConfig, currURL, qId, DOM_Opts);
-            currQuota_max = linkData.latestQuota_max ?? currQuota_max;
-            currQuota_remaining = linkData.latestQuota_remaining ?? currQuota_remaining;
-
-            popupContent.answerList = myAnsList;
-            popupContent.commentList = myCmmtList;
-            popupContent.linkData = linkData;
-            popupContent.apiQuota = {
-                currQuota_max,
-                currQuota_remaining,
-            }
-
-            browser.runtime.sendMessage({
-                //  reference: https://stackoverflow.com/a/20021813/6908282
-                from: "contentScript",
-                subject: "pageIsValid",
-                content: {
-                    answerCount: myAnsList ? myAnsList.length : "?",
-                    commentCount: myCmmtList ? myCmmtList.length : "?",
-                    linkCount: linkData.hlLinkQ ? linkData.linkedQids.length : "?",
-                    token: linkData.token,
-                    apiQuota: {
-                        currQuota_max,
-                        currQuota_remaining,
-                    }
+                    browser.runtime.sendMessage({
+                        //  reference: https://stackoverflow.com/a/20021813/6908282
+                        from: "contentScript",
+                        subject: "joinCommunity",
+                        content: {
+                            currUser: currUser,
+                        }
+                    }).then(function () {
+                        // console.log("sending message");
+                    });
+                } else {
+    
+    
+                    // if there is a "Login" button in the navbar
+                    browser.runtime.sendMessage({
+                        //  reference: https://stackoverflow.com/a/20021813/6908282
+                        from: "contentScript",
+                        subject: "needLogin",
+                        content: {
+                            currUser: currUser,
+                        }
+                    }).then(function () {
+                        // console.log("sending message");
+                    });
                 }
-            }).then(function () {
-                // console.log("sending message");
-            });
+    
+            }else{
 
-            output = {
-                userConfig,
-                popupContent,
+                browser.runtime.sendMessage({
+                    //  reference: https://stackoverflow.com/a/20021813/6908282
+                    from: "contentScript",
+                    subject: "loading",
+                }).then(function () {
+                    // console.log("sending message");
+                });
+    
+                question = document.getElementById('question');
+                const qId = question.dataset.questionid;
+                quesAuthor = document.querySelector(".post-signature.owner")?.getElementsByTagName("a")[0];
+                let ansJson = [];
+                let ansIsAPI = true;
+                let allComments = [];
+                let idforCmts = [];
+                let cmtIsAPI = true;
+    
+                const getAnswers = await stackAPI.getAnswersForPosts(currURL, qId);
+                ansJson = getAnswers.myDetails;
+                currQuota_max = getAnswers.latestQuota_max;
+                currQuota_remaining = getAnswers.latestQuota_remaining;
+    
+                idforCmts.push(qId);
+                const cmtIds = getCmtIds(ansJson, ansIsAPI);
+                idforCmts.push(...cmtIds)
+    
+                const getComments = await stackAPI.getCommentsForPosts(currURL, idforCmts.join(";"));
+                allComments = getComments.myDetails;
+                currQuota_max = getComments.latestQuota_max;
+                currQuota_remaining = getComments.latestQuota_remaining;
+    
+                allComments.sort((a,b)=> a.post_id - b.post_id || a.creation_date - b.creation_date); // sort comments by post and then by date
+                if (allComments == []) {
+                    allComments = document.getElementsByClassName("comment");
+                    cmtIsAPI = false;
+                    console.log("Comments API did not work")
+                }
+    
+                const queryParams = new Proxy(new URLSearchParams(window.location.search), {
+                    get: (searchParams, prop) => searchParams.get(prop),
+                });
+                const isSorted = queryParams.answertab != undefined;
+    
+                const DOM_Opts = { currUser, isSorted }
+    
+                const quesAuth = quesAuthor == null ? undefined : quesAuthor.href;
+                popupContent.metaData.quesAuthor = quesAuth;
+    
+                const result = await browser.storage.sync.get({ 'stackMeData': defaultPreferances });
+    
+                const userConfig = result.stackMeData;
+                // You can set default for values not in the storage by providing a dictionary:
+                // reference: https://stackoverflow.com/a/26898749/6908282
+    
+    
+                myAnsList = highlightAnswer(ansJson, ansIsAPI, userConfig, DOM_Opts, currURL);
+                myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
+    
+                const linkData = await HighlightLinks(userConfig, currURL, qId, DOM_Opts);
+                currQuota_max = linkData.latestQuota_max ?? currQuota_max;
+                currQuota_remaining = linkData.latestQuota_remaining ?? currQuota_remaining;
+    
+                popupContent.answerList = myAnsList;
+                popupContent.commentList = myCmmtList;
+                popupContent.linkData = linkData;
+                popupContent.apiQuota = {
+                    currQuota_max,
+                    currQuota_remaining,
+                }
+    
+                browser.runtime.sendMessage({
+                    //  reference: https://stackoverflow.com/a/20021813/6908282
+                    from: "contentScript",
+                    subject: "pageIsValid",
+                    content: {
+                        answerCount: myAnsList ? myAnsList.length : "?",
+                        commentCount: myCmmtList ? myCmmtList.length : "?",
+                        linkCount: linkData.hlLinkQ ? linkData.linkedQids.length : "?",
+                        token: linkData.token,
+                        apiQuota: {
+                            currQuota_max,
+                            currQuota_remaining,
+                        }
+                    }
+                }).then(function () {
+                    // console.log("sending message");
+                });
+    
+                output = {
+                    userConfig,
+                    popupContent,
+                }
+                // console.log({popupContent})
             }
-            // console.log({popupContent})
+
         }
         browser.runtime.onMessage.addListener((msg, sender, response) => {
             // Reference: https://stackoverflow.com/a/20023723/6908282

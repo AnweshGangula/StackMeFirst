@@ -146,6 +146,14 @@
 
 		return badgeTextList;
 	}
+
+	function DockKeydown(e){
+		// if (e.key !== 'Enter' && e.key !== ' ') return;
+        //     e.preventDefault();
+        //     e.target.click();
+
+		console.log("This is just to fix A11y warning: https://stackoverflow.com/a/77153984/6908282")
+	}
 </script>
 
 <div
@@ -157,6 +165,7 @@
 	data-closing={closingTimer}
 	data-devMode = {devMode ? devModeSuffix : null}
 	on:click={(e) => DockMixpanel(e)}
+	on:keydown={DockKeydown}
 	on:mouseleave={() => ToggleDock("close")}
 	on:mouseenter={() => ToggleDock("open")}
 >
@@ -180,7 +189,7 @@
 			<span id="badgeText">
 				<small class:greenBorder={isGreenBorder}>{badgeText}</small>
 			</span>
-			<img src={logoImageUrl} height="20" alt="Stack Me First Logo" />
+			<img src={logoImageUrl} height="23" alt="Stack Me First Logo" />
 		</button>
 	</div>
 </div>

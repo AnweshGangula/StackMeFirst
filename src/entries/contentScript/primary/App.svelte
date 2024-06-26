@@ -24,19 +24,24 @@
 		classes: ["SMFToast"]           // user-defined classes
 	}
 
-	const remainingAPIQuota = stackData.popupContent.apiQuota.currQuota_remaining;
-	const apiCallsPerPage = 4; // number of API calls "Stack Me First" uses per page
-	const remainingUses = Math.floor(remainingAPIQuota/apiCallsPerPage) ?? 0;
-	if(import.meta.env.VITE_DEV_MODE){
-		console.log("Remaining number of posts API will work on", {remainingUses})
-	}
-	if(remainingUses <= 3000){
-		DisplayToast(`
-		<details>
-			<summary>Remaining API Quota: ${remainingUses}</summary>
-			<p>You can use the Stack Me First Plugin for ${remainingUses} more times</p>
-		</details>
-		`);
+	if(stackData.userConfig.displaySidebar == "JoinCommunity"){
+		
+	} else {
+
+		const remainingAPIQuota = stackData.popupContent.apiQuota.currQuota_remaining;
+		const apiCallsPerPage = 4; // number of API calls "Stack Me First" uses per page
+		const remainingUses = Math.floor(remainingAPIQuota/apiCallsPerPage) ?? 0;
+		if(import.meta.env.VITE_DEV_MODE){
+			console.log("Remaining number of posts API will work on", {remainingUses})
+		}
+		if(remainingUses <= 10){
+			DisplayToast(`
+			<details>
+				<summary>Remaining API Quota: ${remainingUses}</summary>
+				<p>You can use the Stack Me First Plugin for ${remainingUses} more times</p>
+			</details>
+			`);
+		}
 	}
 
 </script>

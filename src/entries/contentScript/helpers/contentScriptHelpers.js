@@ -131,7 +131,7 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
         if (scrollToAnsId) {
             // if the user clicks on a link to a specific answer, scroll that into view
             // answer.scrollIntoView();
-            console.log("scrolling");
+            // console.log("scrolling");
             scrollToTarget(scrollToAnsId, "answer", 60)
         }
     }
@@ -227,7 +227,7 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
                             smfLogo.classList.add("smfLogo");
                             scrollToCmts.appendChild(smfLogo); 
 
-                            console.log("img Added")
+                            // console.log("img Added")
 
                             scrollToCmts.addEventListener("click", () => {
                                 scrollToTarget(parentId, "comments", 100 + 60);

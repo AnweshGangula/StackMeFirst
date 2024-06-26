@@ -74,7 +74,7 @@
 	{:then result}
 		<Notification {warningType} {warningText} {glCurrTab} />
 
-		{#if warningText == "! Login to Stack Overflow to highlight your answers"}
+		{#if (warningText == "! Login to Stack Overflow to highlight your answers" || warningText == "! Join this Community to use Stack Me First Plugin")}
 			<!-- If user not logged in to Stack Overflow don't render anything -->
 		{:else}
 			<div id="myStack">
