@@ -135,7 +135,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
 
 <div id="GettingStarted_Root" style="height: 100vh;">
   <h1 style="margin: 0;">Getting Started</h1>
-  <p>Remaining Quota: {remainingUses}</p>
+  <p>Remaining Quota (today): {remainingUses}</p>
 
   {#await getStartedContent}
     <Loader />
@@ -146,7 +146,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
         <small>(click to fetch data from the community)</small>
         {#if listOfJoinedCommunities}
           <table id="communitiesTable">
-            <tr style="text-wrap: nowrap;">
+            <tr style="text-wrap: nowrap; text-align: center">
               <th>Community</th>
               <th>Reputation</th>
               <th># Questions</th>
@@ -158,9 +158,9 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                 class = {"joinedComminity " + (domain == getUrlRootDomain(site.site_url) ? 'highlight': '')}
                 style="padding: 5px 2px; border-radius: 5px">
                 <td style="min-width: 150px;">{site.site_name}</td>
-                <td>{site.reputation}</td>
-                <td>{site.question_count}</td>
-                <td>{site.answer_count}</td>
+                <td style="text-align: center">{site.reputation}</td>
+                <td style="text-align: center">{site.question_count}</td>
+                <td style="text-align: center">{site.answer_count}</td>
               </tr>
             {/each} 
           </table>

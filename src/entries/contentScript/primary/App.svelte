@@ -33,7 +33,7 @@
 		const apiCallsPerPage = constants.apiCallsPerPage; // number of API calls "Stack Me First" uses per page
 		const remainingUses = Math.floor(remainingAPIQuota/apiCallsPerPage) ?? 0;
 		if(import.meta.env.VITE_DEV_MODE){
-			console.log("Remaining number of posts API will work on", {remainingUses})
+			// console.log("Remaining number of posts API will work on", {remainingUses})
 		}
 		if(remainingUses <= 10){
 			DisplayToast(`

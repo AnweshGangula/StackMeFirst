@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 import { defaultApiData, StackAppDetails, pageTypeEnum } from "~/utils/constants";
-import { GetBrowser, IsStackOverflow, getUrlRootDomain } from "~/utils/utils";
+import { GetBrowser, GetLocalTokenData, IsStackOverflow, getUrlRootDomain } from "~/utils/utils";
 import Api from "~/utils/stackAPI";
 
 import backgroundMixpanel from "./mixpanelBackground";
@@ -18,6 +18,38 @@ if (manifestVer == 2) {
 browser.runtime.onInstalled.addListener(() => {
   // console.log("Extension installed");
 });
+
+function OpenGettingStartedPage(tab, accountId){
+  const website = getUrlRootDomain(tab.url) ?? "";
+
+  const isStack = website ? IsStackOverflow(tab.url) : false;
+
+  const queryParameters = new URLSearchParams();
+  if (isStack) {
+    queryParameters.append("domain", website)
+  }
+  if(accountId){
+    queryParameters.append("accountId", accountId)
+  }
+
+  const gettingStartedPage_Url = browser.runtime.getURL('/src/entries/gettingStarted/index.html') + (queryParameters.size > 0 ? "?" + queryParameters.toString() : "");
+
+  console.log({ gettingStartedPage_Url })
+
+  browser.tabs.create({
+    url: gettingStartedPage_Url,
+    openerTabId: tab.id,
+
+    // active: false, // this does not affter the tab being focused - https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/create#active
+  })
+
+  const pageViewData = {
+      sourcePage: tab.url,
+      pageType: pageTypeEnum.gettingStarted
+  };
+  const mixpanel = new SmfMixpanel(pageViewData);
+  // })
+}
 
 browser.runtime.onMessage.addListener(
   //  reference: https://stackoverflow.com/a/20021813/6908282
@@ -83,40 +115,13 @@ browser.runtime.onMessage.addListener(
 
       case 'openGettingStarted':
 
-          const website = getUrlRootDomain(sender.tab.url) ?? "";
-
-          const isStack = website ? IsStackOverflow(sender.tab.url) : false;
-
-          const queryParameters = [];
-          if (isStack) {
-            queryParameters.push(`domain=${website}`)
-          }
-          if(content.accountId){
-            queryParameters.push(`accountId=${content.accountId}`)
-          }
-
-          const gettingStartedPage_Url = browser.runtime.getURL('/src/entries/gettingStarted/index.html') + (queryParameters.length > 0 ? "?" + queryParameters.join("&") : "");
-
-          console.log({ gettingStartedPage_Url })
-
-          browser.tabs.create({
-            url: gettingStartedPage_Url,
-            openerTabId: sender.tab.id,
-
-            // active: false, // this does not affter the tab being focused - https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/create#active
-          })
-
-          const pageViewData = {
-              sourcePage: sender.tab.url,
-              pageType: pageTypeEnum.gettingStarted
-          };
-          const mixpanel = new SmfMixpanel(pageViewData);
-          // })
-
+        OpenGettingStartedPage(sender.tab, content.accountId)
         break;
+
       case 'sendMixPanelData':
         mixpanel.trackEvent(request.eventName, content)
         break;
+
       default:
         console.log(`no matched action: ${subject}`);
     }
@@ -162,4 +167,47 @@ function UpdateBadge(badgeText, tabId, badgeTitle, color) {
     browserAction.setBadgeBackgroundColor({ color: color, tabId: tabId });
   });
 }
+
+async function initContextMenus(){
+
+  const tokenData = await GetLocalTokenData();
+  const token = tokenData.token;
+  const profileData = tokenData;
+  const accountId = tokenData.accountId;
+
+  const contextMenuId = {
+    gettingStarted: "gettingStarted"
+  }
+
+  function contextMenuClick(info,tab) {
+
+    console.log("Context Click")
+    if (info.menuItemId == contextMenuId.gettingStarted) {
+      OpenGettingStartedPage(tab, accountId)
+    }
+
+  }
+
+  browser.contextMenus.removeAll().then(() => {
+    browser.contextMenus.create({
+      title: "Stack Me First",
+      id: "stackMeFirst",
+      contexts: ["all"]
+    })
+
+    // for (const {id: id, title: title, parentId: parentId, contexts: contexts} of MENUS) {
+
+        browser.contextMenus.create({
+          parentId: "stackMeFirst",
+          title: "Open Getting Started Page", 
+          contexts:["all"], 
+          id: contextMenuId.gettingStarted
+        })
+    // }
+  })
+
+  browser.contextMenus.onClicked.addListener(contextMenuClick)
+}
+
+initContextMenus();
 
