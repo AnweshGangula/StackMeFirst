@@ -4,6 +4,7 @@
     import { pageTypeEnum } from "~/utils/constants";
     import Api from "~/utils/stackAPI";
     import { GetLocalTokenData, getUrlRootDomain } from "~/utils/utils";
+    import Loader from "../popup/Components/Loader.svelte";
 
 
   console.log("Getting Started");
@@ -33,7 +34,7 @@
 
     listOfJoinedCommunities = sortedAccountByReputation;
 
-    console.log({listOfJoinedCommunities})
+    // console.log({listOfJoinedCommunities})
 
     // browser.tabs.query({ active: true, lastFocusedWindow: true }).then(function (tabs) {
     // 	isQ = IsStackOverflow(tabs[0].url);
@@ -58,14 +59,18 @@
     }
   }
 
+  function OnDomainClick(e, site){
+    domain = site.site_url;
+  }
+
   async function GettingStartedContent(){
     
-    const {sortedAccountByReputation} = await GettingStartedEvent();
+    // const {sortedAccountByReputation: listOfJoinedCommunities} = await GettingStartedEvent();
     
-    let gettingStartedSite = sortedAccountByReputation[0];
+    let gettingStartedSite = listOfJoinedCommunities[0];
 
     if(domain){
-      gettingStartedSite = sortedAccountByReputation.filter(s=>s.site_url.includes(domain))[0];
+      gettingStartedSite = listOfJoinedCommunities.filter(s=>s.site_url.includes(domain))[0];
     } else {
       domain = getUrlRootDomain(gettingStartedSite.site_url);
     }
@@ -88,59 +93,85 @@
     getUserAnswers = await stackAPI.getPostsByUserId(domain, userId, "answers");
     getUserComments = await stackAPI.getPostsByUserId(domain, userId, "comments");
 
-    console.log({getUserComments, getUserAnswers, getUserQuestions})
+    const gettingStartedData = {listOfJoinedCommunities, getUserComments, getUserAnswers, getUserQuestions}
+    console.log({gettingStartedData})
 
+    return gettingStartedData
 }
 
-GettingStartedContent();
+const getStartedContent = GettingStartedEvent().then(async ()=>{
+    await GettingStartedContent();
+  })
 
 </script>
 
-<div id="GettingStarted_Root">
-  <h1>Getting Started</h1>
+<div id="GettingStarted_Root" style="height: 100vh;">
+  <h1 style="margin: 0;">Getting Started</h1>
 
-  {#if listOfJoinedCommunities}
-    <ul>
-      {#each listOfJoinedCommunities as site}
-          <li>{site.site_name}</li>
-      {/each} 
-    </ul>
-{/if}
 
-  <p>Domain: {domain}</p>
+  {#await getStartedContent}
+    <Loader />
+  {:then result}
+    <div style="display: flex; gap: 10px;">
+      <div style="text-wrap: nowrap;">
+        {#if listOfJoinedCommunities}
+          <ul style="list-style: none; display: grid; gap: 2px;">
+            {#each listOfJoinedCommunities as site}
+              <li
+              on:click={(e)=>OnDomainClick(e, site)}
+                style="padding: 5px 2px;">
 
-  {#if getUserQuestions}
-    <div id="getStartedQuestions">
-      <h2>Questions to get started</h2>
-      <p>
-        {getUserQuestions.myDetails[0].link}
-      </p>
-      <p>
-        {getUserQuestions.myDetails[0].title}
-      </p>
+                {site.site_name}
+              </li>
+            {/each} 
+          </ul>
+        {/if}
+      </div>
+
+      <div>
+          <p>Domain: {domain}</p>
+    
+          {#if getUserQuestions}
+            <div id="getStartedQuestions">
+              <h2>Questions to get started</h2>
+              <p>
+                {getUserQuestions.myDetails[0].link}
+              </p>
+              <p>
+                {getUserQuestions.myDetails[0].title}
+              </p>
+            </div>
+          {/if}
+    
+          {#if getUserAnswers}
+          <div id="getStartedQuestions">
+            <h2>Anwers to get started</h2>
+            <p>
+              {getUserAnswers.myDetails[0].answer_id}
+            </p>
+            <p>
+              {getUserAnswers.myDetails[0].body}
+            </p>
+          </div>
+          {/if}
+    
+          {#if getUserComments}
+            <div id="getStartedQuestions">
+              <h2>Comments to get started</h2>
+              <p>
+                {getUserComments.myDetails[0].comment_id}
+              </p>
+            </div>
+          {/if}
+      </div>
+
     </div>
-  {/if}
+  {:catch error}
+      <p style="color: red">{error.message}</p>
+  {/await}
 
-  {#if getUserAnswers}
-  <div id="getStartedQuestions">
-    <h2>Anwers to get started</h2>
-    <p>
-      {getUserAnswers.myDetails[0].answer_id}
-    </p>
-    <p>
-      {getUserAnswers.myDetails[0].body}
-    </p>
-  </div>
-  {/if}
 
-  {#if getUserComments}
-    <div id="getStartedQuestions">
-      <h2>Comments to get started</h2>
-      <p>
-        {getUserComments.myDetails[0].comment_id}
-      </p>
-    </div>
-  {/if}
+
 
 </div>
 
