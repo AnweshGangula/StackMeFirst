@@ -194,13 +194,15 @@
 		</div>
 	</div>
 
-	<button 
-		type="button" 
-		on:click|preventDefault={(e)=>GettingStartedEvent(e)}
-		id="gettingStartedDock">
+	{#if pageType!== pageTypeEnum.gettingStarted}
+		<button 
+			type="button" 
+			on:click|preventDefault={(e)=>GettingStartedEvent(e)}
+			id="gettingStartedDock">
 
-		Getting Started
-	</button>
+			Getting Started
+		</button>
+	{/if}
 
 </header>
 

@@ -208,63 +208,72 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     
               {#if getUserQuestions.myDetails.length > 0}
                 <div id="getStartedQuestions">
-                  <h2>Questions to get started</h2>
+                  <details open>
+                    <summary>
+                      <h2>Questions to get started</h2>
+                    </summary>
 
-                  <ul>
-                    {#each getUserQuestions.myDetails.slice(0, 5) as ques}
-                      <li>
-                        <a href={GetAffiliatedLink("q", ques.question_id)}>
-                          {ques.title}
-                        </a>
-                      </li>
-                    {/each} 
-                  </ul>
-
+                    <ul>
+                      {#each getUserQuestions.myDetails.slice(0, 5) as ques}
+                        <li>
+                          <a href={GetAffiliatedLink("q", ques.question_id)}>
+                            {ques.title}
+                          </a>
+                        </li>
+                      {/each} 
+                    </ul>
+                  </details>
                 </div>
               {/if}
         
               {#if getUserAnswers.myDetails.length > 0}
               <div id="getStartedQuestions">
-                <h2>Anwers to get started</h2>
+                <details open>
+                  <summary>
+                    <h2>Anwers to get started</h2>
+                    <i>limited to 4 lines</i>
+                  </summary>
 
-                <ul>
-                  {#each getUserAnswers.myDetails.slice(0, 5) as ans}
-                    <li>
-                      <a 
-                        class="link"
-                        href={GetAffiliatedLink("a", ans.answer_id)}
-                        >
-                        {ans.answer_id}
-                      </a>
-                      <span>
-                        {@html ans.body}
-                      </span>
-                    </li>
-                  {/each} 
-                </ul>
+                  <ul>
+                    {#each getUserAnswers.myDetails.slice(0, 5) as ans}
+                      <li class="link answer">
+                        <a 
+                          href={GetAffiliatedLink("a", ans.answer_id)}
+                          >
+                          {ans.answer_id}
+                        </a>
+                        <span>
+                          {@html ans.body}
+                        </span>
+                      </li>
+                    {/each} 
+                  </ul>
 
+                </details>
               </div>
               {/if}
         
               {#if getUserComments.myDetails.length > 0}
                 <div id="getStartedQuestions">
-                  <h2>Comments to get started</h2>
-
-                  <ul>
-                    {#each getUserComments.myDetails.slice(0, 5) as cmt}
-                      <li>
-                        <a 
-                          class="link"
-                          href={GetAffiliatedLink("comment", cmt.comment_id)}
-                        >
-                          {cmt.comment_id}
-                        </a>
-                        <span>
-                          {cmt.body}
-                        </span>
-                      </li>
-                    {/each} 
-                  </ul>
+                  <details open>
+                    <summary>
+                      <h2>Comments to get started</h2>
+                    </summary>
+                    <ul>
+                      {#each getUserComments.myDetails.slice(0, 5) as cmt}
+                        <li class="link">
+                          <a 
+                            href={GetAffiliatedLink("comment", cmt.comment_id)}
+                          >
+                            {cmt.comment_id}
+                          </a>
+                          <span>
+                            {@html cmt.body}
+                          </span>
+                        </li>
+                      {/each} 
+                    </ul>
+                  </details>
                 </div>
               {/if}
             {/if}
@@ -293,21 +302,35 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     /* --toastContainerLeft: calc(50vw - 8rem); */
   }
 
+  summary h2 {
+    display: inline;
+    /* margin: 0; */
+  }
   #communitiesTable {
     /* width: 250px; */
     table-layout: fixed;
     max-width: 350px;
   }
 
-  #gettingStartedCommunityData .link{
+  #gettingStartedCommunityData .link a{
     display: block; 
     background-color: aliceblue; 
     padding: 2px 5px; 
     border-radius: 5px;
   }
 
-  #gettingStartedCommunityData .link:hover {
+  #gettingStartedCommunityData .link a:hover {
     background-color: bisque;
+  }
+
+  #gettingStartedCommunityData .link.answer{
+
+    /* max-height: ; */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4; /* number of lines to show */
+            line-clamp: 4; 
+    -webkit-box-orient: vertical;
   }
 
   #communitiesTable th {
