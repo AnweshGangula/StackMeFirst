@@ -1,7 +1,7 @@
 <script>
   	import { onMount } from "svelte";
     import browser from "webextension-polyfill";
-    import { pageTypeEnum } from "~/utils/constants";
+    import { constants, pageTypeEnum } from "~/utils/constants";
     import Api from "~/utils/stackAPI";
     import { GetLocalTokenData, getUrlRootDomain } from "~/utils/utils";
     import Loader from "../popup/Components/Loader.svelte";
@@ -11,11 +11,15 @@
 
   const urlParams = new URLSearchParams(window.location.search);
   let domain = urlParams.get('domain');
+  // meta sites are not returned in associated API call - except meta.stackexchange.com: https://meta.stackexchange.com/q/400995/381523
+  domain = (domain?.startsWith("meta.") && domain !== "meta.stackexchange.com" )? domain.replace("meta.", "") : domain;
 
   let listOfJoinedCommunities;
   let getUserQuestions;
   let getUserAnswers;
   let getUserComments;
+  let reloadingCommunity = false;
+  let remainingUses = "loading...";
 
   async function GettingStartedEvent() {
     const tokenData = await GetLocalTokenData();
@@ -60,10 +64,15 @@
   }
 
   function OnDomainClick(e, site){
-    domain = site.site_url;
+    
+    reloadingCommunity = true;
+    domain = getUrlRootDomain(site.site_url);
+    GettingStartedContent(listOfJoinedCommunities).then(()=>{
+      reloadingCommunity = false;
+    });
   }
 
-  async function GettingStartedContent(){
+  async function GettingStartedContent(listOfJoinedCommunities){
     
     // const {sortedAccountByReputation: listOfJoinedCommunities} = await GettingStartedEvent();
     
@@ -96,72 +105,103 @@
     const gettingStartedData = {listOfJoinedCommunities, getUserComments, getUserAnswers, getUserQuestions}
     console.log({gettingStartedData})
 
+    const apiCallsPerPage = constants.apiCallsPerPage; // number of API calls "Stack Me First" uses per page
+		remainingUses = Math.floor(getUserComments.latestQuota_remaining/apiCallsPerPage) ?? 0;
+
+
     return gettingStartedData
 }
 
 const getStartedContent = GettingStartedEvent().then(async ()=>{
-    await GettingStartedContent();
+    await GettingStartedContent(listOfJoinedCommunities);
   })
 
 </script>
 
 <div id="GettingStarted_Root" style="height: 100vh;">
   <h1 style="margin: 0;">Getting Started</h1>
-
+  <p>Remaining Quota: {remainingUses}</p>
 
   {#await getStartedContent}
     <Loader />
   {:then result}
-    <div style="display: flex; gap: 10px;">
-      <div style="text-wrap: nowrap;">
+    <div style="display: flex; gap: 10px; padding: 2px 5px">
+      <div style="">
+        <h2>Communities you joined:</h2>
+        <small>(click to fetch data from the community)</small>
         {#if listOfJoinedCommunities}
-          <ul style="list-style: none; display: grid; gap: 2px;">
+          <table id="communitiesTable">
+            <tr style="text-wrap: nowrap;">
+              <th>Community</th>
+              <th>Reputation</th>
+              <th># Questions</th>
+              <th># Answers</th>
+            </tr>
             {#each listOfJoinedCommunities as site}
-              <li
-              on:click={(e)=>OnDomainClick(e, site)}
-                style="padding: 5px 2px;">
-
-                {site.site_name}
-              </li>
+              <tr
+                on:click={(e)=>OnDomainClick(e, site)}
+                class = {"joinedComminity " + (domain == getUrlRootDomain(site.site_url) ? 'highlight': '')}
+                style="padding: 5px 2px; border-radius: 5px">
+                <td style="min-width: 150px;">{site.site_name}</td>
+                <td>{site.reputation}</td>
+                <td>{site.question_count}</td>
+                <td>{site.answer_count}</td>
+              </tr>
             {/each} 
-          </ul>
+          </table>
         {/if}
       </div>
 
       <div>
           <p>Domain: {domain}</p>
-    
-          {#if getUserQuestions}
-            <div id="getStartedQuestions">
-              <h2>Questions to get started</h2>
-              <p>
-                {getUserQuestions.myDetails[0].link}
-              </p>
-              <p>
-                {getUserQuestions.myDetails[0].title}
-              </p>
-            </div>
-          {/if}
-    
-          {#if getUserAnswers}
-          <div id="getStartedQuestions">
-            <h2>Anwers to get started</h2>
-            <p>
-              {getUserAnswers.myDetails[0].answer_id}
+
+          {#if reloadingCommunity}
+            <Loader />
+          {:else}
+
+          {#if (
+            getUserQuestions.myDetails.length == 0
+            || getUserAnswers.myDetails.length == 0
+            || getUserComments.myDetails.length == 0
+            )}
+            <p style="background-color: firebrick; color: white; padding: 5px 8px;">
+              No Data found in <strong>{domain}</strong>
             </p>
-            <p>
-              {getUserAnswers.myDetails[0].body}
-            </p>
-          </div>
-          {/if}
+          {:else}
     
-          {#if getUserComments}
-            <div id="getStartedQuestions">
-              <h2>Comments to get started</h2>
-              <p>
-                {getUserComments.myDetails[0].comment_id}
-              </p>
-            </div>
+              {#if getUserQuestions.myDetails.length > 0}
+                <div id="getStartedQuestions">
+                  <h2>Questions to get started</h2>
+                  <p>
+                    {getUserQuestions.myDetails[0].link}
+                  </p>
+                  <p>
+                    {getUserQuestions.myDetails[0].title}
+                  </p>
+                </div>
+              {/if}
+        
+              {#if getUserAnswers.myDetails.length > 0}
+              <div id="getStartedQuestions">
+                <h2>Anwers to get started</h2>
+                <p>
+                  {getUserAnswers.myDetails[0].answer_id}
+                </p>
+                <p>
+                  {getUserAnswers.myDetails[0].body}
+                </p>
+              </div>
+              {/if}
+        
+              {#if getUserComments.myDetails.length > 0}
+                <div id="getStartedQuestions">
+                  <h2>Comments to get started</h2>
+                  <p>
+                    {getUserComments.myDetails[0].comment_id}
+                  </p>
+                </div>
+              {/if}
+            {/if}
           {/if}
       </div>
 
@@ -185,5 +225,29 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     --toastContainerRight: 1rem;
     --toastContainerBottom: 2rem;
     /* --toastContainerLeft: calc(50vw - 8rem); */
+  }
+
+  #communitiesTable {
+    /* width: 250px; */
+    table-layout: fixed;
+    max-width: 350px;
+  }
+
+  #communitiesTable th {
+    padding: 8px 4px;
+    text-align: left;
+    background-color: #04AA6D;
+    color: white;
+  }
+  
+  #communitiesTable tr:nth-child(even):not(:hover):not(.highlight){background-color: #f2f2f2;}
+
+  .joinedComminity:not(.highlight):hover{
+    background-color: bisque;
+  }
+  .highlight {
+    background-color: darkorange;
+    color: white;
+    font-weight: bold;
   }
 </style>

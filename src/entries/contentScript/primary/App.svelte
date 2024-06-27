@@ -7,6 +7,7 @@
 
 	import logo from "~/assets/logo.svg";
     import { DisplayToast } from '~/entries/popup/popupUtils';
+    import { constants } from '~/utils/constants';
 	const logoImageUrl = new URL(logo, import.meta.url).href;
 
 	// Default options
@@ -29,7 +30,7 @@
 	} else {
 
 		const remainingAPIQuota = stackData.popupContent.apiQuota.currQuota_remaining;
-		const apiCallsPerPage = 4; // number of API calls "Stack Me First" uses per page
+		const apiCallsPerPage = constants.apiCallsPerPage; // number of API calls "Stack Me First" uses per page
 		const remainingUses = Math.floor(remainingAPIQuota/apiCallsPerPage) ?? 0;
 		if(import.meta.env.VITE_DEV_MODE){
 			console.log("Remaining number of posts API will work on", {remainingUses})

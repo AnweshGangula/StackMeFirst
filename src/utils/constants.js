@@ -1,5 +1,9 @@
 import pkg from '../../package.json';
 
+export const constants = {
+    apiCallsPerPage: 4 // number of API calls "Stack Me First" uses per page
+}
+
 export const StackAppDetails = {
     firefox: {
         clientId: 24355,
