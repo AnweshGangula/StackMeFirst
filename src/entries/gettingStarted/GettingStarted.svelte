@@ -134,12 +134,14 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
 
 </script>
 
-<div id="GettingStarted_Root" style="height: 100vh;">
+<div id="GettingStarted_Root" style="">
 
   <Header pageType={pageTypeEnum.gettingStarted} />
 
-  <h1 style="margin: 0;">Getting Started</h1>
-  <p>Remaining Quota (today): {remainingUses}</p>
+  <div id="headerGettingStarted">
+    <h1 style="margin: 0;">Getting Started</h1>
+    <p>Remaining Quota (today): {remainingUses}</p>
+  </div>
 
   <div>
     <p>
@@ -302,6 +304,13 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     /* --toastContainerLeft: calc(50vw - 8rem); */
   }
 
+
+  #headerGettingStarted {
+    position: sticky; 
+    top: 0px;
+    background-color: white;
+    border-bottom: 1px solid lightgray;
+  }
   summary h2 {
     display: inline;
     /* margin: 0; */
