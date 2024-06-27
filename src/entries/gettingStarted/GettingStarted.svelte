@@ -5,6 +5,7 @@
     import Api from "~/utils/stackAPI";
     import { GetLocalTokenData, getUrlRootDomain } from "~/utils/utils";
     import Loader from "../popup/Components/Loader.svelte";
+    import Header from "~/lib/Header.svelte";
 
 
   console.log("Getting Started");
@@ -134,9 +135,30 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
 </script>
 
 <div id="GettingStarted_Root" style="height: 100vh;">
+
+  <Header pageType={pageTypeEnum.gettingStarted} />
+
   <h1 style="margin: 0;">Getting Started</h1>
   <p>Remaining Quota (today): {remainingUses}</p>
 
+  <div>
+    <p>
+      Welcome to Stack Me First,
+    </p>
+    <p>
+      If you're using the Stack Me First browser extension for the first time, this guide will help you get started with using it and how you can use it. This extension is meant to be used by user who use any of the Stack Exchange communities extensively. 
+      <span>
+        To use this page, you will need to "Login"  using the above button. And if you're already logged in, you will see your profile icon from Stack-Exchange.
+      </span>
+    </p>
+    <p>
+      Once you're signed in, Whenever you visit this page <i>(either using the Right-Click context menu or from the "Getting started" button in the popup and the sidebar)</i>, you will see the list of communities you have joined below. And a list of suggested Questions, Answers or Comments that you can get started with. 
+    </p>
+    <p>
+      You can click on any one of the communities listed in the table to update the suggested content accordingly.
+    </p>
+    <hr />
+  </div>
   {#await getStartedContent}
     <Loader />
   {:then result}
@@ -167,7 +189,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
         {/if}
       </div>
 
-      <div>
+      <div id="gettingStartedCommunityData">
           <!-- <p>Domain: {domain}</p> -->
 
           {#if reloadingCommunity}
@@ -208,11 +230,14 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                 <ul>
                   {#each getUserAnswers.myDetails.slice(0, 5) as ans}
                     <li>
-                      <a href={GetAffiliatedLink("a", ans.answer_id)}>
+                      <a 
+                        class="link"
+                        href={GetAffiliatedLink("a", ans.answer_id)}
+                        >
                         {ans.answer_id}
                       </a>
                       <span>
-                        : {ans.body}
+                        {@html ans.body}
                       </span>
                     </li>
                   {/each} 
@@ -228,11 +253,14 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                   <ul>
                     {#each getUserComments.myDetails.slice(0, 5) as cmt}
                       <li>
-                        <a href={GetAffiliatedLink("comment", cmt.comment_id)}>
+                        <a 
+                          class="link"
+                          href={GetAffiliatedLink("comment", cmt.comment_id)}
+                        >
                           {cmt.comment_id}
                         </a>
                         <span>
-                          : {cmt.body}
+                          {cmt.body}
                         </span>
                       </li>
                     {/each} 
@@ -269,6 +297,17 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     /* width: 250px; */
     table-layout: fixed;
     max-width: 350px;
+  }
+
+  #gettingStartedCommunityData .link{
+    display: block; 
+    background-color: aliceblue; 
+    padding: 2px 5px; 
+    border-radius: 5px;
+  }
+
+  #gettingStartedCommunityData .link:hover {
+    background-color: bisque;
   }
 
   #communitiesTable th {

@@ -211,6 +211,8 @@
 <style>
 	header {
 		display: flex;
+		max-width: 450px;
+		margin: auto;
 		align-items: center;
 		flex-wrap: wrap;
 		justify-content: space-between;
