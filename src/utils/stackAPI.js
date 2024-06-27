@@ -16,6 +16,8 @@ if (currBrowser == "Mozilla Firefox") {
 
 // generated from createFilter method
 const filter = '!0XXAMzZV3)6nNHjQ18538kAUL';
+const filterNoToken = "!DQDF627RVr9ylaKR-0-wIwLBcv-EAfWnG-jh)cvtEkcSZlpI11b"
+const filterToken = "";
 
 export default class Api {
     latestQuota_max;
@@ -183,7 +185,7 @@ export default class Api {
         const site = currURL;
         
 
-        const filter = this.token ? "!*Mg4PjfvuWMFghsH" : "withbody";
+        const filter = filterNoToken; // "withbody"
         // queriesObj.filter = "withbody"; // https://stackoverflow.com/a/69166789/6908282
         if (!("pagesize" in queriesObj)) {
             queriesObj.pagesize = 100;

@@ -20,6 +20,7 @@
   let getUserComments;
   let reloadingCommunity = false;
   let remainingUses = "loading...";
+  let selectedSite;
 
   async function GettingStartedEvent() {
     const tokenData = await GetLocalTokenData();
@@ -65,6 +66,7 @@
 
   function OnDomainClick(e, site){
     
+    selectedSite = site;
     reloadingCommunity = true;
     domain = getUrlRootDomain(site.site_url);
     GettingStartedContent(listOfJoinedCommunities).then(()=>{
@@ -72,20 +74,33 @@
     });
   }
 
+  function GetAffiliatedLink(postType, postId){
+    const myAffiliateId = selectedSite.user_id;
+    const siteUrl = selectedSite.site_url;
+
+    let href = siteUrl + "/" + postType + "/" + postId + "/" + myAffiliateId;
+
+    if(postType == "comment"){
+      href = siteUrl + "/posts/comments/" + postId;
+    }
+
+    return href;
+  }
+
   async function GettingStartedContent(listOfJoinedCommunities){
     
     // const {sortedAccountByReputation: listOfJoinedCommunities} = await GettingStartedEvent();
     
-    let gettingStartedSite = listOfJoinedCommunities[0];
+    selectedSite = listOfJoinedCommunities[0];
 
     if(domain){
-      gettingStartedSite = listOfJoinedCommunities.filter(s=>s.site_url.includes(domain))[0];
+      selectedSite = listOfJoinedCommunities.filter(s=>s.site_url.includes(domain))[0];
     } else {
-      domain = getUrlRootDomain(gettingStartedSite.site_url);
+      domain = getUrlRootDomain(selectedSite.site_url);
     }
 
-    const userId = gettingStartedSite.user_id;
-    console.log({gettingStartedSite})
+    const userId = selectedSite.user_id;
+    console.log({selectedSite})
 
     const tokenData = await GetLocalTokenData();
     const token = tokenData.token ?? "";
@@ -153,7 +168,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
       </div>
 
       <div>
-          <p>Domain: {domain}</p>
+          <!-- <p>Domain: {domain}</p> -->
 
           {#if reloadingCommunity}
             <Loader />
@@ -172,33 +187,56 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
               {#if getUserQuestions.myDetails.length > 0}
                 <div id="getStartedQuestions">
                   <h2>Questions to get started</h2>
-                  <p>
-                    {getUserQuestions.myDetails[0].link}
-                  </p>
-                  <p>
-                    {getUserQuestions.myDetails[0].title}
-                  </p>
+
+                  <ul>
+                    {#each getUserQuestions.myDetails.slice(0, 5) as ques}
+                      <li>
+                        <a href={GetAffiliatedLink("q", ques.question_id)}>
+                          {ques.title}
+                        </a>
+                      </li>
+                    {/each} 
+                  </ul>
+
                 </div>
               {/if}
         
               {#if getUserAnswers.myDetails.length > 0}
               <div id="getStartedQuestions">
                 <h2>Anwers to get started</h2>
-                <p>
-                  {getUserAnswers.myDetails[0].answer_id}
-                </p>
-                <p>
-                  {getUserAnswers.myDetails[0].body}
-                </p>
+
+                <ul>
+                  {#each getUserAnswers.myDetails.slice(0, 5) as ans}
+                    <li>
+                      <a href={GetAffiliatedLink("a", ans.answer_id)}>
+                        {ans.answer_id}
+                      </a>
+                      <span>
+                        : {ans.body}
+                      </span>
+                    </li>
+                  {/each} 
+                </ul>
+
               </div>
               {/if}
         
               {#if getUserComments.myDetails.length > 0}
                 <div id="getStartedQuestions">
                   <h2>Comments to get started</h2>
-                  <p>
-                    {getUserComments.myDetails[0].comment_id}
-                  </p>
+
+                  <ul>
+                    {#each getUserComments.myDetails.slice(0, 5) as cmt}
+                      <li>
+                        <a href={GetAffiliatedLink("comment", cmt.comment_id)}>
+                          {cmt.comment_id}
+                        </a>
+                        <span>
+                          : {cmt.body}
+                        </span>
+                      </li>
+                    {/each} 
+                  </ul>
                 </div>
               {/if}
             {/if}

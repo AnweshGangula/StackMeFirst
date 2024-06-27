@@ -106,7 +106,7 @@ export const customFilterEg = {
     base: "default",
 }
 
-export const affeliateIds = {
+export const affiliateIds = {
     "stackoverflow.com": "6908282",
     "superuser.com": "863212",
     "meta.stackexchange.com": "381523",
