@@ -148,7 +148,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
 
   <div id="headerGettingStarted">
     <h1 style="margin: 0;">🚀 Getting Started</h1>
-    <p>Remaining Quota (today): {remainingUses}/{totalAvaibaleUses}</p>
+    <p>Remaining uses today (approx): <strong>{remainingUses}</strong>/{totalAvaibaleUses}</p>
   </div>
 
   <div style="border-bottom: 1px solid lightgray;">
@@ -167,6 +167,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     <p>
       You can click on any one of the communities listed in the table to update the suggested content accordingly.
     </p>
+    <blockquote style="padding: 5px; margin: 5px 15px; border-left: 3px solid gray; background: beige">There are additional references to help you get started in the <a href="https://github.com/AnweshGangula/StackMeFirst/tree/listUpvotedAns?tab=readme-ov-file#getting-started">Readme File</a> of the Github Repository</blockquote>
     <!-- <hr /> -->
   </div>
   {#await getStartedContent}

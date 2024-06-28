@@ -190,7 +190,7 @@ async function initContextMenus(){
 
   browser.contextMenus.removeAll().then(() => {
     browser.contextMenus.create({
-      title: "Stack Me First",
+      title: "Stack Me First - Menu",
       id: "stackMeFirst",
       contexts: ["all"]
     })
@@ -199,7 +199,7 @@ async function initContextMenus(){
 
         browser.contextMenus.create({
           parentId: "stackMeFirst",
-          title: "Open Getting Started Page", 
+          title: "🚀 Open Getting Started Page", 
           contexts:["all"], 
           id: contextMenuId.gettingStarted
         })

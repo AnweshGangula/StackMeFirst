@@ -26,15 +26,30 @@ Optionally, you can also use the login button in the popup to highlight & list
 
 ## Getting Started
 
-If you're using this extensions for the first time, it may not be very obvious how, when and where is this useful. You can use **Stack Exchange Data Explorer (SEDE)** [Queries](https://data.stackexchange.com/stackoverflow/queries) to find posts where Stack Me First can show it's magic. Below are few references
+If you're using this extensions for the first time, it may not be very obvious how, when and where is this useful. You can use the "Getting Started" page of the plugin which you can open by clicking the button in the popup that shows when you click the badge icon OR by **right-click > Stack Me First Menu > 🚀 Open Getting Started page**
 
-> NOTE: all the links below are SEDE queries, so you need to input your UserId which you can fetch from your stack exchange community profile by logging in and clicking on your profile icons and copying the UserId from the url. for example my profile url for stack overflow is https://stackoverflow.com/users/6908282/gangula and my UserId `6908282`
+Alternatiely, You can use **Stack Exchange Data Explorer (SEDE)** [Queries](https://data.stackexchange.com/users/37325/gangula?order_by=favorite) to find posts where Stack Me First can show it's magic.
+
+Below are few references
+
+<blockquote>
+<details>
+<summary>Useful references to get started</summary>
+
+> NOTE: all the links below are SEDE queries, so you need to input your UserId which you can fetch from your stack exchange community profile by logging in and clicking on your profile icons and copying the UserId from the url.\
+> For example my profile url for stack overflow is https://stackoverflow.com/users/6908282/gangula and my UserId `6908282`
 
 - Posts answered by user - Find posts that are answered by you
   - https://data.stackexchange.com/stackoverflow/query/1849271/posts-answered-by-user
   - This shows a list of posts where you have added answers to the post.
 - Posts commented by user  - Find posts where you added atleast 1 comment
   - https://data.stackexchange.com/stackoverflow/query/1849270/posts-commented-by-user
+- Posts with links to questions that you posted
+  - https://data.stackexchange.com/stackoverflow/query/1849607
+  - 
+</details>
+</blockquote>
+
 
 ## Instructions
 
