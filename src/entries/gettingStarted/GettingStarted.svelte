@@ -1,5 +1,6 @@
 <script>
   	import { onMount } from "svelte";
+    import DOMPurify from 'dompurify';
     import browser from "webextension-polyfill";
     import { constants, pageTypeEnum } from "~/utils/constants";
     import Api from "~/utils/stackAPI";
@@ -19,9 +20,16 @@
   let getUserQuestions;
   let getUserAnswers;
   let getUserComments;
-  let reloadingCommunity = false;
-  let remainingUses = "loading...";
   let selectedSite;
+  
+  let reloadingCommunity = false;
+  
+  let apiCallsPerPage = constants.apiCallsPerPage; // number of API calls "Stack Me First" uses per page
+  let remainingUses = "loading...";
+  let totalAvaibaleUses = 10000/apiCallsPerPage;
+
+  
+  let stackAPI;
 
   async function GettingStartedEvent() {
     const tokenData = await GetLocalTokenData();
@@ -29,7 +37,7 @@
     const profileData = tokenData;
     const accountId = tokenData.accountId;
 
-    const stackAPI = new Api(token);
+    stackAPI = new Api(token);
     const {
       myDetails: userAssociatedAccounts,
       latestQuota_max,
@@ -106,7 +114,7 @@
     const tokenData = await GetLocalTokenData();
     const token = tokenData.token ?? "";
 
-    let stackAPI = new Api(token);
+    stackAPI = new Api(token);
 
     // TODO: get all communities joined by the user and display getting started for each site
     // NOTE: this needs account_id which is different from userID.
@@ -121,8 +129,8 @@
     const gettingStartedData = {listOfJoinedCommunities, getUserComments, getUserAnswers, getUserQuestions}
     console.log({gettingStartedData})
 
-    const apiCallsPerPage = constants.apiCallsPerPage; // number of API calls "Stack Me First" uses per page
-		remainingUses = Math.floor(getUserComments.latestQuota_remaining/apiCallsPerPage) ?? 0;
+		remainingUses = Math.floor(stackAPI.latestQuota_remaining/apiCallsPerPage) ?? 0;
+    totalAvaibaleUses = Math.floor(stackAPI.latestQuota_max/apiCallsPerPage) ?? 10000
 
 
     return gettingStartedData
@@ -134,16 +142,16 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
 
 </script>
 
-<div id="GettingStarted_Root" style="">
+<div id="GettingStarted_Root" style="max-width: 1200px; margin: auto;">
 
   <Header pageType={pageTypeEnum.gettingStarted} />
 
   <div id="headerGettingStarted">
-    <h1 style="margin: 0;">Getting Started</h1>
-    <p>Remaining Quota (today): {remainingUses}</p>
+    <h1 style="margin: 0;">🚀 Getting Started</h1>
+    <p>Remaining Quota (today): {remainingUses}/{totalAvaibaleUses}</p>
   </div>
 
-  <div>
+  <div style="border-bottom: 1px solid lightgray;">
     <p>
       Welcome to Stack Me First,
     </p>
@@ -159,7 +167,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     <p>
       You can click on any one of the communities listed in the table to update the suggested content accordingly.
     </p>
-    <hr />
+    <!-- <hr /> -->
   </div>
   {#await getStartedContent}
     <Loader />
@@ -244,8 +252,9 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                           >
                           {ans.answer_id}
                         </a>
-                        <span>
-                          {@html ans.body}
+                        <span class="bodyText">
+                          {@html DOMPurify.sanitize(ans.body)}
+                          <!-- {ans.body_markdown} -->
                         </span>
                       </li>
                     {/each} 
@@ -269,8 +278,9 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                           >
                             {cmt.comment_id}
                           </a>
-                          <span>
-                            {@html cmt.body}
+                          <span class="bodyText">
+                            {@html DOMPurify.sanitize(cmt.body)}
+                            <!-- {@html cmt.body_markdown} -->
                           </span>
                         </li>
                       {/each} 
@@ -332,14 +342,19 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     background-color: bisque;
   }
 
-  #gettingStartedCommunityData .link.answer{
+  #gettingStartedCommunityData .link .bodyText{
+    position: relative;
+    left: 15px;
+  }
+  #gettingStartedCommunityData .link.answer .bodyText {
 
     /* max-height: ; */
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 4; /* number of lines to show */
-            line-clamp: 4; 
+    -webkit-line-clamp: 3; /* number of lines to show */
+            line-clamp: 3; 
     -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
   }
 
   #communitiesTable th {

@@ -89,7 +89,8 @@
 	position: absolute;
     content: "👑"; /* "\2756" or \2764*/
 	/* Unicode symbol: https://www.fileformat.info/info/unicode/category/So/list.htm */
-    left: -15px;
+    text-shadow: 1px 1px 2px red;
+	left: -15px;
     top: -15px;
     color: orange;
     font-size: large;
