@@ -20,6 +20,7 @@
   let getUserQuestions;
   let getUserAnswers;
   let getUserComments;
+  let getUserLinkQs;
   let selectedSite;
   
   let reloadingCommunity = false;
@@ -127,7 +128,14 @@
     getUserComments = await stackAPI.getPostsByUserId(domain, userId, "comments");
     selectedSite.totalComments = getUserComments.totalCount;
 
-    const gettingStartedData = {listOfJoinedCommunities, getUserComments, getUserAnswers, getUserQuestions}
+    const questionIds = getUserQuestions.myDetails
+    // .filter(q=>q.score < 10) // filter smaller score questions - hopefully it might have less linked questions
+    .map(q=>q.question_id)
+    .slice(0,6).join(";");
+
+    getUserLinkQs = await stackAPI.getLinkedQues("https://" + domain, questionIds)
+
+    const gettingStartedData = {listOfJoinedCommunities, getUserComments, getUserAnswers, getUserQuestions, getUserLinkQs}
     console.log({gettingStartedData})
 
 		remainingUses = Math.floor(stackAPI.latestQuota_remaining/apiCallsPerPage) ?? 0;
@@ -298,6 +306,29 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                 </div>
               {/if}
             {/if}
+
+            {#if getUserLinkQs.myDetails.length > 0}
+              <div class="getStartedLinkQ">
+                <details>
+                  <summary>
+                    <h2>Questions linked to Your Questions</h2>
+                  </summary>
+                  
+                  <blockquote>Stack Me First can also help you identify questions that are linked to any questions you might have posted. This helps you in identifying a post you created if you come across a linked post in your Google search or any other source</blockquote>
+
+                  <ul>
+                    {#each getUserLinkQs.myDetails.filter(q => q.score < 20).slice(0, 5) as ques}
+                      <li class="question">
+                        <a href={GetAffiliatedLink("q", ques.question_id)}>
+                          {ques.title}
+                        </a>
+                      </li>
+                  {/each} 
+                  </ul>
+
+              </div>
+            {/if}
+
           {/if}
         </div>
     </div>
