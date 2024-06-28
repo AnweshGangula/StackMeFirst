@@ -199,11 +199,14 @@ export default class Api {
         //     if (hasMore) {
         //         mergedQuery.page += 1;
         //     }
-            const { items, has_more, quota_max, quota_remaining} = await this._fetch(
+            const apiResponse = await this._fetch(
                 `/users/${userId}/${postType}`,
                 mergedQuery,
                 site
             );
+
+            const { items, has_more, quota_max, quota_remaining, total: totalCount} = apiResponse;
+
             this.latestQuota_max = quota_max;
             this.latestQuota_remaining = quota_remaining;
 
@@ -211,7 +214,7 @@ export default class Api {
             // hasMore = has_more;
         // } while (hasMore);
 
-        return {myDetails, latestQuota_max: this.latestQuota_max, latestQuota_remaining: this.latestQuota_remaining};
+        return {myDetails, latestQuota_max: this.latestQuota_max, latestQuota_remaining: this.latestQuota_remaining, totalCount};
     }
 
     async getAnswersForPosts(currURL, ids, queriesObj = {}) {
@@ -244,7 +247,7 @@ export default class Api {
         } while (hasMore);
 
         return {myDetails, latestQuota_max: this.latestQuota_max, latestQuota_remaining: this.latestQuota_remaining};
-    }
+    }   
 
     async getCommentsForPosts(currURL, ids, queriesObj = {}) {
         const site = await this.siteNameFromURL(currURL); //.split(".")[0];

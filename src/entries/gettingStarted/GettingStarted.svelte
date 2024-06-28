@@ -125,6 +125,7 @@
     // const getUserPosts = await stackAPI.getPostsByUserId(domain, userId, "posts"); // this may or may not give both answers and questions
     getUserAnswers = await stackAPI.getPostsByUserId(domain, userId, "answers");
     getUserComments = await stackAPI.getPostsByUserId(domain, userId, "comments");
+    selectedSite.totalComments = getUserComments.totalCount;
 
     const gettingStartedData = {listOfJoinedCommunities, getUserComments, getUserAnswers, getUserQuestions}
     console.log({gettingStartedData})
@@ -167,7 +168,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     <p>
       You can click on any one of the communities listed in the table to update the suggested content accordingly.
     </p>
-    <blockquote style="padding: 5px; margin: 5px 15px; border-left: 3px solid gray; background: beige">There are additional references to help you get started in the <a href="https://github.com/AnweshGangula/StackMeFirst/tree/listUpvotedAns?tab=readme-ov-file#getting-started">Readme File</a> of the Github Repository</blockquote>
+    <blockquote style="">There are additional references to help you get started in the <a href="https://github.com/AnweshGangula/StackMeFirst/tree/listUpvotedAns?tab=readme-ov-file#getting-started">Readme File</a> of the Github Repository</blockquote>
     <!-- <hr /> -->
   </div>
   {#await getStartedContent}
@@ -176,7 +177,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     <div style="display: flex; gap: 10px; padding: 2px 5px">
       <div style="">
         <h2>Communities you joined:</h2>
-        <small>(click to fetch data from the community)</small>
+        <small>(click to fetch data from the respective community)</small>
         {#if listOfJoinedCommunities}
           <table id="communitiesTable">
             <tr style="text-wrap: nowrap; text-align: center">
@@ -184,16 +185,23 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
               <th>Reputation</th>
               <th># Questions</th>
               <th># Answers</th>
+              <th># Comments</th>
             </tr>
             {#each listOfJoinedCommunities as site}
               <tr
+                title="{site.site_url == selectedSite.site_url ? "" : "Click to fetch data"}"
                 on:click={(e)=>OnDomainClick(e, site)}
                 class = {"joinedComminity " + (domain == getUrlRootDomain(site.site_url) ? 'highlight': '')}
                 style="padding: 5px 2px; border-radius: 5px">
-                <td style="min-width: 150px;">{site.site_name}</td>
-                <td style="text-align: center">{site.reputation}</td>
-                <td style="text-align: center">{site.question_count}</td>
-                <td style="text-align: center">{site.answer_count}</td>
+                <td class="cellCommunity" style="min-width: 150px;">{site.site_name}</td>
+                <td class="cellNumbers cellReputation">{site.reputation}</td>
+                <td class="cellNumbers cellQuestion_count">{site.question_count}</td>
+                <td class="cellNumbers cellAnswer_count">{site.answer_count}</td>
+                <td 
+                  class="cellNumbers cellSite_url {site.site_url == selectedSite.site_url ? "" : "loadComments"}"
+                  > 
+                  {site.site_url == selectedSite.site_url ? (selectedSite.totalComments ?? "loading...") : "🔃"}
+                </td>
               </tr>
             {/each} 
           </table>
@@ -209,8 +217,8 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
 
           {#if (
             getUserQuestions.myDetails.length == 0
-            || getUserAnswers.myDetails.length == 0
-            || getUserComments.myDetails.length == 0
+            && getUserAnswers.myDetails.length == 0
+            && getUserComments.myDetails.length == 0
             )}
             <p style="background-color: firebrick; color: white; padding: 5px 8px;">
               No Data found in <strong>{domain}</strong>
@@ -218,7 +226,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
           {:else}
     
               {#if getUserQuestions.myDetails.length > 0}
-                <div id="getStartedQuestions">
+                <div class="getStartedQuestions">
                   <details open>
                     <summary>
                       <h2>Questions to get started</h2>
@@ -226,7 +234,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
 
                     <ul>
                       {#each getUserQuestions.myDetails.slice(0, 5) as ques}
-                        <li>
+                        <li class="question">
                           <a href={GetAffiliatedLink("q", ques.question_id)}>
                             {ques.title}
                           </a>
@@ -238,11 +246,11 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
               {/if}
         
               {#if getUserAnswers.myDetails.length > 0}
-              <div id="getStartedQuestions">
-                <details open>
+              <div class="getStartedQuestions">
+                <details>
                   <summary>
                     <h2>Anwers to get started</h2>
-                    <i>limited to 4 lines</i>
+                    <i>answer body is limited to 4 lines</i>
                   </summary>
 
                   <ul>
@@ -266,14 +274,14 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
               {/if}
         
               {#if getUserComments.myDetails.length > 0}
-                <div id="getStartedQuestions">
-                  <details open>
+                <div class="getStartedQuestions">
+                  <details>
                     <summary>
                       <h2>Comments to get started</h2>
                     </summary>
                     <ul>
                       {#each getUserComments.myDetails.slice(0, 5) as cmt}
-                        <li class="link">
+                        <li class="link comment">
                           <a 
                             href={GetAffiliatedLink("comment", cmt.comment_id)}
                           >
@@ -291,8 +299,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
               {/if}
             {/if}
           {/if}
-      </div>
-
+        </div>
     </div>
   {:catch error}
       <p style="color: red">{error.message}</p>
@@ -315,10 +322,18 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     /* --toastContainerLeft: calc(50vw - 8rem); */
   }
 
+  #GettingStarted_Root blockquote {
+    padding: 5px;
+    margin: 5px 15px;
+    margin-left: 30px;
+    border-left: 3px solid gray;
+    background: beige
+  }
 
   #headerGettingStarted {
     position: sticky; 
     top: 0px;
+    z-index: 10;
     background-color: white;
     border-bottom: 1px solid lightgray;
   }
@@ -329,7 +344,38 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
   #communitiesTable {
     /* width: 250px; */
     table-layout: fixed;
-    max-width: 350px;
+    max-width: 450px;
+  }
+
+  #communitiesTable .cellNumbers{
+    text-align: center;
+  }
+
+  #communitiesTable .cellCommunity{
+    min-width: 200px;
+    padding: 2px 5px;
+  }
+
+  #communitiesTable .cellSite_url.loadComments{
+    cursor: pointer;
+  }
+
+  #gettingStartedCommunityData {
+    max-height: 850px;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+
+  #gettingStartedCommunityData summary {
+    position: sticky;
+    top: 0px;
+    z-index: 9;
+    background: white;
+    border-bottom: 1px solid lightgray;
+  }
+
+  #gettingStartedCommunityData .link {
+    margin-top: 8px;
   }
 
   #gettingStartedCommunityData .link a{
@@ -358,6 +404,10 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     text-overflow: ellipsis;
   }
 
+  #communitiesTable {
+    position: sticky;
+    top: 75px;
+  }
   #communitiesTable th {
     padding: 8px 4px;
     text-align: left;
