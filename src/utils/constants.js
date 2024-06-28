@@ -26,7 +26,8 @@ export const stackCommunities = [
 ]
 
 export const excludedSites = [
-    "api.stackexchange.com"
+    "api.stackexchange.com",
+    "data.stackexchange.com"
 ]
 
 export const pageTypeEnum = {

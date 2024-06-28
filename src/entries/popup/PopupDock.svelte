@@ -4,7 +4,7 @@
 	// let console = browser.extension.getBackgroundPage().console;
 	import Notification from "./Components/Notification.svelte";
 	import { restore_options, CheckWarnings } from "./popupUtils";
-	import { IsStackOverflow } from "~/utils/utils";
+	import { IsValidStackExchangeSite } from "~/utils/utils";
 	import { pageTypeEnum } from "~/utils/constants";
 	import StackContent from "./Components/StackContent.svelte";
 	// import Preferences from "~/lib/Preferences.svelte";

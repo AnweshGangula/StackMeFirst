@@ -1,7 +1,7 @@
 <script>
 	import browser from "webextension-polyfill";
 	import Api from "~/utils/stackAPI";
-	import { GetLocalTokenData, getUrlRootDomain, IsStackOverflow } from "~/utils/utils";
+	import { GetLocalTokenData, getUrlRootDomain, IsValidStackExchangeSite } from "~/utils/utils";
 	import { pageTypeEnum } from "~/utils/constants";
 
 	import ProfilePic from "./ProfilePic.svelte";
@@ -104,7 +104,7 @@
 				const tabUrl = activeTab.url;
 				const website = getUrlRootDomain(tabUrl);
 
-				const isStack = website ? IsStackOverflow(tabUrl) : false;
+				const isStack = website ? IsValidStackExchangeSite(tabUrl) : false;
 
 				const queryParameters = [];
 				if (isStack) {

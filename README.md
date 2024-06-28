@@ -40,13 +40,13 @@ Below are few references
 > For example my profile url for stack overflow is https://stackoverflow.com/users/6908282/gangula and my UserId `6908282`
 
 - Posts answered by user - Find posts that are answered by you
-  - https://data.stackexchange.com/stackoverflow/query/1849271/posts-answered-by-user
+  - [Posts answered by me](https://data.stackexchange.com/stackoverflow/query/1849271/posts-answered-by-user?UserId=6908282)
   - This shows a list of posts where you have added answers to the post.
 - Posts commented by user  - Find posts where you added atleast 1 comment
-  - https://data.stackexchange.com/stackoverflow/query/1849270/posts-commented-by-user
+  - [Post which has my comments with more than 3 votes](https://data.stackexchange.com/stackoverflow/query/1849270/posts-commented-by-user?MinCommentsScore=3&UserId=6908282)
 - Posts with links to questions that you posted
-  - https://data.stackexchange.com/stackoverflow/query/1849607
-  - 
+  - [Questions that have a link to questions posted by the user](https://data.stackexchange.com/stackoverflow/query/1849607/questions-that-use-a-particular-users-question-on-linked-section?UserId=6908282)
+
 </details>
 </blockquote>
 

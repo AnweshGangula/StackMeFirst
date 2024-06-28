@@ -26,10 +26,10 @@
 		{/if}
 		{#if warningText != ""}
 			<p class="warn">
-				{#if warningText.startsWith("! Please open a Stack Overflow")}
-					! Please open a
-					<a href='https://stackoverflow.com/' on:click|preventDefault={() => browser.tabs.create({ url: 'https://stackoverflow.com/'})} >
-						Stack Overflow
+				{#if warningText.startsWith("! Please open any Stack Exchange")}
+					! Please open any 
+					<a href='https://stackexchange.com/' on:click|preventDefault={() => browser.tabs.create({ url: 'https://stackexchange.com/'})} >
+						Stack Exchange
 					</a>
 					 question to use this addin.
 				{:else}

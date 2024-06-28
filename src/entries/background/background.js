@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 import { defaultApiData, StackAppDetails, pageTypeEnum } from "~/utils/constants";
-import { GetBrowser, GetLocalTokenData, IsStackOverflow, getUrlRootDomain } from "~/utils/utils";
+import { GetBrowser, GetLocalTokenData, IsValidStackExchangeSite, getUrlRootDomain } from "~/utils/utils";
 import Api from "~/utils/stackAPI";
 
 import backgroundMixpanel from "./mixpanelBackground";
@@ -22,7 +22,7 @@ browser.runtime.onInstalled.addListener(() => {
 function OpenGettingStartedPage(tab, accountId){
   const website = getUrlRootDomain(tab.url) ?? "";
 
-  const isStack = website ? IsStackOverflow(tab.url) : false;
+  const isStack = website ? IsValidStackExchangeSite(tab.url) : false;
 
   const queryParameters = new URLSearchParams();
   if (isStack) {
@@ -61,7 +61,7 @@ browser.runtime.onMessage.addListener(
     let badgeText, badgeTitle, color;
 
     switch (subject) {
-      case "isStackOverflow":
+      case "isValidStackSite":
         browserAction.setIcon({ path: '../icons/StackMeFirst.png', tabId: browserTabId });
         // return true; // must return true to signal asynchronous
         break;

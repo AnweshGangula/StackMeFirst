@@ -14,7 +14,11 @@
   const urlParams = new URLSearchParams(window.location.search);
   let domain = urlParams.get('domain');
   // meta sites are not returned in associated API call - except meta.stackexchange.com: https://meta.stackexchange.com/q/400995/381523
-  domain = (domain?.startsWith("meta.") && domain !== "meta.stackexchange.com" )? domain.replace("meta.", "") : domain;
+  if(domain?.startsWith("meta.") && domain !== "meta.stackexchange.com" ){
+    domain = domain.replace("meta.", "")
+  } else if (domain == "data.stackexchange.com"){
+    domain = ""
+  }
 
   let listOfJoinedCommunities;
   let getUserQuestions;
@@ -52,7 +56,7 @@
     // console.log({listOfJoinedCommunities})
 
     // browser.tabs.query({ active: true, lastFocusedWindow: true }).then(function (tabs) {
-    // 	isQ = IsStackOverflow(tabs[0].url);
+    // 	isQ = IsValidStackExchangeSite(tabs[0].url);
     // 	if (isQ) {
     // browser.tabs
     // 	.sendMessage(tabs[0].id, { from: pageTypeEnum.popup, subject: "popupLinkQs" })

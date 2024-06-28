@@ -4,7 +4,7 @@
 	// let console = browser.extension.getBackgroundPage().console;
 	import Notification from "./Components/Notification.svelte";
 	import { restore_options, CheckWarnings } from "./popupUtils";
-	import { IsStackOverflow } from "~/utils/utils";
+	import { IsValidStackExchangeSite } from "~/utils/utils";
 	import { pageTypeEnum } from "~/utils/constants";
 	import StackContent from "./Components/StackContent.svelte";
 	import Header from "~/lib/Header.svelte";
@@ -32,7 +32,7 @@
 		let activeTab = tabs[0];
 		glCurrTab = tabs[0];
 
-		if (IsStackOverflow(activeTab.url)) {
+		if (IsValidStackExchangeSite(activeTab.url)) {
 			const info = await browser.tabs.sendMessage(tabs[0].id, { from: pageTypeEnum.popup, subject: "popupDOM" })
 			// console.log(info);
 			extractMyStack(info, tabs);
@@ -42,7 +42,7 @@
 			//     document.getElementById("config").style.display = "none";
 			// }
 		} else {
-			warningText = "! Please open a Stack Overflow question to use this addin.";
+			warningText = "! Please open any Stack Exchange question to use this addin.";
 			warningType.add("warn");
 		}
 	}

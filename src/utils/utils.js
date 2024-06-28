@@ -24,15 +24,14 @@ export function getUrlRootDomain(url) {
 }
 
 
-export function IsStackOverflow(baseUrl) {
+export function IsValidStackExchangeSite(baseUrl) {
     // let activeURL = new URL(baseUrl);
     // let website = activeURL.host;
-    // const isStackOverflow = website == "stackoverflow.com";
 
-    const isStackOverflow = stackCommunities.includes(getDomainWithoutSubdomain(baseUrl));
+    const isValidStackSite = stackCommunities.includes(getDomainWithoutSubdomain(baseUrl));
     const isExcludedSite = excludedSites.includes(getUrlRootDomain(baseUrl));
 
-    const isValidUrl = isStackOverflow && !isExcludedSite
+    const isValidUrl = isValidStackSite && !isExcludedSite
 
     return isValidUrl
 }
@@ -42,7 +41,7 @@ export function IsQuestion(baseUrl) {
     const ignoreURL = ignoreUrlList.some((url) => URLpathname.includes(url))
     const isQuestion = URLpathname.startsWith("/questions/");
 
-    return IsStackOverflow(baseUrl) && isQuestion && !ignoreURL
+    return IsValidStackExchangeSite(baseUrl) && isQuestion && !ignoreURL
 }
 
 export function QuesIdUrl(baseUrl) {

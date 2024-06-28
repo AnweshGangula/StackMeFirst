@@ -1,7 +1,7 @@
 import browser from "webextension-polyfill";
 
 import { getCmtIds, highlightAnswer, highlightComments, HighlightLinks } from "./helpers/contentScriptHelpers";
-import { IsStackOverflow, IsQuestion } from "~/utils/utils";
+import { IsValidStackExchangeSite, IsQuestion } from "~/utils/utils";
 import { defaultPreferances } from "~/utils/constants";
 import Api from "~/utils/stackAPI";
 import { GetLocalTokenData } from "~/utils/utils";
@@ -31,10 +31,10 @@ export default async function highlightStack() {
     //TODO: if logged, then add token for stackAPI above. This will help with API limitations: https://api.stackexchange.com/docs/throttle#:~:text=If%20an%20application%20does%20have%20an%20access_token
     const currURL = window.location.href // .at(-1)
 
-    if (IsStackOverflow(currURL)) {
+    if (IsValidStackExchangeSite(currURL)) {
         browser.runtime.sendMessage({
             from: "contentScript",
-            subject: "isStackOverflow",
+            subject: "isValidStackSite",
         });
 
         const currUser = document.querySelector(".s-topbar--item.s-user-card");
