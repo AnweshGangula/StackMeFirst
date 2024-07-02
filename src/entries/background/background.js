@@ -67,7 +67,7 @@ browser.runtime.onMessage.addListener(
         break;
       case "needLogin":
         badgeText = "Login";
-        badgeTitle = "Login to Stack Overflow to highlight your answers";
+        badgeTitle = "Login to this Stack Exchange community to highlight your answers";
         color = "firebrick";
 
         UpdateBadge(badgeText, browserTabId, badgeTitle, color);

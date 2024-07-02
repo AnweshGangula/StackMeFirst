@@ -167,7 +167,7 @@
 				<ProfilePic {profileData} />
 				<button id="btnLogout" title={profileData.userName} on:click|preventDefault={() => RemoveToken(result.token)}>Logout</button>
 				{:else}
-				<button id="btnLogin" class={loading} on:click|preventDefault={() => login()} title="Click to Login to Stack Overflow for enhanced insights">
+				<button id="btnLogin" class={loading} on:click|preventDefault={() => login()} title="Click to Login to Stack Exchange community for enhanced insights">
 					Login
 				</button>
 				{/if}

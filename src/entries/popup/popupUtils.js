@@ -96,7 +96,7 @@ export function CheckWarnings(currTab, info) {
     //  reference: https://stackoverflow.com/a/20023723/6908282
     const metaData = info.metaData;
     if (!info.userLoggedIn){ // } && !info.userInCommunity) {
-        warningText = "! Login to Stack Overflow to highlight your answers";
+        warningText = "! Login to this Stack Exchange community to highlight your answers";
         warningType.add("warn");
     } else if (!info.userInCommunity) {
         warningText = "! Join this Community to use Stack Me First Plugin";

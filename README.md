@@ -148,9 +148,9 @@ Checkout the contribution or local development instructions in the [./Contributo
 
 # SEO Keywords/sentences:
 
-- chrome extension or firefox extension to highlight & list my upvoted stack overflow answers
-- chrome extension or firefox extension to highlight & list my stack overflow linked questions
-- chrome extension or firefox extension to highlight & list my stack overflow comments
+- chrome extension or firefox extension to highlight & list my upvoted stack overflow & stack exchange community answers
+- chrome extension or firefox extension to highlight & list my stack overflow & stack exchange community linked questions
+- chrome extension or firefox extension to highlight & list my stack overflow & stack exchange community comments
 
 [1]: https://chrome.google.com/webstore/detail/stack-me-first/pmjhehdfjfahnlgdblnhhfcimegodmnj
 [2]: https://microsoftedge.microsoft.com/addons/detail/stack-me-first/andilefigneejkadafmdfcmjdnabfbhi

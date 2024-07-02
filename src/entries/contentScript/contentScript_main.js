@@ -198,6 +198,8 @@ export default async function highlightStack() {
             if ((msg.from === 'popup') && (msg.subject === 'popupDOM')) {
                 // send data to list answers in popup
                 response(popupContent); // this sends popupContent dict to SetPopupContent function in popup.js
+            } else if (msg.subject === "headerDOM") {
+                response(userLoggedIn)
             }
         });
     }
