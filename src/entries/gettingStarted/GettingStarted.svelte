@@ -163,7 +163,7 @@
     .map(q=>q.question_id)
     .slice(0,6).join(";");
 
-    getUserLinkQs = await stackAPI.getLinkedQues("https://" + domain, questionIds)
+    getUserLinkQs = questionIds.length > 0 ? await stackAPI.getLinkedQues("https://" + domain, questionIds) : {latestQuota_max: stackAPI.latestQuota_max, latestQuota_remaining: stackAPI.latestQuota_remaining, myDetails: []};
 
     const gettingStartedData = {listOfJoinedCommunities, getUserComments, getUserAnswers, getUserQuestions, getUserLinkQs, allMyHiddenCommentPosts}
     console.log({gettingStartedData})
@@ -187,7 +187,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
 
   <div id="headerGettingStarted">
     <h1 style="margin: 0;">🚀 Getting Started</h1>
-    <p>Remaining uses today (approx): <strong>{remainingUses}</strong>/{totalAvaibaleUses}</p>
+    <p>Remaining uses <b>today</b> (approx): <strong>{remainingUses}</strong>/{totalAvaibaleUses}</p>
   </div>
 
   <div style="border-bottom: 1px solid lightgray;">
@@ -270,7 +270,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                   <details open>
                     <summary>
                       <h2>Questions to get started</h2>
-                      <i>({questions.length})</i>
+                      <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({questions.length})</b></i>
                     </summary>
 
                     <ul>
@@ -292,7 +292,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                 <details>
                   <summary>
                     <h2>Anwers to get started</h2>
-                    <i>({answers.length}) answer body is limited to 4 lines</i>
+                    <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({answers.length})</b> answer body is limited to 4 lines</i>
                   </summary>
 
                   <ul>
@@ -322,7 +322,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                   <details>
                     <summary>
                       <h2>Comments to get started</h2>
-                      <i>({userComments.length})</i>
+                      <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({userComments.length})</b></i>
                     </summary>
                     <ul>
                       {#each userComments as cmt}
@@ -351,7 +351,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                 <details>
                   <summary>
                     <h2>Questions linked to Your Questions</h2>
-                    <i>({linkQs.length})</i>
+                    <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({linkQs.length})</b></i>
                   </summary>
                   
                   <blockquote>Stack Me First can also help you identify questions that are linked to any questions you might have posted. This helps you in identifying a post you created if you come across a linked post in your Google search or any other source</blockquote>
@@ -369,13 +369,19 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
               </div>
             {/if}
 
-            {#if allMyHiddenCommentPosts.length >= 0}
+            {#if (
+              getUserQuestions.myDetails.length > 0
+              || getUserAnswers.myDetails.length > 0
+              || getUserComments.myDetails.length > 0
+              || getUserLinkQs.myDetails.length > 0
+              || allMyHiddenCommentPosts.slice(0, 5).length > 0
+              )}
               {@const hiddenCommentPosts = allMyHiddenCommentPosts.slice(0, 5)}
               <div class="getStartedHiddenComments">
                 <details>
                   <summary>
                     <h2>Posts with your hidden comments</h2>
-                    <i>({hiddenCommentPosts.length})</i>
+                    <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({hiddenCommentPosts.length})</b></i>
                   </summary>
                   
                   {#if hiddenCommentPosts.length == 0}
@@ -413,7 +419,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                   {/if}
 
               </div>
-          {/if}
+            {/if}
 
           {/if}
         </div>
