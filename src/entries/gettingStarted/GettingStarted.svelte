@@ -265,14 +265,16 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
           {:else}
     
               {#if getUserQuestions.myDetails.length > 0}
+                {@const questions = getUserQuestions.myDetails.slice(0, 5)}
                 <div class="getStartedQuestions">
                   <details open>
                     <summary>
                       <h2>Questions to get started</h2>
+                      <i>({questions.length})</i>
                     </summary>
 
                     <ul>
-                      {#each getUserQuestions.myDetails.slice(0, 5) as ques}
+                      {#each questions as ques}
                         <li class="question">
                           <a href={GetAffiliatedLink("q", ques.question_id)} target="_blank">
                             {ques.title}
@@ -285,15 +287,16 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
               {/if}
         
               {#if getUserAnswers.myDetails.length > 0}
+              {@const answers = getUserAnswers.myDetails.slice(0, 5)}
               <div class="getStartedQuestions">
                 <details>
                   <summary>
                     <h2>Anwers to get started</h2>
-                    <i>answer body is limited to 4 lines</i>
+                    <i>({answers.length}) answer body is limited to 4 lines</i>
                   </summary>
 
                   <ul>
-                    {#each getUserAnswers.myDetails.slice(0, 5) as ans}
+                    {#each answers as ans}
                       <li class="link answer">
                         <a 
                           href={GetAffiliatedLink("a", ans.answer_id)}
@@ -314,13 +317,15 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
               {/if}
         
               {#if getUserComments.myDetails.length > 0}
+                {@const userComments = getUserComments.myDetails.slice(0, 5)}
                 <div class="getStartedQuestions">
                   <details>
                     <summary>
                       <h2>Comments to get started</h2>
+                      <i>({userComments.length})</i>
                     </summary>
                     <ul>
-                      {#each getUserComments.myDetails.slice(0, 5) as cmt}
+                      {#each userComments as cmt}
                         <li class="link comment">
                           <a 
                             href={GetAffiliatedLink("comment", cmt.comment_id)}
@@ -341,16 +346,18 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
             {/if}
 
             {#if getUserLinkQs.myDetails.length > 0}
+              {@const linkQs = getUserLinkQs.myDetails.filter(q => q.score < 20).slice(0, 5)}
               <div class="getStartedLinkQ">
                 <details>
                   <summary>
                     <h2>Questions linked to Your Questions</h2>
+                    <i>({linkQs.length})</i>
                   </summary>
                   
                   <blockquote>Stack Me First can also help you identify questions that are linked to any questions you might have posted. This helps you in identifying a post you created if you come across a linked post in your Google search or any other source</blockquote>
 
                   <ul>
-                    {#each getUserLinkQs.myDetails.filter(q => q.score < 20).slice(0, 5) as ques}
+                    {#each linkQs as ques}
                       <li class="question">
                         <a href={GetAffiliatedLink("q", ques.question_id)} target="_blank">
                           {ques.title}
@@ -362,50 +369,51 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
               </div>
             {/if}
 
-            <!-- {#if allMyHiddenCommentPosts.length > 0} -->
-            <!-- commenting this because I wan this to be always visible as an indicator -->
-            <div class="getStartedHiddenComments">
-              <details>
-                <summary>
-                  <h2>Posts with your hidden comments</h2>
-                </summary>
-                
-                {#if allMyHiddenCommentPosts.length == 0}
-                <p style=" background: firebrick; color: white; padding: 5px; border-radius: 5px; ">No Posts found with hidden comments</p>
-                {/if}
-                
-                <blockquote><b>Feature Overview: </b>If there are any posts in which you have added comments, and the total number of comments in that posts are more than 5, then it's possible that your comment/s might get hidden by the stack exchange <a href="https://stackoverflow.blog/2009/04/23/comments-top-n-shown/" target="_blank">top n comments</a> algorithm. And <b>Stack Me First</b> can also help you identify such hidden comments, if there are any.</blockquote>
+            {#if allMyHiddenCommentPosts.length >= 0}
+              {@const hiddenCommentPosts = allMyHiddenCommentPosts.slice(0, 5)}
+              <div class="getStartedHiddenComments">
+                <details>
+                  <summary>
+                    <h2>Posts with your hidden comments</h2>
+                    <i>({hiddenCommentPosts.length})</i>
+                  </summary>
+                  
+                  {#if hiddenCommentPosts.length == 0}
+                  <p style=" background: firebrick; color: white; padding: 5px; border-radius: 5px; ">No Posts found with hidden comments</p>
+                  {/if}
+                  
+                  <blockquote><b>Feature Overview: </b>If there are any posts in which you have added comments, and the total number of comments in that posts are more than 5, then it's possible that your comment/s might get hidden by the stack exchange <a href="https://stackoverflow.blog/2009/04/23/comments-top-n-shown/" target="_blank">top n comments</a> algorithm. And <b>Stack Me First</b> can also help you identify such hidden comments, if there are any.</blockquote>
 
-                {#if allMyHiddenCommentPosts.length > 0}
-                  <ul>
-                    {#each allMyHiddenCommentPosts.slice(0, 5) as post}
-                      {@const postId = post.postType == "q" ? post.question_id : post.answer_id} 
-                      {@const postType = post.postType == "q" ? "Question" : "Answer"} 
-                      {@const postContent = post.postType == "q" ? post.title : post.body_markdown} 
-                      <li class="link">
-                        <a href={GetAffiliatedLink(post.postType, postId)} target="_blank">
-                          {postId}
-                        </a>
-                        <b>({postType})</b>
-                        <span class="postcontent">
-                          {postContent}
-                        </span>
-                      </li>
-                  {/each} 
-                  </ul>
-                {:else}
-                  <div style="border-top: 1px solid lightgray; padding: 3px 12px; margin: 12px 4px;background: antiquewhite;">
-                    
-                    <!-- adding comment below mentioning that all the posts are not searched with API - to reduce API usage -->
-                    <p>We searched for hidden comments in recent posts to reduce API usage and could not find any. But you might encounter some posts while you use the extension.</p>
-                    <p>For a better search, you can use the query in the following link (which is targeted towards stack overflow)</p>
-                    <blockquote>Note: You need to add your stackoverflow <code>user_id</code> for this to work. You can find the user_id in the url of your stack overflow profile</blockquote>
-                    <a href="https://data.stackexchange.com/stackoverflow/query/1849760">Find posts that have hidden comments added by user</a>
-                  </div>
-                {/if}
+                  {#if hiddenCommentPosts.length > 0}
+                    <ul>
+                      {#each hiddenCommentPosts as post}
+                        {@const postId = post.postType == "q" ? post.question_id : post.answer_id} 
+                        {@const postType = post.postType == "q" ? "Question" : "Answer"} 
+                        {@const postContent = post.postType == "q" ? post.title : post.body_markdown} 
+                        <li class="link">
+                          <a href={GetAffiliatedLink(post.postType, postId)} target="_blank">
+                            {postId}
+                          </a>
+                          <b>({postType})</b>
+                          <span class="postcontent">
+                            {postContent}
+                          </span>
+                        </li>
+                    {/each} 
+                    </ul>
+                  {:else}
+                    <div style="border-top: 1px solid lightgray; padding: 3px 12px; margin: 12px 4px;background: antiquewhite;">
+                      
+                      <!-- adding comment below mentioning that all the posts are not searched with API - to reduce API usage -->
+                      <p>We searched for hidden comments in recent posts to reduce API usage and could not find any. But you might encounter some posts while you use the extension.</p>
+                      <p>For a better search, you can use the query in the following link (which is targeted towards stack overflow)</p>
+                      <blockquote>Note: You need to add your stackoverflow <code>user_id</code> for this to work. You can find the user_id in the url of your stack overflow profile</blockquote>
+                      <a href="https://data.stackexchange.com/stackoverflow/query/1849760">Find posts that have hidden comments added by user</a>
+                    </div>
+                  {/if}
 
-            </div>
-          <!-- {/if} -->
+              </div>
+          {/if}
 
           {/if}
         </div>
