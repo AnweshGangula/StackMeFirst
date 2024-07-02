@@ -56,24 +56,27 @@ export function UpdateUI(Options, pageType) {
         const cmtOff = document.getElementById("commentOff");
         const linkOff = document.getElementById("linkqOff");
 
+        const ansCount = document.getElementById("answerCount");
+        const cmtCount = document.getElementById("commentCount");
+
         if (!Options.hlAns) {
             const msg = "highlighting answers is disabled";
-            ansList.title = msg;
-            ansOff.textContent = msg;
-            document.getElementById("answerCount").textContent = "?";
+            if(ansList) ansList.title = msg;
+            if(ansOff) ansOff.textContent = msg;
+            if(ansCount) ansCount.textContent = "?";
         } else {
-            ansList.title = "";
-            ansOff.textContent = "";
+            if(ansList) ansList.title = "";
+            if(ansOff) ansOff.textContent = "";
         }
 
         if (!Options.hlCmnts) {
             const msg = "highlighting comments is disabled";
-            cmtList.title = msg;
-            cmtOff.textContent = msg;
-            document.getElementById("commentCount").textContent = "?";
+            if(cmtList) cmtList.title = msg;
+            if(cmtOff) cmtOff.textContent = msg;
+            if(cmtCount) cmtCount.textContent = "?";
         } else {
-            cmtList.title = "";
-            cmtOff.textContent = "";
+            if(cmtList) cmtList.title = "";
+            if(cmtOff) cmtOff.textContent = "";
         }
 
         if (linkOff) {
