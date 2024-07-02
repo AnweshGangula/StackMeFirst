@@ -25,6 +25,7 @@
   let getUserAnswers;
   let getUserComments;
   let getUserLinkQs;
+  let allMyHiddenCommentPosts;
   let selectedSite;
   
   let reloadingCommunity = false;
@@ -132,6 +133,31 @@
     getUserComments = await stackAPI.getPostsByUserId(domain, userId, "comments");
     selectedSite.totalComments = getUserComments.totalCount;
 
+    const moreCommentQuestinos = getUserQuestions.myDetails.filter(q => {
+      q.postType = "q";
+      return (q.comment_count > 5  && q.comments.filter(c=>c.owner.user_id == userId))
+    });
+    const moreCommentAnswers = getUserAnswers.myDetails.filter(a => {
+      a.postType = "a";
+      return (a.comment_count > 5 && a.comments.filter(c=>c.owner.user_id == userId));
+    });
+
+    const allMoreCommentPosts = [...moreCommentAnswers, ...moreCommentQuestinos];
+
+    allMyHiddenCommentPosts = allMoreCommentPosts.filter(p=>{
+
+      const hiddenComments = p.comments.sort((a,b)=>{
+        return b.score - a.score || a.creation_date - b.creation_date
+      }).slice(5);
+
+      const myHiddenComments = hiddenComments.filter(c=> c.owner.user_id == userId);
+
+      return myHiddenComments.length > 0;
+
+    });
+
+    console.log({allMoreCommentPosts, allMyHiddenCommentPosts});
+
     const questionIds = getUserQuestions.myDetails
     // .filter(q=>q.score < 10) // filter smaller score questions - hopefully it might have less linked questions
     .map(q=>q.question_id)
@@ -139,7 +165,7 @@
 
     getUserLinkQs = await stackAPI.getLinkedQues("https://" + domain, questionIds)
 
-    const gettingStartedData = {listOfJoinedCommunities, getUserComments, getUserAnswers, getUserQuestions, getUserLinkQs}
+    const gettingStartedData = {listOfJoinedCommunities, getUserComments, getUserAnswers, getUserQuestions, getUserLinkQs, allMyHiddenCommentPosts}
     console.log({gettingStartedData})
 
 		remainingUses = Math.floor(stackAPI.latestQuota_remaining/apiCallsPerPage) ?? 0;
@@ -180,7 +206,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     <p>
       You can click on any one of the communities listed in the table to update the suggested content accordingly.
     </p>
-    <blockquote style="">There are additional references to help you get started in the <a href="https://github.com/AnweshGangula/StackMeFirst/tree/listUpvotedAns?tab=readme-ov-file#getting-started">Readme File</a> of the Github Repository</blockquote>
+    <blockquote style="">There are additional references to help you get started in the <a href="https://github.com/AnweshGangula/StackMeFirst/tree/listUpvotedAns?tab=readme-ov-file#getting-started" target="_blank">Readme File</a> of the Github Repository</blockquote>
     <!-- <hr /> -->
   </div>
   {#await getStartedContent}
@@ -247,7 +273,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                     <ul>
                       {#each getUserQuestions.myDetails.slice(0, 5) as ques}
                         <li class="question">
-                          <a href={GetAffiliatedLink("q", ques.question_id)}>
+                          <a href={GetAffiliatedLink("q", ques.question_id)} target="_blank">
                             {ques.title}
                           </a>
                         </li>
@@ -270,6 +296,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                       <li class="link answer">
                         <a 
                           href={GetAffiliatedLink("a", ans.answer_id)}
+                          target="_blank"
                           >
                           {ans.answer_id}
                         </a>
@@ -296,6 +323,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                         <li class="link comment">
                           <a 
                             href={GetAffiliatedLink("comment", cmt.comment_id)}
+                            target="_blank"
                           >
                             {cmt.comment_id}
                           </a>
@@ -323,7 +351,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                   <ul>
                     {#each getUserLinkQs.myDetails.filter(q => q.score < 20).slice(0, 5) as ques}
                       <li class="question">
-                        <a href={GetAffiliatedLink("q", ques.question_id)}>
+                        <a href={GetAffiliatedLink("q", ques.question_id)} target="_blank">
                           {ques.title}
                         </a>
                       </li>
@@ -332,6 +360,35 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
 
               </div>
             {/if}
+
+            {#if allMyHiddenCommentPosts.length > 0}
+            <div class="getStartedHiddenComments">
+              <details>
+                <summary>
+                  <h2>Posts with your hidden comments</h2>
+                </summary>
+                
+                <blockquote>If there are any posts in which you have added a comment, and the total number of comments in that posts are more than 5, then it's possible that your comments might get hidden by the stack exchange <a href="https://stackoverflow.blog/2009/04/23/comments-top-n-shown/" target="_blank">top n comments</a> algorithm. And <b>Stack Me First</b> can also help you identify such posts if there are any.</blockquote>
+
+                <ul>
+                  {#each allMyHiddenCommentPosts.slice(0, 5) as post}
+                    {@const postId = post.postType == "q" ? post.question_id : post.answer_id} 
+                    {@const postType = post.postType == "q" ? "Question" : "Answer"} 
+                    {@const postContent = post.postType == "q" ? post.title : post.body_markdown} 
+                    <li class="link">
+                      <a href={GetAffiliatedLink(post.postType, postId)} target="_blank">
+                        {postId}
+                      </a>
+                      <b>({postType})</b>
+                      <span class="postcontent">
+                        {postContent}
+                      </span>
+                    </li>
+                {/each} 
+                </ul>
+
+            </div>
+          {/if}
 
           {/if}
         </div>
@@ -431,6 +488,17 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
   #gettingStartedCommunityData .link.answer .bodyText {
 
     /* max-height: ; */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* number of lines to show */
+            line-clamp: 3; 
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+  }
+
+  .getStartedHiddenComments .postcontent {
+    /* max-height: ; */
+    /* background-color: bisque; */
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 3; /* number of lines to show */

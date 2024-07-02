@@ -16,6 +16,8 @@ export const StackAppDetails = {
 }
 
 export const stackCommunities = [
+    // use `/sites` API to get a list of all sites
+    // https://api.stackexchange.com/docs/sites#pagesize=500
     "stackoverflow.com",
     "stackexchange.com",
     "mathoverflow.net",
