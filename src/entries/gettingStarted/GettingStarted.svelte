@@ -9,8 +9,6 @@
     import Header from "~/lib/Header.svelte";
 
 
-  console.log("Getting Started");
-
   const urlParams = new URLSearchParams(window.location.search);
   let domain = urlParams.get('domain');
   // meta sites are not returned in associated API call - except meta.stackexchange.com: https://meta.stackexchange.com/q/400995/381523
@@ -44,8 +42,8 @@
     const accountId = tokenData.accountId;
 
     if(!token){
-      console.warn("Token not found. Plese login");
-      throw new Error('Please login to fetch the information to help you get started');
+      console.warn("Token not found. Please login");
+      throw new Error('Please login above to fetch the information to help you get started');
     }
 
     stackAPI = new Api(token);
@@ -126,7 +124,7 @@
     const token = tokenData.token;
 
     if(!token){
-      console.warn("Token not found. Plese login");
+      console.warn("Token not found. Please login");
       throw new Error('Please login to fetch the information to help you get started');
     }
 
@@ -166,8 +164,6 @@
 
     });
 
-    console.log({allMoreCommentPosts, allMyHiddenCommentPosts});
-
     const questionIds = getUserQuestions.myDetails
     // .filter(q=>q.score < 10) // filter smaller score questions - hopefully it might have less linked questions
     .map(q=>q.question_id)
@@ -176,7 +172,7 @@
     getUserLinkQs = questionIds.length > 0 ? await stackAPI.getLinkedQues("https://" + domain, questionIds) : {latestQuota_max: stackAPI.latestQuota_max, latestQuota_remaining: stackAPI.latestQuota_remaining, myDetails: []};
 
     const gettingStartedData = {listOfJoinedCommunities, getUserComments, getUserAnswers, getUserQuestions, getUserLinkQs, allMyHiddenCommentPosts}
-    console.log({gettingStartedData})
+    // console.log({gettingStartedData})
 
 		remainingUses = Math.floor(stackAPI.latestQuota_remaining/apiCallsPerPage) ?? 0;
     totalAvaibaleUses = Math.floor(stackAPI.latestQuota_max/apiCallsPerPage) ?? 10000
@@ -216,7 +212,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     <p>
       You can click on any one of the communities listed in the table to update the suggested content accordingly.
     </p>
-    <blockquote style="">There are additional references to help you get started in the <a href="https://github.com/AnweshGangula/StackMeFirst/tree/listUpvotedAns?tab=readme-ov-file#getting-started" target="_blank">Readme File</a> of the Github Repository</blockquote>
+    <blockquote style="">There are additional references to help you get started in the <a href="https://github.com/AnweshGangula/StackMeFirst/tree/main?tab=readme-ov-file#getting-started" target="_blank">Readme File</a> of the Github Repository</blockquote>
     <!-- <hr /> -->
   </div>
   {#await getStartedContent}

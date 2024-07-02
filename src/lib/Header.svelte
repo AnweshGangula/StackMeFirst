@@ -25,6 +25,28 @@
 		accountId = tokenData.accountId;
 		profileData = tokenData;
 
+		let userLoggedIn = false;
+		if(pageType == pageTypeEnum.gettingStarted){
+			userLoggedIn = true;
+		} else if(pageType == pageTypeEnum.sidebar){
+			const joinCommunityBtn = Array.from(document.getElementsByClassName("s-topbar--item")).filter(a => a.localName == "a" && a.innerText.includes("Join this community"));
+			const userProfileBtn = Array.from(document.getElementsByClassName("s-topbar--item")).filter(a => a.localName == "a" && a.id.includes("user-profile-button"))
+
+			const userInCommunity = joinCommunityBtn.length == 0 ? true : false;
+			userLoggedIn = (userProfileBtn.length > 0 || joinCommunityBtn.length > 0);
+
+			
+		} else {
+			const tabs = await browser.tabs.query({ active: true, lastFocusedWindow: true })
+			console.log("check login")
+			userLoggedIn = await browser.tabs.sendMessage(tabs[0].id, { from: "header", subject: "headerDOM" })
+			
+			// console.log({userLoggedIn})
+		}
+		
+		tokenData.userLoggedIn = userLoggedIn;
+
+
 		return tokenData;
 	}
 
@@ -162,16 +184,19 @@
 
 	<div style=" display: grid; gap: 5px; ">
 		{#await domData then result}
-			<div class="loginDiv">
-				{#if token}
-				<ProfilePic {profileData} />
-				<button id="btnLogout" title={profileData.userName} on:click|preventDefault={() => RemoveToken(result.token)}>Logout</button>
-				{:else}
-				<button id="btnLogin" class={loading} on:click|preventDefault={() => login()} title="Click to Login to Stack Exchange community for enhanced insights">
-					Login
-				</button>
-				{/if}
-			</div>
+			{#if (pageType == pageTypeEnum.gettingStarted || result.userLoggedIn)}
+				<div class="loginDiv">
+					{#if token}
+					<ProfilePic {profileData} />
+					<button id="btnLogout" title={profileData.userName} on:click|preventDefault={() => RemoveToken(result.token)}>Logout</button>
+					{:else}
+					<button id="btnLogin" class={loading} on:click|preventDefault={() => login()} title="Click to Login to this Stack Exchange communityfor enhanced insights">
+						Login
+					</button>
+					{/if}
+				</div>
+			<!-- {:else} -->
+			{/if}
 		{/await}
 		
 		<div id="docsHelp">
