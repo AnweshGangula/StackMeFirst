@@ -43,6 +43,11 @@
     const profileData = tokenData;
     const accountId = tokenData.accountId;
 
+    if(!token){
+      console.warn("Token not found. Plese login");
+      throw new Error('Please login to fetch the information to help you get started');
+    }
+
     stackAPI = new Api(token);
     const {
       myDetails: userAssociatedAccounts,
@@ -118,7 +123,12 @@
     console.log({selectedSite})
 
     const tokenData = await GetLocalTokenData();
-    const token = tokenData.token ?? "";
+    const token = tokenData.token;
+
+    if(!token){
+      console.warn("Token not found. Plese login");
+      throw new Error('Please login to fetch the information to help you get started');
+    }
 
     stackAPI = new Api(token);
 
@@ -425,7 +435,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
         </div>
     </div>
   {:catch error}
-      <p style="color: red">{error.message}</p>
+      <p style="background: firebrick; color: white; background: firebrick; text-align: center;">{error.message}</p>
   {/await}
 
 
