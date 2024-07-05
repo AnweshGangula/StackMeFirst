@@ -31,7 +31,7 @@
 					<a href='https://stackexchange.com/' on:click|preventDefault={() => browser.tabs.create({ url: 'https://stackexchange.com/'})} >
 						Stack Exchange
 					</a>
-					 question to use this addin.
+					 community question to use this addin.
 				{:else}
 					 {warningText}
 				{/if}

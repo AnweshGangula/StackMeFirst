@@ -105,7 +105,7 @@ export function CheckWarnings(currTab, info) {
         warningText = "! Join this Community to use Stack Me First Plugin";
         warningType.add("warn");
     } else if (!isQuestion) {
-        warningText = "! Please open any Stack Exchange question to use this addin.";
+        warningText = "! Please open any Stack Exchange community question to use this addin.";
         warningType.add("warn");
     } else if ((info.commentList == undefined || info.commentList.length == 0) && (info.answerList == undefined || info.answerList.length == 0)) {
         warningText = "! This question doesn't have any answers/comments submitted by you.";

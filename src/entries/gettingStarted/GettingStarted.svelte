@@ -209,7 +209,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
       </span>
     </p>
     <p>
-      Once you're signed in, Whenever you visit this page <i>(either using the Right-Click context menu or from the "Getting started" button in the popup and the sidebar)</i>, you will see the list of communities you have joined below. And a list of suggested Questions, Answers or Comments that you can get started with. 
+      Once you're signed in, whenever you visit this page <i>(either using the Right-Click context menu or from the "Getting started" button in the popup and the sidebar)</i>, you will see the list of communities you have joined below. And a list of suggested Questions, Answers or Comments that you can get started with. 
     </p>
     <p>
       You can click on any one of the communities listed in the table to update the suggested content accordingly.
@@ -225,7 +225,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
       <div style="display: flex; gap: 10px; padding: 2px 5px">
         <div style="">
           <h2>Communities you joined:</h2>
-          <small>(click to fetch data from the respective community)</small>
+          <small>(click on a row to fetch data from the respective community)</small>
             <table id="communitiesTable">
               <tr style="text-wrap: nowrap; text-align: center">
                 <th>Community</th>

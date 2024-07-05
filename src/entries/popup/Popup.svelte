@@ -42,7 +42,7 @@
 			//     document.getElementById("config").style.display = "none";
 			// }
 		} else {
-			warningText = "! Please open any Stack Exchange question to use this addin.";
+			warningText = "! Please open any Stack Exchange community question to use this addin.";
 			warningType.add("warn");
 		}
 	}
