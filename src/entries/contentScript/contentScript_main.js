@@ -59,42 +59,42 @@ export default async function highlightStack() {
             },
         };
 
-        if (isQuestion) {
+        if (currUser == undefined) {
 
-            if (currUser == undefined) {
+            if (userLoggedIn) {
+                // if user has not joined the community
 
-                if (userLoggedIn) {
-                    // if user has not joined the community
-    
-                    output.userConfig = {displaySidebar: "JoinCommunity"};
+                output.userConfig = { displaySidebar: "JoinCommunity" };
 
-                    browser.runtime.sendMessage({
-                        //  reference: https://stackoverflow.com/a/20021813/6908282
-                        from: "contentScript",
-                        subject: "joinCommunity",
-                        content: {
-                            currUser: currUser,
-                        }
-                    }).then(function () {
-                        // console.log("sending message");
-                    });
-                } else {
-    
-    
-                    // if there is a "Login" button in the navbar
-                    browser.runtime.sendMessage({
-                        //  reference: https://stackoverflow.com/a/20021813/6908282
-                        from: "contentScript",
-                        subject: "needLogin",
-                        content: {
-                            currUser: currUser,
-                        }
-                    }).then(function () {
-                        // console.log("sending message");
-                    });
-                }
-    
-            }else{
+                browser.runtime.sendMessage({
+                    //  reference: https://stackoverflow.com/a/20021813/6908282
+                    from: "contentScript",
+                    subject: "joinCommunity",
+                    content: {
+                        currUser: currUser,
+                    }
+                }).then(function () {
+                    // console.log("sending message");
+                });
+            } else {
+
+
+                // if there is a "Login" button in the navbar
+                browser.runtime.sendMessage({
+                    //  reference: https://stackoverflow.com/a/20021813/6908282
+                    from: "contentScript",
+                    subject: "needLogin",
+                    content: {
+                        currUser: currUser,
+                    }
+                }).then(function () {
+                    // console.log("sending message");
+                });
+            }
+
+        } else {
+
+            if (isQuestion) {
 
                 browser.runtime.sendMessage({
                     //  reference: https://stackoverflow.com/a/20021813/6908282
@@ -103,7 +103,7 @@ export default async function highlightStack() {
                 }).then(function () {
                     // console.log("sending message");
                 });
-    
+
                 question = document.getElementById('question');
                 const qId = question.dataset.questionid;
                 quesAuthor = document.querySelector(".post-signature.owner")?.getElementsByTagName("a")[0];
@@ -112,52 +112,52 @@ export default async function highlightStack() {
                 let allComments = [];
                 let idforCmts = [];
                 let cmtIsAPI = true;
-    
+
                 const getAnswers = await stackAPI.getAnswersForPosts(currURL, qId);
                 ansJson = getAnswers.myDetails;
                 currQuota_max = getAnswers.latestQuota_max;
                 currQuota_remaining = getAnswers.latestQuota_remaining;
-    
+
                 idforCmts.push(qId);
                 const cmtIds = getCmtIds(ansJson, ansIsAPI);
                 idforCmts.push(...cmtIds)
-    
+
                 const getComments = await stackAPI.getCommentsForPosts(currURL, idforCmts.join(";"));
                 allComments = getComments.myDetails;
                 currQuota_max = getComments.latestQuota_max;
                 currQuota_remaining = getComments.latestQuota_remaining;
-    
-                allComments.sort((a,b)=> a.post_id - b.post_id || a.creation_date - b.creation_date); // sort comments by post and then by date
+
+                allComments.sort((a, b) => a.post_id - b.post_id || a.creation_date - b.creation_date); // sort comments by post and then by date
                 if (allComments == []) {
                     allComments = document.getElementsByClassName("comment");
                     cmtIsAPI = false;
                     console.log("Comments API did not work")
                 }
-    
+
                 const queryParams = new Proxy(new URLSearchParams(window.location.search), {
                     get: (searchParams, prop) => searchParams.get(prop),
                 });
                 const isSorted = queryParams.answertab != undefined;
-    
+
                 const DOM_Opts = { currUser, isSorted }
-    
+
                 const quesAuth = quesAuthor == null ? undefined : quesAuthor.href;
                 popupContent.metaData.quesAuthor = quesAuth;
-    
+
                 const result = await browser.storage.sync.get({ 'stackMeData': defaultPreferances });
-    
+
                 const userConfig = result.stackMeData;
                 // You can set default for values not in the storage by providing a dictionary:
                 // reference: https://stackoverflow.com/a/26898749/6908282
-    
-    
+
+
                 myAnsList = highlightAnswer(ansJson, ansIsAPI, userConfig, DOM_Opts, currURL);
                 myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
-    
+
                 const linkData = await HighlightLinks(userConfig, currURL, qId, DOM_Opts);
                 currQuota_max = linkData.latestQuota_max ?? currQuota_max;
                 currQuota_remaining = linkData.latestQuota_remaining ?? currQuota_remaining;
-    
+
                 popupContent.answerList = myAnsList;
                 popupContent.commentList = myCmmtList;
                 popupContent.linkData = linkData;
@@ -165,7 +165,7 @@ export default async function highlightStack() {
                     currQuota_max,
                     currQuota_remaining,
                 }
-    
+
                 browser.runtime.sendMessage({
                     //  reference: https://stackoverflow.com/a/20021813/6908282
                     from: "contentScript",
@@ -183,7 +183,7 @@ export default async function highlightStack() {
                 }).then(function () {
                     // console.log("sending message");
                 });
-    
+
                 output = {
                     userConfig,
                     popupContent,
