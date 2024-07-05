@@ -26,6 +26,18 @@ export function getCmtIds(ansJson, ansIsAPI) {
     return idforCmts
 }
 
+export function highlightQuestion(questionDOM, bool = false){
+
+    if(bool){
+        // questionDOM.querySelector(".votecell").classList.add("smfAuthor");
+        const questionHeader = document.getElementById("question-header");
+
+        questionHeader.title = "You are the author of this question";
+        questionHeader.classList.add("smfAuthor", "smfHighlight");
+    }
+
+}
+
 export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL) {
     const hlAns = userConfig.hlAns;
     const srtAns = userConfig.srtAns;

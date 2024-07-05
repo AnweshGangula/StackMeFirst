@@ -2,6 +2,8 @@
 	--smfBorderColor: var(--theme-primary-500, darkorange);
 	--smfBorderColor: var(--theme-primary, darkorange);
 	--smfBackgroundColor: var(--white, inherit);
+
+	padding-left: 5px;
 	border-style: solid;
 	border-width: 0px;
 	border-left-width: 5px;

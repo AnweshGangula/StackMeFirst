@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 
-import { getCmtIds, highlightAnswer, highlightComments, HighlightLinks } from "./helpers/contentScriptHelpers";
+import { getCmtIds, highlightAnswer, highlightComments, HighlightLinks, highlightQuestion } from "./helpers/contentScriptHelpers";
 import { IsValidStackExchangeSite, IsQuestion } from "~/utils/utils";
 import { defaultPreferances } from "~/utils/constants";
 import Api from "~/utils/stackAPI";
@@ -144,6 +144,7 @@ export default async function highlightStack() {
                 const quesAuth = quesAuthor == null ? undefined : quesAuthor.href;
                 popupContent.metaData.quesAuthor = quesAuth;
 
+                console.log({quesAuth, currUser}, currUser.href == quesAuth)
                 const result = await browser.storage.sync.get({ 'stackMeData': defaultPreferances });
 
                 const userConfig = result.stackMeData;
@@ -151,6 +152,7 @@ export default async function highlightStack() {
                 // reference: https://stackoverflow.com/a/26898749/6908282
 
 
+                highlightQuestion(question, currUser.href == quesAuth);
                 myAnsList = highlightAnswer(ansJson, ansIsAPI, userConfig, DOM_Opts, currURL);
                 myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
 
