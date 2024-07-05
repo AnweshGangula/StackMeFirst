@@ -18,6 +18,8 @@
     domain = ""
   }
 
+  let lineClamp = 3; // https://stackoverflow.com/a/57183208/6908282
+
   let listOfJoinedCommunities;
   let getUserQuestions;
   let getUserAnswers;
@@ -215,223 +217,231 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     <blockquote style="">There are additional references to help you get started in the <a href="https://github.com/AnweshGangula/StackMeFirst/tree/main?tab=readme-ov-file#getting-started" target="_blank">Readme File</a> of the Github Repository</blockquote>
     <!-- <hr /> -->
   </div>
+
   {#await getStartedContent}
     <Loader />
   {:then result}
-    <div style="display: flex; gap: 10px; padding: 2px 5px">
-      <div style="">
-        <h2>Communities you joined:</h2>
-        <small>(click to fetch data from the respective community)</small>
-        {#if listOfJoinedCommunities}
-          <table id="communitiesTable">
-            <tr style="text-wrap: nowrap; text-align: center">
-              <th>Community</th>
-              <th>Reputation</th>
-              <th># Questions</th>
-              <th># Answers</th>
-              <th># Comments</th>
-            </tr>
-            {#each listOfJoinedCommunities as site}
-              <tr
-                title="{site.site_url == selectedSite.site_url ? "" : "Click to fetch data"}"
-                on:click={(e)=>OnDomainClick(e, site)}
-                class = {"joinedComminity " + (domain == getUrlRootDomain(site.site_url) ? 'highlight': '')}
-                style="padding: 5px 2px; border-radius: 5px">
-                <td class="cellCommunity" style="min-width: 150px;">{site.site_name}</td>
-                <td class="cellNumbers cellReputation">{site.reputation}</td>
-                <td class="cellNumbers cellQuestion_count">{site.question_count}</td>
-                <td class="cellNumbers cellAnswer_count">{site.answer_count}</td>
-                <td 
-                  class="cellNumbers cellSite_url {site.site_url == selectedSite.site_url ? "" : "loadComments"}"
-                  > 
-                  {site.site_url == selectedSite.site_url ? (selectedSite.totalComments ?? "loading...") : "🔃"}
-                </td>
+    {#if listOfJoinedCommunities.length > 0 }
+      <div style="display: flex; gap: 10px; padding: 2px 5px">
+        <div style="">
+          <h2>Communities you joined:</h2>
+          <small>(click to fetch data from the respective community)</small>
+            <table id="communitiesTable">
+              <tr style="text-wrap: nowrap; text-align: center">
+                <th>Community</th>
+                <th>Reputation</th>
+                <th># Questions</th>
+                <th># Answers</th>
+                <th># Comments</th>
               </tr>
-            {/each} 
-          </table>
-        {/if}
-      </div>
+              {#each listOfJoinedCommunities as site}
+                <tr
+                  title="{site.site_url == selectedSite.site_url ? "" : "Click to fetch data"}"
+                  on:click={(e)=>OnDomainClick(e, site)}
+                  class = {"joinedComminity " + (domain == getUrlRootDomain(site.site_url) ? 'highlight': '')}
+                  style="padding: 5px 2px; border-radius: 5px">
+                  <td class="cellCommunity" style="min-width: 150px;">{site.site_name}</td>
+                  <td class="cellNumbers cellReputation">{site.reputation}</td>
+                  <td class="cellNumbers cellQuestion_count">{site.question_count}</td>
+                  <td class="cellNumbers cellAnswer_count">{site.answer_count}</td>
+                  <td 
+                    class="cellNumbers cellSite_url {site.site_url == selectedSite.site_url ? "" : "loadComments"}"
+                    > 
+                    {site.site_url == selectedSite.site_url ? (selectedSite.totalComments ?? "loading...") : "🔃"}
+                  </td>
+                </tr>
+              {/each} 
+            </table>
+        </div>
 
-      <div id="gettingStartedCommunityData">
-          <!-- <p>Domain: {domain}</p> -->
+        <div id="gettingStartedCommunityData">
+            <!-- <p>Domain: {domain}</p> -->
 
-          {#if reloadingCommunity}
-            <Loader />
-          {:else}
+            {#if reloadingCommunity}
+              <Loader />
+            {:else}
 
-          {#if (
-            getUserQuestions.myDetails.length == 0
-            && getUserAnswers.myDetails.length == 0
-            && getUserComments.myDetails.length == 0
-            && getUserLinkQs.myDetails.length == 0
-            )}
-            <p style="background-color: firebrick; color: white; padding: 5px 8px;">
-              No Data found in <strong>{domain}</strong>
-            </p>
-          {:else}
-    
-              {#if getUserQuestions.myDetails.length > 0}
-                {@const questions = getUserQuestions.myDetails.slice(0, 5)}
+            {#if (
+              getUserQuestions.myDetails.length == 0
+              && getUserAnswers.myDetails.length == 0
+              && getUserComments.myDetails.length == 0
+              && getUserLinkQs.myDetails.length == 0
+              )}
+              <p style="background-color: firebrick; color: white; padding: 5px 8px;">
+                No Data found in <strong>{domain}</strong>
+              </p>
+            {:else}
+      
+                {#if getUserQuestions.myDetails.length > 0}
+                  {@const questions = getUserQuestions.myDetails.slice(0, 5)}
+                  <div class="getStartedQuestions">
+                    <details open>
+                      <summary>
+                        <h2>Questions to get started</h2>
+                        <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({questions.length})</b></i>
+                      </summary>
+
+                      <ul>
+                        {#each questions as ques}
+                          <li class="question">
+                            <a href={GetAffiliatedLink("q", ques.question_id)} target="_blank">
+                              {ques.title}
+                            </a>
+                          </li>
+                        {/each} 
+                      </ul>
+                    </details>
+                  </div>
+                {/if}
+          
+                {#if getUserAnswers.myDetails.length > 0}
+                {@const answers = getUserAnswers.myDetails.slice(0, 5)}
                 <div class="getStartedQuestions">
-                  <details open>
+                  <details>
                     <summary>
-                      <h2>Questions to get started</h2>
-                      <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({questions.length})</b></i>
+                      <h2>Anwers to get started</h2>
+                      <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({answers.length})</b> answer body is limited to {lineClamp} lines</i>
                     </summary>
 
                     <ul>
-                      {#each questions as ques}
+                      {#each answers as ans}
+                        <li class="link answer" style="--lineClamp: {lineClamp}">
+                          <a 
+                            href={GetAffiliatedLink("a", ans.answer_id)}
+                            target="_blank"
+                            >
+                            {ans.answer_id}
+                          </a>
+                          <span class="bodyText">
+                            {@html DOMPurify.sanitize(ans.body)}
+                            <!-- {ans.body_markdown} -->
+                          </span>
+                        </li>
+                      {/each} 
+                    </ul>
+
+                  </details>
+                </div>
+                {/if}
+          
+                {#if getUserComments.myDetails.length > 0}
+                  {@const userComments = getUserComments.myDetails.slice(0, 5)}
+                  <div class="getStartedQuestions">
+                    <details>
+                      <summary>
+                        <h2>Comments to get started</h2>
+                        <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({userComments.length})</b></i>
+                      </summary>
+                      <ul>
+                        {#each userComments as cmt}
+                          <li class="link comment">
+                            <a 
+                              href={GetAffiliatedLink("comment", cmt.comment_id)}
+                              target="_blank"
+                            >
+                              {cmt.comment_id}
+                            </a>
+                            <span class="bodyText">
+                              {@html DOMPurify.sanitize(cmt.body)}
+                              <!-- {@html cmt.body_markdown} -->
+                            </span>
+                          </li>
+                        {/each} 
+                      </ul>
+                    </details>
+                  </div>
+                {/if}
+              {/if}
+
+              {#if getUserLinkQs.myDetails.length > 0}
+                {@const linkQs = getUserLinkQs.myDetails.filter(q => q.score < 20).slice(0, 5)}
+                <div class="getStartedLinkQ">
+                  <details>
+                    <summary>
+                      <h2>Questions linked to Your Questions</h2>
+                      <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({linkQs.length})</b></i>
+                    </summary>
+                    
+                    <blockquote>Stack Me First can also help you identify questions that are linked to any questions you might have posted. This helps you in identifying a post you created if you come across a linked post in your Google search or any other source</blockquote>
+
+                    <ul>
+                      {#each linkQs as ques}
                         <li class="question">
                           <a href={GetAffiliatedLink("q", ques.question_id)} target="_blank">
                             {ques.title}
                           </a>
                         </li>
-                      {/each} 
+                    {/each} 
                     </ul>
-                  </details>
+
                 </div>
               {/if}
-        
-              {#if getUserAnswers.myDetails.length > 0}
-              {@const answers = getUserAnswers.myDetails.slice(0, 5)}
-              <div class="getStartedQuestions">
-                <details>
-                  <summary>
-                    <h2>Anwers to get started</h2>
-                    <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({answers.length})</b> answer body is limited to 4 lines</i>
-                  </summary>
 
-                  <ul>
-                    {#each answers as ans}
-                      <li class="link answer">
-                        <a 
-                          href={GetAffiliatedLink("a", ans.answer_id)}
-                          target="_blank"
-                          >
-                          {ans.answer_id}
-                        </a>
-                        <span class="bodyText">
-                          {@html DOMPurify.sanitize(ans.body)}
-                          <!-- {ans.body_markdown} -->
-                        </span>
-                      </li>
-                    {/each} 
-                  </ul>
-
-                </details>
-              </div>
-              {/if}
-        
-              {#if getUserComments.myDetails.length > 0}
-                {@const userComments = getUserComments.myDetails.slice(0, 5)}
-                <div class="getStartedQuestions">
+              {#if (
+                getUserQuestions.myDetails.length > 0
+                || getUserAnswers.myDetails.length > 0
+                || getUserComments.myDetails.length > 0
+                || getUserLinkQs.myDetails.length > 0
+                || allMyHiddenCommentPosts.slice(0, 5).length > 0
+                )}
+                {@const hiddenCommentPosts = allMyHiddenCommentPosts.slice(0, 5)}
+                <div class="getStartedHiddenComments">
                   <details>
                     <summary>
-                      <h2>Comments to get started</h2>
-                      <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({userComments.length})</b></i>
+                      <h2>Posts with your hidden comments</h2>
+                      <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({hiddenCommentPosts.length})</b></i>
                     </summary>
-                    <ul>
-                      {#each userComments as cmt}
-                        <li class="link comment">
-                          <a 
-                            href={GetAffiliatedLink("comment", cmt.comment_id)}
-                            target="_blank"
-                          >
-                            {cmt.comment_id}
-                          </a>
-                          <span class="bodyText">
-                            {@html DOMPurify.sanitize(cmt.body)}
-                            <!-- {@html cmt.body_markdown} -->
-                          </span>
-                        </li>
+                    
+                    {#if hiddenCommentPosts.length == 0}
+                    <p style=" background: firebrick; color: white; padding: 5px; border-radius: 5px; ">No Posts found with hidden comments</p>
+                    {/if}
+                    
+                    <blockquote><b>Feature Overview: </b>If there are any posts in which you have added comments, and the total number of comments in that posts are more than 5, then it's possible that your comment/s might get hidden by the stack exchange <a href="https://stackoverflow.blog/2009/04/23/comments-top-n-shown/" target="_blank">top n comments</a> algorithm. And <b>Stack Me First</b> can also help you identify such hidden comments, if there are any.</blockquote>
+
+                    {#if hiddenCommentPosts.length > 0}
+                      <ul>
+                        {#each hiddenCommentPosts as post}
+                          {@const postId = post.postType == "q" ? post.question_id : post.answer_id} 
+                          {@const postType = post.postType == "q" ? "Question" : "Answer"} 
+                          {@const postContent = post.postType == "q" ? post.title : post.body_markdown} 
+                          <li class="link">
+                            <a href={GetAffiliatedLink(post.postType, postId)} target="_blank">
+                              {postId}
+                            </a>
+                            <b>({postType})</b>
+                            <span class="postcontent" style="--lineClamp: {lineClamp}">
+                              {postContent}
+                            </span>
+                          </li>
                       {/each} 
-                    </ul>
-                  </details>
+                      </ul>
+                    {:else}
+                      <div style="border-top: 1px solid lightgray; padding: 3px 12px; margin: 12px 4px;background: antiquewhite;">
+                        
+                        <!-- adding comment below mentioning that all the posts are not searched with API - to reduce API usage -->
+                        <p>We searched for hidden comments in recent posts to reduce API usage and could not find any. But you might encounter some posts while you use the extension.</p>
+                        <p>For a better search, you can use the query in the following link (which is targeted towards stack overflow)</p>
+                        <blockquote>Note: You need to add your stackoverflow <code>user_id</code> for this to work. You can find the user_id in the url of your stack overflow profile</blockquote>
+                        <a href="https://data.stackexchange.com/stackoverflow/query/1849760">Find posts that have hidden comments added by user</a>
+                      </div>
+                    {/if}
+
                 </div>
               {/if}
+
             {/if}
+          </div>
+      </div>
+    {:else}
+      <p>
+        You haven't joined in any Stack Exchange Communities. Stack Me First is useful if you have been using any of the Stack Exchange communities.
+      </p>
+    {/if}
 
-            {#if getUserLinkQs.myDetails.length > 0}
-              {@const linkQs = getUserLinkQs.myDetails.filter(q => q.score < 20).slice(0, 5)}
-              <div class="getStartedLinkQ">
-                <details>
-                  <summary>
-                    <h2>Questions linked to Your Questions</h2>
-                    <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({linkQs.length})</b></i>
-                  </summary>
-                  
-                  <blockquote>Stack Me First can also help you identify questions that are linked to any questions you might have posted. This helps you in identifying a post you created if you come across a linked post in your Google search or any other source</blockquote>
-
-                  <ul>
-                    {#each linkQs as ques}
-                      <li class="question">
-                        <a href={GetAffiliatedLink("q", ques.question_id)} target="_blank">
-                          {ques.title}
-                        </a>
-                      </li>
-                  {/each} 
-                  </ul>
-
-              </div>
-            {/if}
-
-            {#if (
-              getUserQuestions.myDetails.length > 0
-              || getUserAnswers.myDetails.length > 0
-              || getUserComments.myDetails.length > 0
-              || getUserLinkQs.myDetails.length > 0
-              || allMyHiddenCommentPosts.slice(0, 5).length > 0
-              )}
-              {@const hiddenCommentPosts = allMyHiddenCommentPosts.slice(0, 5)}
-              <div class="getStartedHiddenComments">
-                <details>
-                  <summary>
-                    <h2>Posts with your hidden comments</h2>
-                    <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({hiddenCommentPosts.length})</b></i>
-                  </summary>
-                  
-                  {#if hiddenCommentPosts.length == 0}
-                  <p style=" background: firebrick; color: white; padding: 5px; border-radius: 5px; ">No Posts found with hidden comments</p>
-                  {/if}
-                  
-                  <blockquote><b>Feature Overview: </b>If there are any posts in which you have added comments, and the total number of comments in that posts are more than 5, then it's possible that your comment/s might get hidden by the stack exchange <a href="https://stackoverflow.blog/2009/04/23/comments-top-n-shown/" target="_blank">top n comments</a> algorithm. And <b>Stack Me First</b> can also help you identify such hidden comments, if there are any.</blockquote>
-
-                  {#if hiddenCommentPosts.length > 0}
-                    <ul>
-                      {#each hiddenCommentPosts as post}
-                        {@const postId = post.postType == "q" ? post.question_id : post.answer_id} 
-                        {@const postType = post.postType == "q" ? "Question" : "Answer"} 
-                        {@const postContent = post.postType == "q" ? post.title : post.body_markdown} 
-                        <li class="link">
-                          <a href={GetAffiliatedLink(post.postType, postId)} target="_blank">
-                            {postId}
-                          </a>
-                          <b>({postType})</b>
-                          <span class="postcontent">
-                            {postContent}
-                          </span>
-                        </li>
-                    {/each} 
-                    </ul>
-                  {:else}
-                    <div style="border-top: 1px solid lightgray; padding: 3px 12px; margin: 12px 4px;background: antiquewhite;">
-                      
-                      <!-- adding comment below mentioning that all the posts are not searched with API - to reduce API usage -->
-                      <p>We searched for hidden comments in recent posts to reduce API usage and could not find any. But you might encounter some posts while you use the extension.</p>
-                      <p>For a better search, you can use the query in the following link (which is targeted towards stack overflow)</p>
-                      <blockquote>Note: You need to add your stackoverflow <code>user_id</code> for this to work. You can find the user_id in the url of your stack overflow profile</blockquote>
-                      <a href="https://data.stackexchange.com/stackoverflow/query/1849760">Find posts that have hidden comments added by user</a>
-                    </div>
-                  {/if}
-
-              </div>
-            {/if}
-
-          {/if}
-        </div>
-    </div>
   {:catch error}
-      <p style="background: firebrick; color: white; background: firebrick; text-align: center;">{error.message}</p>
+      <p style="background: firebrick; color: white; background: firebrick; text-align: center;">     
+        {error.message}
+      </p>
   {/await}
 
 
@@ -490,9 +500,21 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
   }
 
   #gettingStartedCommunityData {
+    --smfBackgroundColor: darkorange;
+    --smfBorderColor: darkorange;
+
     max-height: 850px;
     overflow: hidden;
     overflow-y: auto;
+
+    border: 5px solid darkorange;
+    border-right: none;
+    border-width: 1px 0px 1px 5px;
+    padding-left: 5px;
+    z-index: 2;
+    margin: 5px;
+    margin-left: -12px; /* this help is making it look like the table and getting started content are related */
+    border-radius: 5px;
   }
 
   #gettingStartedCommunityData summary {
@@ -527,8 +549,8 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     /* max-height: ; */
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 3; /* number of lines to show */
-            line-clamp: 3; 
+    -webkit-line-clamp: var(--lineClamp); /* number of lines to show */
+            line-clamp: var(--lineClamp); 
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;
   }
@@ -538,8 +560,8 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     /* background-color: bisque; */
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 3; /* number of lines to show */
-            line-clamp: 3; 
+    -webkit-line-clamp: var(--lineClamp); /* number of lines to show */
+            line-clamp: var(--lineClamp); 
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;
   }
