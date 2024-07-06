@@ -144,7 +144,7 @@ export default async function highlightStack() {
                 const quesAuth = quesAuthor == null ? undefined : quesAuthor.href;
                 popupContent.metaData.quesAuthor = quesAuth;
 
-                console.log({quesAuth, currUser}, currUser.href == quesAuth)
+                // console.log({quesAuth, currUser}, currUser.href == quesAuth)
                 const result = await browser.storage.sync.get({ 'stackMeData': defaultPreferances });
 
                 const userConfig = result.stackMeData;

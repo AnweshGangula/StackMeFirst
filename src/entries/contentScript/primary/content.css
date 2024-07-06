@@ -20,6 +20,10 @@
 		linear-gradient(270deg, transparent 70%, var(--smfBorderColor, mediumseagreen));
 }
 
+.smfHighlight.highlighted-post {
+	--smfBackgroundColor: var(--yellow-100, --white, inherit);
+}
+
 .smfHighlight.smfAnswer:not(.smfUpvoted),
 .smfHighlight.smfAuthor {
     --smfBorderColor: darkorange;

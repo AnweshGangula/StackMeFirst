@@ -6,9 +6,20 @@ export default function scrollToTarget_Main(eleId, type, headerHeight = 60) {
     } else {
         eleId = type + "-" + eleId;
         let element = document.getElementById(eleId);
-        element.classList.add("highlighted-post"); // CSS class 'highlighted-post' has a animation called
+        // element.classList.add(...["highlighted-post", "comment__highlight"]); // CSS class 'highlighted-post' has a animation called
+        let elementPosition = element.getBoundingClientRect().top;
 
-        const elementPosition = element.getBoundingClientRect().top;
+        if (type == "comment") {
+            element.classList.add(...["comment__highlight"]); // CSS class 'highlighted-post' has a animation called
+            const commentElement = element.getElementsByClassName("comment-text")[0];
+            elementPosition = commentElement.getBoundingClientRect().top;
+
+            // element.style.backgroundColor = "var(--yellow-100)"; // don't use setTimeout - comments have a transition for backgroundColor. So settimeout to remove backgroundcolor triggers that's transition
+        } else {
+
+            element.classList.add(...["highlighted-post"]); // CSS class 'highlighted-post' has a animation called
+        }
+
         const offsetPosition = elementPosition - headerHeight;
         window.scrollBy({
             top: offsetPosition,
@@ -16,13 +27,9 @@ export default function scrollToTarget_Main(eleId, type, headerHeight = 60) {
         });
 
         setTimeout(function () {
-            element.classList.remove("highlighted-post");
-            element.style.backgroundColor = "";
+            element.classList.remove(...["highlighted-post", "comment__highlight"]);
+            // element.style.backgroundColor = "";
         }, 3000);
 
-        if (type == "comment") {
-            element = element.getElementsByClassName("comment-text")[0];
-            element.style.backgroundColor = "var(--yellow-100)"; // don't use setTimeout - comments have a transition for backgroundColor. So settimeout to remove backgroundcolor triggers that's transition
-        }
     }
 }
