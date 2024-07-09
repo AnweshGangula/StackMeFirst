@@ -48,7 +48,7 @@ const sharedManifest = {
     page: "src/entries/options/index.html",
     open_in_tab: true,
   },
-  permissions: ["tabs", "storage", "scripting", "identity", "contextMenus"],
+  permissions: ["tabs", "storage", "scripting", "identity", "contextMenus", "history"],
 };
 
 

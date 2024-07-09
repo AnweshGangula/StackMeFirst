@@ -37,6 +37,18 @@ export default async function highlightStack() {
             subject: "isValidStackSite",
         });
 
+        browser.runtime.sendMessage({
+            from: "contentScript",
+            subject: "searchUrlInHistory",
+            content: {
+                url: currURL
+            }
+        }).then(checkUrlInHistory =>{
+            
+            console.log({checkUrlInHistory})
+        })
+
+
         const currUser = document.querySelector(".s-topbar--item.s-user-card");
         const isQuestion = IsQuestion(window.location.href)
         let question, quesAuthor;

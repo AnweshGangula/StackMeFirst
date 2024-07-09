@@ -65,6 +65,50 @@ browser.runtime.onMessage.addListener(
         browserAction.setIcon({ path: '../icons/StackMeFirst.png', tabId: browserTabId });
         // return true; // must return true to signal asynchronous
         break;
+
+      case "searchUrlInHistory":
+        // ref: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/history/getVisits#examples
+
+        let searching = browser.history.search({
+          text: content.url,
+          startTime: 0,
+          maxResults: 1,
+        });
+        
+        searching.then(listVisits);
+
+        
+        function listVisits(historyItems) {
+          if (historyItems.length) {
+            console.log(`URL ${historyItems[0].url}`);
+            const gettingVisits = browser.history.getVisits({
+              url: historyItems[0].url,
+            });
+            gettingVisits.then((visits)=> gotVisits(visits, historyItems));
+          }
+        }
+        
+        function gotVisits(visits, historyItems) {
+          console.log(`Visit count: ${visits.length}`);
+          // for (const visit of visits) {
+            console.log({visits, historyItems});
+            sendResponse({ 
+              message: 'found url in history',
+              data: {visits, historyItems}
+            })
+          // }
+        }
+
+        // function listUrlHistoryVisit(url){
+        //     const gettingVisits = browser.history.getVisits({
+        //       url: url,
+        //     });
+        //     gettingVisits.then(gotVisits);
+        // }
+        
+        // listUrlHistoryVisit(content.url);
+
+        break;
       case "needLogin":
         badgeText = "Login";
         badgeTitle = "Login to this Stack Exchange community to highlight your answers";
