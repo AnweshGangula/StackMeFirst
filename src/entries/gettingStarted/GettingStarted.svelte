@@ -257,6 +257,16 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
         <div id="gettingStartedCommunityData">
             <!-- <p>Domain: {domain}</p> -->
 
+            <div>
+              <p>
+                Below are some example questions, answers & comments that we found from your profile in <b>{selectedSite.site_name}</b>.
+              </p>
+              <i>
+                (Note that, the list will only show a <b>maximum of 5</b> results)
+              </i>
+              <hr />
+            </div>
+            
             {#if reloadingCommunity}
               <Loader />
             {:else}
@@ -385,10 +395,15 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                 || allMyHiddenCommentPosts.slice(0, 5).length > 0
                 )}
                 {@const hiddenCommentPosts = allMyHiddenCommentPosts.slice(0, 5)}
-                <div class="getStartedHiddenComments">
+                <div class="getStartedHiddenComments {hiddenCommentPosts.length == 0 ? 'noContent' : ''} ">
                   <details>
                     <summary>
-                      <h2>Posts with your hidden comments</h2>
+                      <h2>
+                        {#if hiddenCommentPosts.length == 0}
+                          <span style="color: firebrick;">No</span>
+                        {/if}
+                        Posts with your hidden comments
+                      </h2>
                       <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({hiddenCommentPosts.length})</b></i>
                     </summary>
                     
@@ -420,9 +435,14 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                         
                         <!-- adding comment below mentioning that all the posts are not searched with API - to reduce API usage -->
                         <p>We searched for hidden comments in recent posts to reduce API usage and could not find any. But you might encounter some posts while you use the extension.</p>
-                        <p>For a better search, you can use the query in the following link (which is targeted towards stack overflow)</p>
-                        <blockquote>Note: You need to add your stackoverflow <code>user_id</code> for this to work. You can find the user_id in the url of your stack overflow profile</blockquote>
-                        <a href="https://data.stackexchange.com/stackoverflow/query/1849760">Find posts that have hidden comments added by user</a>
+
+                        <!-- {#if selectedSite.site_name == "Stack Overflow"} -->
+
+                          <p>For a better search, you can use the query in the following link <i>(which is only works with <b>stack overflow</b>)</i></p>
+                          <blockquote>Note: You need to add your stackoverflow <code>user_id</code> for this to work. You can find the user_id in the url of your stack overflow profile</blockquote>
+                          <a href="https://data.stackexchange.com/stackoverflow/query/1849760">Find posts that have hidden comments added by user</a>
+
+                        <!-- {/if} -->
                       </div>
                     {/if}
 
@@ -503,7 +523,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     --smfBackgroundColor: darkorange;
     --smfBorderColor: darkorange;
 
-    max-height: 850px;
+    max-height: 830px;
     overflow: hidden;
     overflow-y: auto;
 
@@ -564,6 +584,10 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
             line-clamp: var(--lineClamp); 
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;
+  }
+
+  .getStartedHiddenComments.noContent h2 {
+    /* color: firebrick; */
   }
 
   #communitiesTable {

@@ -22,7 +22,7 @@ Optionally, you can also use the login button in the popup to highlight & list
 - Linked questions that have been Upvoted/Bookmarked/Posted by the logged in user.
 
 > Note: this does not store or share any data externally.\
-> Disclaimer: The linked questions are affiliated with my account - which is associated with "Booster" badge - https://stackoverflow.com/help/badges/261/booster
+> Disclaimer: Disclaimer: The links to questions & answers are affiliated with my account - which is associated with "Booster" badge - https://stackoverflow.com/help/badges/261/booster
 
 ## Getting Started
 
@@ -122,6 +122,11 @@ I'm aware of few of the issue with the current version of the plugin, You can ch
 - [Favorites not being highlighted][13]
 - [Linked questions not being highlighted for few questions][14]
 
+## Known Limitations
+
+- Cannot identify Saves/Favorites/Bookmarks
+  - Stack Exchange API doedoesnreliably provide the information about saved posts as mentioned [here][17] & [here][18].
+
 ## Existing Alternate Extensions:
 
 There are a few extensions which you can consider as alternatives to Stack Me First, which give you different features:
@@ -168,3 +173,5 @@ Checkout the contribution or local development instructions in the [./Contributo
 [14]: https://meta.stackexchange.com/q/383720/381523
 [15]: ./Contribution.md
 [16]: https://meta.stackexchange.com/q/382363/381523
+[17]: https://stackoverflow.com/a/78717880/6908282
+[18]: https://meta.stackexchange.com/q/385726/381523
