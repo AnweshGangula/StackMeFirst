@@ -26,6 +26,11 @@
 	--smfBackgroundColor: var(--yellow-100, --white, inherit);
 }
 
+.smfCommentVote {
+	border-left: 3px solid var(--theme-primary, darkorange);
+	padding-left: 3px !important;
+}
+
 .smfHighlight.smfAnswer:not(.smfUpvoted),
 .smfHighlight.smfAuthor {
     --smfBorderColor: darkorange;

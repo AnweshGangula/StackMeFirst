@@ -167,6 +167,7 @@ export default async function highlightStack() {
                 highlightQuestion(question, currUser.href == quesAuth);
                 myAnsList = highlightAnswer(ansJson, ansIsAPI, userConfig, DOM_Opts, currURL);
                 myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
+                HighlightUpvotedComments();
 
                 const linkData = await HighlightLinks(userConfig, currURL, qId, DOM_Opts);
                 currQuota_max = linkData.latestQuota_max ?? currQuota_max;
@@ -218,6 +219,14 @@ export default async function highlightStack() {
         });
     }
     return output;
+}
+
+function HighlightUpvotedComments() {
+    Array.from(document.querySelectorAll(".js-comment-actions"))
+        .filter(e => e.querySelector(".comment-up-on"))
+        .map(d => {
+            d.classList.add("smfCommentVote");
+        })
 }
 
 export async function renderContent(

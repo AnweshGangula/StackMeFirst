@@ -81,7 +81,9 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
                         answerToHighlight.classList.add("smfHighlight", "smfAnswer");
                         if (answer.upvoted) {
                             answerToHighlight.classList.add("smfUpvoted");
-
+                        }
+                        if (answerUser == currUser.href) {
+                            answerToHighlight.classList.add("smfAuthor");
                         }
                     }
                     if (!isSorted && srtAns) {
