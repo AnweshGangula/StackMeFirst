@@ -6,7 +6,7 @@
 	padding-left: 5px;
 	border-style: solid;
 	border-width: 0px;
-	border-left-width: 5px;
+	border-left-width: 2px;
 	border-color: darkorange;
 	border-color: var(--smfBorderColor, mediumseagreen);
 	border-radius: 5px;
@@ -20,6 +20,8 @@
 		linear-gradient(270deg, transparent 70%, var(--smfBorderColor, mediumseagreen));
 }
 
+.smfHighlight.highlighted-post .smfCmtLnk,
+.comment__highlight .smfCmtLnk,
 .smfHighlight.highlighted-post {
 	--smfBackgroundColor: var(--yellow-100, --white, inherit);
 }

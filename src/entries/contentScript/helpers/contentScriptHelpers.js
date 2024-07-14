@@ -232,13 +232,22 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
                             scrollToCmts.title = "You have posted comments in this post. Click to scroll to the comments"
                             scrollToCmts.classList.add("smfAnsHasCmmts", "s-btn", "s-btn__filled");
                             
-                            const smfLogo = document.createElement("img");
-                            smfLogo.src = logoImageUrl;
-                            smfLogo.height = "20";
-                            smfLogo.alt = "Stack Me First Logo";
-                            smfLogo.classList.add("smfLogo");
-                            scrollToCmts.appendChild(smfLogo); 
+                            // const smfLogoSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                            // smfLogoSvg.setAttribute('height','20');
+                            const smfLogoSvg = document.createElement("img");
+                            smfLogoSvg.src = logoImageUrl;
+                            smfLogoSvg.height = "20";
+                            smfLogoSvg.alt = "Stack Me First Logo";
+                            smfLogoSvg.classList.add("smfLogo");
 
+                            // const smfLogoUse = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+                            // useElem.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', logoImageUrl + "#smfLogo");
+
+                            // smfLogoSvg.appendChild(smfLogoUse);
+                            scrollToCmts.appendChild(smfLogoSvg); 
+
+                            // const smfLogoSvg = appendSVGChild("svg", scrollToCmts, {'height': 20, 'width': 20});
+                            // const smfLogoUse = appendSVGChild("use", smfLogoSvg, {'href': logoImageUrl + "#smfLogo", 'xlink:href': logoImageUrl + "#smfLogo"});
                             // console.log("img Added")
 
                             scrollToCmts.addEventListener("click", () => {
@@ -260,6 +269,18 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
 
     return commentList;
 }
+
+function appendSVGChild(elementType,target,attributes = {},text = '') {
+    // ref: https://dev.to/gavinsykes/appending-a-child-to-an-svg-using-pure-javascript-1h9g
+    const element = document.createElementNS('http://www.w3.org/2000/svg',elementType);
+    Object.entries(attributes).map(a => element.setAttribute(a[0],a[1]));
+    if (text) {
+      const textNode = document.createTextNode(text);
+      element.appendChild(textNode);
+    }
+    target.appendChild(element);
+    return element;
+  };
 
 export async function HighlightLinks(preferences, currURL, currentQid, DOM_Opts) {
     // example URL: https://api.stackexchange.com/docs/linked-questions#order=desc&sort=activity&ids=73591695&site=stackoverflow&run=true
