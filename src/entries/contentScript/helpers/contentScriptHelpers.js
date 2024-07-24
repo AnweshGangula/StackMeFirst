@@ -160,13 +160,14 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
     return answerList;
 }
 
-export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
+export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts, currURL) {
     const hlCmnts = userConfig.hlCmnts;
     const currUser = DOM_Opts.currUser;
 
 
     let commentList = [];
     let hiddenCmtsCount = 0;
+    let scrollToCmtId = undefined;
     if (hlCmnts == true) {
         for (let comment of comments) {
             let commentUser, commentId, body, parentId;
@@ -267,6 +268,19 @@ export function highlightComments(comments, cmtIsAPI, userConfig, DOM_Opts) {
 
                 commentList.push({ commentId, suffix, title: body, cmtParentId: parentId });
             }
+
+            if (currURL.indexOf("#comment" + commentId + "_" + parentId) > -1) {
+                // if the user clicks on a link to a specific answer, scroll that into view
+                // answer.scrollIntoView();
+                scrollToCmtId = commentId;
+            }
+        }
+
+        if (scrollToCmtId) {
+            // if the user clicks on a link to a specific answer, scroll that into view
+            // answer.scrollIntoView();
+            // console.log("scrolling to comment" + scrollToCmtId);
+            scrollToTarget(scrollToCmtId, "comment", 60)
         }
     }
     else {

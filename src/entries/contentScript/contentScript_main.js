@@ -168,7 +168,7 @@ export default async function highlightStack() {
 
                 highlightQuestion(question, currUser.href == quesAuth);
                 myAnsList = highlightAnswer(ansJson, ansIsAPI, userConfig, DOM_Opts, currURL);
-                myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts);
+                myCmmtList = highlightComments(allComments, cmtIsAPI, userConfig, DOM_Opts, currURL);
                 HighlightUpvotedComments();
 
                 const linkData = await HighlightLinks(userConfig, currURL, qId, DOM_Opts);
