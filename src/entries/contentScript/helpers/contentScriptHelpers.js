@@ -83,7 +83,11 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
                             answerToHighlight.classList.add("smfUpvoted");
                         }
                         if (answerUser == currUser.href) {
-                            answerToHighlight.classList.add("smfAuthor");
+                            // answerToHighlight.classList.add("smfAuthor");
+                            const authIcon = document.createElement("span");
+                            authIcon.classList.add("smfAuthAnswer");
+                            authIcon.textContent = "👑";
+                            answerToHighlight.prepend(authIcon);
                         }
                     }
                     if (!isSorted && srtAns) {
