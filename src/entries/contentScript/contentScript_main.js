@@ -62,7 +62,8 @@ export default async function highlightStack() {
         const userInCommunity = joinCommunityBtn.length == 0 ? true : false;
         const userLoggedIn = (userProfileBtn.length > 0 || joinCommunityBtn.length > 0);
 
-        var popupContent = {
+        output.popupContent = {
+            ...output.popupContent,
             userLoggedIn,
             userInCommunity: userInCommunity,
             metaData: {
@@ -154,12 +155,13 @@ export default async function highlightStack() {
                 const DOM_Opts = { currUser, isSorted }
 
                 const quesAuth = quesAuthor == null ? undefined : quesAuthor.href;
-                popupContent.metaData.quesAuthor = quesAuth;
+                output.popupContent.metaData.quesAuthor = quesAuth;
 
                 // console.log({quesAuth, currUser}, currUser.href == quesAuth)
                 const result = await browser.storage.sync.get({ 'stackMeData': defaultPreferances });
 
                 const userConfig = result.stackMeData;
+                output.userConfig = userConfig;
                 // You can set default for values not in the storage by providing a dictionary:
                 // reference: https://stackoverflow.com/a/26898749/6908282
 
@@ -173,10 +175,10 @@ export default async function highlightStack() {
                 currQuota_max = linkData.latestQuota_max ?? currQuota_max;
                 currQuota_remaining = linkData.latestQuota_remaining ?? currQuota_remaining;
 
-                popupContent.answerList = myAnsList;
-                popupContent.commentList = myCmmtList;
-                popupContent.linkData = linkData;
-                popupContent.apiQuota = {
+                output.popupContent.answerList = myAnsList;
+                output.popupContent.commentList = myCmmtList;
+                output.popupContent.linkData = linkData;
+                output.popupContent.apiQuota = {
                     currQuota_max,
                     currQuota_remaining,
                 }
@@ -199,10 +201,10 @@ export default async function highlightStack() {
                     // console.log("sending message");
                 });
 
-                output = {
-                    userConfig,
-                    popupContent,
-                }
+                // output = {
+                //     userConfig,
+                //     ...output.popupContent,
+                // }
                 // console.log({popupContent})
             }
 
@@ -212,7 +214,7 @@ export default async function highlightStack() {
             // First, validate the message's structure.
             if ((msg.from === 'popup') && (msg.subject === 'popupDOM')) {
                 // send data to list answers in popup
-                response(popupContent); // this sends popupContent dict to SetPopupContent function in popup.js
+                response(output.popupContent); // this sends popupContent dict to SetPopupContent function in popup.js
             } else if (msg.subject === "headerDOM") {
                 response(userLoggedIn)
             }
