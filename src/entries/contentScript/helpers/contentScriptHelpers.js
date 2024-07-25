@@ -54,11 +54,6 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
         const ansToSort = {};
         for (let answer of answers) {
             let answerUser, answerId, body;
-            if(!answer.upvoted){
-                // if user did not Login to Stack Exchange, then the API will not return the upvoted status of the answer
-                const upvoted = document.getElementById(`answer-${answer.answer_id}`)?.getElementsByClassName("js-vote-up-btn")[0].ariaPressed
-                answer.upvoted = upvoted == "true";
-            }
             if (ansIsAPI) {
                 answerUser = answer.owner.link;
                 answerId = answer.answer_id;
@@ -70,11 +65,19 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
                 answerId = answer.dataset.answerid;
                 body = TrimText(answer.querySelectorAll(".answercell")[0].textContent.replaceAll("\n    ", ""));
             }
+            if(!answer.upvoted){
+                // if user did not Login to Stack Exchange, then the API will not return the upvoted status of the answer
+                const upvoted = document.getElementById(`answer-${answer.answer_id}`)?.getElementsByClassName("js-vote-up-btn")[0].ariaPressed
+                answer.upvoted = upvoted == "true";
+            }
             const answerToHighlight = document.querySelector("#answer-" + answerId);
             const isAnsVisible = answerToHighlight != null
-            let smfSuffix = ""
-            if (isAnsVisible) {
-                if (answerUser == currUser.href || answer.upvoted) {
+            let smfSuffix = ""           
+            if (answerUser == currUser.href || answer.upvoted) {
+
+                if (answerUser == currUser.href) smfSuffix += " (author)";
+
+                if (isAnsVisible) {
                     // if answer is paginated, it will not be visible in current page.
                     // Eg: https://stackoverflow.com/questions/7244321/how-do-i-update-or-sync-a-forked-repository-on-github?page=2&tab=scoredesc#tab-top 
                     if (hlAns) {
@@ -99,11 +102,11 @@ export function highlightAnswer(answers, ansIsAPI, userConfig, DOM_Opts, currURL
 
                         // insertAfter(topEle, answerToHighlight);
                     }
-                    if (answerUser == currUser.href) smfSuffix += " (author)";
-                    answerList.push({ answerId, suffix: smfSuffix, title: body });
+                } else {
+                    smfSuffix += " (hidden)"
                 }
-            } else {
-                smfSuffix = " (hidden)"
+                answerList.push({ answerId, suffix: smfSuffix, title: body });
+
             }
 
             if (currURL.indexOf(answerId + "#" + answerId) > -1) {
