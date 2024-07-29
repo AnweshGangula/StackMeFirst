@@ -4,7 +4,7 @@ Quick Links: [Demo video](https://www.youtube.com/watch?v=Srcy3kOH3Ic) | [Instru
 
 # StackMeFirst
 
-<a href="https://www.youtube.com/watch?v=Srcy3kOH3Ic">
+<a href="https://www.youtube.com/watch?v=Srcy3kOH3Ic" target="_blank">
     <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/22996896/258670431-db6aba7a-5b9d-4438-aeb1-81a593fb44aa.png" alt="Stack Me First v5 Demo" width="650"/>
 </a>
 
@@ -142,7 +142,7 @@ Checkout the contribution or local development instructions in the [./Contributo
 
 <!--
 # Star History
-<a href="https://star-history.com/#AnweshGangula/PKMigrator&Date">
+<a href="https://star-history.com/#AnweshGangula/PKMigrator&Date" target="_blank">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=AnweshGangula/PKMigrator&type=Date&theme=dark" />
     <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=AnweshGangula/PKMigrator&type=Date" />

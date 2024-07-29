@@ -222,6 +222,7 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
     <Loader />
   {:then result}
     {#if listOfJoinedCommunities.length > 0 }
+    {@const siteHost = new URL(selectedSite.site_url).hostname.split(".stackexchange.com")[0].split(".com")[0]}
       <div style="display: flex; gap: 10px; padding: 2px 5px">
         <div style="">
           <h2>Communities you joined:</h2>
@@ -291,6 +292,10 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                         <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({questions.length})</b></i>
                       </summary>
 
+                      <blockquote>
+                        Use <a href={"https://data.stackexchange.com/" +  siteHost + "/revision/1636995/2260979?userId=" + selectedSite.user_id + "&run=true"} target="_blank">this stackexchange query</a> to see more than 5 links
+                      </blockquote>
+
                       <ul>
                         {#each questions as ques}
                           <li class="question">
@@ -309,9 +314,13 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                 <div class="getStartedQuestions">
                   <details>
                     <summary>
-                      <h2>Anwers to get started</h2>
+                      <h2>Answers to get started</h2>
                       <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({answers.length})</b> answer body is limited to {lineClamp} lines</i>
                     </summary>
+
+                    <blockquote>
+                      Use <a href={"https://data.stackexchange.com/" +  siteHost + "/revision/1849271/2254572?userId=" + selectedSite.user_id + "&run=true"} target="_blank">this stackexchange query</a> to see more than 5 links
+                    </blockquote>
 
                     <ul>
                       {#each answers as ans}
@@ -342,6 +351,10 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                         <h2>Comments to get started</h2>
                         <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({userComments.length})</b></i>
                       </summary>
+
+                      <blockquote>
+                        Use <a href={"https://data.stackexchange.com/" +  siteHost + "/revision/1849270/2254571?UserId=" + selectedSite.user_id + "&MinCommentsScore=0&run=true"} target="_blank">this stackexchange query</a> to see more than 5 links
+                      </blockquote>
                       <ul>
                         {#each userComments as cmt}
                           <li class="link comment">
@@ -371,6 +384,10 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                       <h2>Questions linked to Your Questions</h2>
                       <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({linkQs.length})</b></i>
                     </summary>
+
+                    <blockquote>
+                      Use <a href={"https://data.stackexchange.com/" +  siteHost + "/revision/1849607/2254570?UserId=" + selectedSite.user_id + "&run=true"} target="_blank">this stackexchange query</a> to see more than 5 links
+                    </blockquote>
                     
                     <blockquote>Stack Me First can also help you identify questions that are linked to any questions you might have posted. This helps you in identifying a post you created if you come across a linked post in your Google search or any other source</blockquote>
 
@@ -387,13 +404,13 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                 </div>
               {/if}
 
-              {#if (
+              {#if ( selectedSite && (
                 getUserQuestions.myDetails.length > 0
                 || getUserAnswers.myDetails.length > 0
                 || getUserComments.myDetails.length > 0
                 || getUserLinkQs.myDetails.length > 0
                 || allMyHiddenCommentPosts.slice(0, 5).length > 0
-                )}
+                ))}
                 {@const hiddenCommentPosts = allMyHiddenCommentPosts.slice(0, 5)}
                 <div class="getStartedHiddenComments {hiddenCommentPosts.length == 0 ? 'noContent' : ''} ">
                   <details>
@@ -406,6 +423,9 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                       </h2>
                       <i><b style="background-color: bisque;padding: 3px;border-radius: 3px;">({hiddenCommentPosts.length})</b></i>
                     </summary>
+                    <blockquote>
+                      Use <a href={"https://data.stackexchange.com/" +  siteHost + "/revision/1849760/2260980?UserId=" + selectedSite.user_id + "&run=true"} target="_blank">this stackexchange query</a> to see more than 5 links
+                    </blockquote>
                     
                     {#if hiddenCommentPosts.length == 0}
                     <p style=" background: firebrick; color: white; padding: 5px; border-radius: 5px; ">No Posts found with hidden comments</p>
@@ -435,16 +455,16 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
                         
                         <!-- adding comment below mentioning that all the posts are not searched with API - to reduce API usage -->
                         <p>We searched for hidden comments in recent posts to reduce API usage and could not find any. But you might encounter some posts while you use the extension.</p>
-
-                        <!-- {#if selectedSite.site_name == "Stack Overflow"} -->
-
-                          <p>For a better search, you can use the query in the following link <i>(which is only works with <b>stack overflow</b>)</i></p>
-                          <blockquote>Note: You need to add your stackoverflow <code>user_id</code> for this to work. You can find the user_id in the url of your stack overflow profile</blockquote>
-                          <a href="https://data.stackexchange.com/stackoverflow/query/1849760">Find posts that have hidden comments added by user</a>
-
-                        <!-- {/if} -->
                       </div>
                     {/if}
+
+                    <!-- {#if selectedSite.site_name == "Stack Overflow"} -->
+
+                    <!-- <p>For a better search, you can use the query in the following link</p> -->
+                    <!-- <blockquote>Note: You need to add your stackoverflow <code>user_id</code> for this to work. You can find the user_id in the url of your stack overflow profile</blockquote> -->
+                    <!-- <a href={"https://data.stackexchange.com/" +  siteHost + "/revision/1849760/2260980?UserId=" + selectedSite.user_id + "&run=true"} target="_blank">Find posts that have hidden comments added by user</a> -->
+
+                  <!-- {/if} -->
 
                 </div>
               {/if}
