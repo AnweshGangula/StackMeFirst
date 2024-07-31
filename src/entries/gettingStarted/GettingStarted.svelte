@@ -490,16 +490,6 @@ const getStartedContent = GettingStartedEvent().then(async ()=>{
 </div>
 
 <style>
-  #Sidebar_Root {
-    --toastWidth: 24rem;
-    --toastBackground: blanchedalmond;
-    --toastColor: #424242;
-    --toastBarBackground: brown;
-    --toastContainerTop: auto;
-    --toastContainerRight: 1rem;
-    --toastContainerBottom: 2rem;
-    /* --toastContainerLeft: calc(50vw - 8rem); */
-  }
 
   #GettingStarted_Root blockquote {
     padding: 5px;

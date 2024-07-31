@@ -211,7 +211,7 @@
 	}
 	#dockRoot {
 		position: fixed;
-		z-index: 9999;
+		z-index: var(--sidebarZIndex, 999);
 		top: 30px;
 		right: 0;
 		/* margin: 10px; */

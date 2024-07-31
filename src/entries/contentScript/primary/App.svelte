@@ -62,6 +62,8 @@
 		--toastContainerRight: 1rem;
 		--toastContainerBottom: 2rem;
 		/* --toastContainerLeft: calc(50vw - 8rem); */
+		--sidebarZIndex: calc((var(--zi-navigation-fixed, 5050) +  1));
+		--toastContainerZIndex: var(--sidebarZIndex, 999);
   }
 
 </style>
