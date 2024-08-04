@@ -2,6 +2,7 @@ import browser from "webextension-polyfill";
 import { defaultApiData, StackAppDetails, pageTypeEnum } from "~/utils/constants";
 import { GetBrowser, GetLocalTokenData, IsValidStackExchangeSite, getUrlRootDomain } from "~/utils/utils";
 import Api from "~/utils/stackAPI";
+import pkg from "../../../package.json"
 
 import backgroundMixpanel from "./mixpanelBackground";
 import SmfMixpanel from "~/utils/mixpanel";
@@ -48,6 +49,9 @@ function OpenGettingStartedPage(tab, accountId){
       pageType: pageTypeEnum.gettingStarted
   };
   const mixpanel = new SmfMixpanel(pageViewData);
+  mixpanel.trackEvent("Open Getting Started Page", {
+    eventSource: tab.url
+  });
   // })
 }
 
@@ -234,8 +238,8 @@ async function initContextMenus(){
 
   browser.contextMenus.removeAll().then(() => {
     browser.contextMenus.create({
-      title: "Stack Me First - Menu",
-      id: "stackMeFirst",
+      title: (pkg.displayName ?? "Stack Me First") +  " - Menu",
+      id: (pkg.name ??"stackMeFirst"),
       contexts: ["all"]
     })
 
@@ -253,5 +257,4 @@ async function initContextMenus(){
   browser.contextMenus.onClicked.addListener(contextMenuClick)
 }
 
-initContextMenus();
-
+// initContextMenus();

@@ -40,12 +40,17 @@ export default class SmfMixpanel {
 
     trackEvent(name, keyValueData = {}) {
         // console.log("tracking event", {name}, {keyValueData});
+        const defaultEventSource = {eventSource: "Unknown Source"};
+        const mixPanelEventData = {
+            defaultEventSource,
+            ...keyValueData
+        }
         const nameSuffix = import.meta.env.VITE_DEV_MODE == "true" ? devModeSuffix : "";
         name += nameSuffix;
 
-        devConsole("final Mixpanel call", name, keyValueData); // use mixpanel.init{debug: true} instead
+        devConsole("final Mixpanel call", name, mixPanelEventData); // use mixpanel.init{debug: true} instead
 
-        mixpanel.track(name, keyValueData);
+        mixpanel.track(name, mixPanelEventData);
     }
 
     trackPageView(data){

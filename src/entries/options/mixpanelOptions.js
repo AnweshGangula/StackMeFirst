@@ -13,6 +13,9 @@ export default function optionsMixpanel() {
             pageType: pageTypeEnum.options
         }
         const mixpanel = new SmfMixpanel(pageViewData);
+        mixpanel.trackEvent("Open Options Page", {
+            // eventSource: tab.url
+          });
     });
 
     // Listen globally for all button events
