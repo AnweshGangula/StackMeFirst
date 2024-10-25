@@ -51,6 +51,8 @@ export default defineConfig(({ mode }) => {
       svelte(),
       webExtension({
         manifest: getManifest(Number(env.VITE_MANIFEST_VERSION), env.VITE_DEV_MODE),
+		// https://github.com/samrum/vite-plugin-web-extension/issues/148
+		useDynamicUrlWebAccessibleResources: false,
         additionalInputs: {
           // styles: [
           //   "src/entries/contentScript/primary/content.css"

@@ -11,10 +11,8 @@ const stackCommunities = [
   "stackapps.com",
 ]
 
-const websiteList = [];
-
-stackCommunities.forEach(a => {
-  websiteList.push("*://*." + a + "/*");
+const websiteList = stackCommunities.map(a => {
+  return "*://*." + a + "/*";
 });
 
 const _webAccessibleResources = [
@@ -64,7 +62,9 @@ const browserAction = {
   default_icon: "./icons/StackMeFirst_disabled.png",
   default_popup: "src/entries/popup/index.html",
 };
+const inlineSpecRules = `'inline-speculation-rules' ${ hostPermissions.join(' ') + 'http://localhost:* http://127.0.0.1:* /assets/src/entries/contentScript/primary/main.d2e7ec72.js'}`;
 
+const contentSecutoryPolicy = `script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; script-src-elem 'self' 'unsafe-inline'`
 // remove "scripting" from manifest v2 permissions
 const ManifestV2 = {
   ...sharedManifest,
@@ -85,6 +85,7 @@ const ManifestV2 = {
       strict_min_version: "79.0"
     }
   },
+//   content_security_policy: contentSecutoryPolicy,
 };
 
 const ManifestV3 = {
@@ -93,6 +94,9 @@ const ManifestV3 = {
   background: {
     service_worker: "src/entries/background/serviceWorker.js",
   },
+//   content_security_policy: {
+//     extension_pages: contentSecutoryPolicy
+//   },
   host_permissions: hostPermissions,
   web_accessible_resources: [
     // reference: https://developer.chrome.com/docs/extensions/mv3/manifest/web_accessible_resources/
@@ -100,6 +104,7 @@ const ManifestV3 = {
     {
       resources: _webAccessibleResources,
       matches: websiteList,
+	  use_dynamic_url: false,
     },
   ],
   oauth2: {
